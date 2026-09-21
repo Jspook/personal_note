@@ -1,0 +1,230 @@
+{
+  "main": {
+    "id": "634969d51a70ad66",
+    "type": "split",
+    "children": [
+      {
+        "id": "802a4c8d20b39ba1",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3d4d5a10791bf47b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "AIOS/01 Learning/Courses/Database/Database - Chapter 01 Introduction to Database System & Relational Model.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Database - Chapter 01 Introduction to Database System & Relational Model"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "21e5e6c3f8741142",
+    "type": "split",
+    "children": [
+      {
+        "id": "3bfe971e344dae13",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "939bfe2ee782ff76",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-folder-closed",
+              "title": "File explorer"
+            }
+          },
+          {
+            "id": "ea7fbdef64c87b75",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "ค้นหา"
+            }
+          },
+          {
+            "id": "7c25efe20a8c02c4",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-bookmark",
+              "title": "บุ๊กมาร์ก"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "d7fc08f296e6aef8",
+    "type": "split",
+    "children": [
+      {
+        "id": "2d37d158e9ccf245",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "44a9a86c9a7da819",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Resources/Books/Bussiness for IT/01 General Business.pdf",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "แบ็คลิงค์"
+            }
+          },
+          {
+            "id": "e07f7148c7f06715",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Resources/Books/Bussiness for IT/01 General Business.pdf",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "ลิงค์ขาออก"
+            }
+          },
+          {
+            "id": "5eb13a4c5d7f1126",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "แท็ก"
+            }
+          },
+          {
+            "id": "b63d0b945ea4d62b",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "คุณสมบัติทั้งหมด"
+            }
+          },
+          {
+            "id": "5bf7508bdb1c31ca",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Resources/Books/Bussiness for IT/01 General Business.pdf",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "โครงเรื่อง"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:เปิด quick switcher": false,
+      "graph:เปิดมุมมองกราฟ": false,
+      "canvas:สร้างผืนผ้าใบใหม่": false,
+      "daily-notes:เปิดโน้ตของวันนี้": false,
+      "templates:แทรกเทมเพลต": false,
+      "command-palette:เปิดกระดานคำสั่ง": false,
+      "bases:สร้างฐานใหม่": false
+    }
+  },
+  "active": "3d4d5a10791bf47b",
+  "lastOpenFiles": [
+    "AIOS/me.md",
+    "AIOS/Skills/personal-coach/SKILL.md",
+    "AIOS/Skills/learning-tutor/SKILL.md",
+    "AIOS/Skills/project-builder/SKILL.md",
+    "AIOS/Skills/career-builder/SKILL.md",
+    "AIOS/Skills/learning-tutor",
+    "AIOS/Skills/project-builder",
+    "AIOS/Skills/personal-coach",
+    "AIOS/Skills/career-builder",
+    "AIOS/Skills",
+    "โฟลเดอร์ใหม่",
+    "AIOS/01 Learning/Courses/Web Programming/Web Programming - Unit 12 Session and Cookie Management with Node.JS.md",
+    "Resources/Books/Web Programming/UNIT-12-SessionManagement-v1.pdf",
+    "unit12_dump.txt",
+    "AIOS/01 Learning/Courses/Web Programming/Web Programming - Unit 11 Web Data Transfer through HTTP Methods and CORS.md",
+    "AIOS/01 Learning/Courses/Web Programming/Web Programming - Unit 10 Web Services and REST API with Node.JS.md",
+    "unit11_dump.txt",
+    "Resources/Books/Web Programming/UNIT-10-API-Services-v1.pdf",
+    "AIOS/01 Learning/Courses/Web Programming/Web Programming - Unit 09 Embedded Database SQLite & EJS Partials.md",
+    "AIOS/01 Learning/Courses/Web Programming/Web Programming - Unit 08 MySQL Database Integration & EJS Template Engine.md",
+    "AIOS/01 Learning/Courses/Web Programming/Web Programming - Unit 07 Back-end Web Development with Node.JS & Express.JS.md",
+    "AIOS/01 Learning/Courses/Web Programming/Web Programming - Unit 06 Web Data with JSON and Local Storage.md",
+    "AIOS/01 Learning/Courses/Discrete Mathematics/Discrete Mathematics - Week 8 Divisibility & Modular Arithmetic.md",
+    "AIOS/01 Learning/Courses/Discrete Mathematics/Discrete Mathematics - Week 9 Primes, GCD & Cryptography.md",
+    "AIOS/01 Learning/Courses/Discrete Mathematics/Discrete Mathematics - Week 10 Relations.md",
+    "AIOS/01 Learning/Courses/Database/SQL Lab 04 - SQL SELECT Statements.md",
+    "AIOS/01 Learning/Courses/Database/SQL Lab 02 - DDL Constraints.md",
+    "AIOS/01 Learning/Courses/Database/Oracle SQL - Single-Row Functions.md",
+    "AIOS/01 Learning/Courses/Database/Oracle SQL - Controlling User Access.md",
+    "AIOS/01 Learning/Courses/Database/Database Concept 08 - Business Intelligence & Data Warehouse.md",
+    "AIOS/01 Learning/Courses/Database/Database Concept 07 - Transaction Management and Recovery.md",
+    "AIOS/01 Learning/Courses/Database/Database Concept 06 - Database Normalization.md",
+    "AIOS/01 Learning/Courses/Database/Database Concept 04 - Logical Design - Data Model Mapping.md",
+    "AIOS/01 Learning/Courses/Database/Database Concept 03 - Relational Algebra and Calculus.md",
+    "AIOS/01 Learning/Courses/Database/Database Concept 02 - Entity-Relationship and Relational Model.md",
+    "AIOS/01 Learning/Courses/Database/Database Concept 01 - Introduction to Database Systems.md"
+  ]
+}
