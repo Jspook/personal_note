@@ -99,7 +99,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Resources/Books/Bussiness for IT/01 General Business.pdf",
+                "file": "AIOS/01 Learning/Courses/Database/Database - Chapter 01 Introduction to Database System & Relational Model.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -174,8 +174,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -188,7 +187,7 @@
       "bases:สร้างฐานใหม่": false
     }
   },
-  "active": "3d4d5a10791bf47b",
+  "active": "939bfe2ee782ff76",
   "lastOpenFiles": [
     "AIOS/me.md",
     "AIOS/Skills/personal-coach/SKILL.md",
