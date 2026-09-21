@@ -1,147 +1,331 @@
-# Discrete Mathematics - Week 8: Divisibility, Modular Arithmetic & Base Conversions
+﻿# Discrete Mathematics - Week 8: Divisibility & Modular Arithmetic
 
-## 1. การหารและคุณสมบัติการหาร (Divisibility)
-
-### 1.1 นิยามการหารลงตัว
-ให้ $a$ และ $b$ เป็นจำนวนเต็ม โดยที่ $a \neq 0$ เราจะกล่าวว่า **$a$ หาร $b$ ลงตัว ($a$ divides $b$)** เขียนแทนด้วย $a \mid b$ ก็ต่อเมื่อ มีจำนวนเต็ม $c$ ที่ทำให้:
-$$b = ac$$
-
-* $a$ คือ ตัวหาร (Divisor หรือ Factor) ของ $b$
-* $b$ คือ พหุคูณ (Multiple) ของ $a$
-* สัญลักษณ์ $a \nmid b$ หมายถึง $a$ หาร $b$ ไม่ลงตัว
-
-### 1.2 ทฤษฎีบทคุณสมบัติการหาร (Divisibility Properties)
-ให้ $a, b, c \in \mathbb{Z}$ โดยที่ $a \neq 0$:
-1. ถ้า $a \mid b$ และ $a \mid c$ แล้ว $a \mid (b + c)$
-2. ถ้า $a \mid b$ แล้ว $a \mid bc$ สำหรับทุกจำนวนเต็ม $c$
-3. ถ้า $a \mid b$ และ $b \mid c$ แล้ว $a \mid c$ (คุณสมบัติการถ่ายทอด)
+> **วิชา:** Discrete Mathematics | **สถาบัน:** มหาวิทยาลัย (Dr. Sirasit Lochanachit)
+> **Source:** `Resources/Books/Discrete Mathematics/myDiscrete_Week8.pdf` (54 slides)
 
 ---
 
-## 2. ขั้นตอนวิธีการหาร (Division Algorithm / Euclidean Division)
+## Part 1: Macro Architecture & Overview
 
-ให้ $a$ เป็นจำนวนเต็ม และ $d$ เป็นจำนวนเต็มบวก จะมีจำนวนเต็ม $q$ และ $r$ เพียงคู่เดียวเท่านั้นที่:
-$$a = dq + r \quad \text{โดยที่ } 0 \le r < d$$
+**Number Theory (ทฤษฎีจำนวน)** คือสาขาคณิตศาสตร์ที่ศึกษาเกี่ยวกับจำนวนเต็มและคุณสมบัติของมัน แนวคิดหลักคือ Division (การหาร) และ Prime Numbers (จำนวนเฉพาะ) ซึ่งมีความสำคัญในด้าน Computer Science โดยเฉพาะ Cryptography และ Random Number Generation
 
-* $a$ = ตัวตั้ง (Dividend)
-* $d$ = ตัวหาร (Divisor)
-* $q$ = ผลหาร (Quotient) เขียนแทนด้วย $q = a \text{ div } d$
-* $r$ = เศษเหลือ (Remainder) เขียนแทนด้วย $r = a \bmod d$
+Week 8 ครอบคลุม 2 หัวข้อหลัก ได้แก่ Divisibility & Modular Arithmetic และ Integer Representations ซึ่งมีความสัมพันธ์กันผ่านการใช้ Division Algorithm และ Modular Operations ในการแปลงฐานตัวเลขและการคำนวณ Exponentiation แบบ Fast
 
----
-
-## 3. เลขคณิตมอดุโล (Modular Arithmetic) & สมภาค (Congruence)
-
-### 3.1 ตัวดำเนินการ Modulo
-* $a \bmod d$ คือเศษเหลือจากการหาร $a$ ด้วย $d$
-* สำหรับกรณีที่ $a$ เป็นจำนวนลบ สามารถคำนวณจากสูตร:
-$$a \bmod d = a - \left( \lfloor a / d \rfloor \times d \right)$$
-
-### 3.2 ความสมภาค (Congruence Modulo)
-**นิยาม:** ให้ $a, b \in \mathbb{Z}$ และ $m \in \mathbb{Z}^+$ เราจะกล่าวว่า **$a$ สมภาคกับ $b$ มอดุโล $m$** เขียนแทนด้วย:
-$$a \equiv b \pmod m$$
-ก็ต่อเมื่อ $m \mid (a - b)$ หรือกล่าวอีกนัยหนึ่งคือ **$a$ และ $b$ มีเศษเหลือเท่ากันเมื่อหารด้วย $m$** ($a \bmod m = b \bmod m$)
-
-### 3.3 คุณสมบัติการบวกและการคูณของ Congruence
-ถ้า $a \equiv b \pmod m$ และ $c \equiv d \pmod m$ แล้ว:
-1. **การบวก:** $(a + c) \equiv (b + d) \pmod m$
-2. **การคูณ:** $ac \equiv bd \pmod m$
-
----
-
-## 4. ระบบฐานเลขและการแปลงฐาน (Integer Representations & Base Conversion)
-
-### 4.1 การแทนจำนวนเต็มในฐาน $b$ (Base $b$ Expansion)
-จำนวนเต็มบวก $n$ สามารถเขียนในรูปฐาน $b$ ($b > 1$) ได้แบบเดียวเท่านั้น:
-$$n = a_k b^k + a_{k-1} b^{k-1} + \dots + a_1 b + a_0$$
-เขียนแทนด้วย $(a_k a_{k-1} \dots a_1 a_0)_b$
-
-* **Binary (ฐาน 2):** ตัวเลข $\{0, 1\}$
-* **Octal (ฐาน 8):** ตัวเลข $\{0, 1, \dots, 7\}$ (1 หลักฐาน 8 แทนเลขฐาน 2 ได้ 3 บิต)
-* **Hexadecimal (ฐาน 16):** ตัวเลข $\{0-9, A-F\}$ โดย $A=10, \dots, F=15$ (1 หลักฐาน 16 แทนเลขฐาน 2 ได้ 4 บิต)
-
-### 4.2 แอลกอฮอริทึมการแปลงฐาน (Base Conversion Algorithm)
-การแปลงจำนวนเต็ม $n$ เป็นฐาน $b$:
-1. หาร $n$ ด้วย $b$ ได้ผลหาร $q$ และเศษเหลือ $r$ ($r$ จะเป็นหลักขวาสุด)
-2. หาร $q$ ด้วย $b$ ซ้ำไปเรื่อยๆ โดยเก็บเศษเหลือไว้เป็นหลักถัดไปทางซ้าย
-3. ทำจนกระทั่งผลหาร $q = 0$
-
----
-
-## 5. การยกกำลังมอดุโลด่วน (Fast Modular Exponentiation)
-
-การคำนวณ $b^n \bmod m$ เมื่อ $n$ มีขนาดใหญ่มาก ไม่สามารถคำนวณ $b^n$ ตรงๆ ได้เนื่องจากตัวเลขจะใหญ่เกินกว่าที่หน่วยความจำของคอมพิวเตอร์จะรองรับ (Integer Overflow / Out of Memory) และทำให้การคำนวณช้ามาก
-
-### 5.1 แอลกอฮอริทึม Binary Modular Exponentiation
-1. แปลงเลขชี้กำลัง $n$ เป็นเลขฐานสอง $(a_{k-1} \dots a_1 a_0)_2$
-2. กำหนดค่าเริ่มต้น $x = 1$ และ $\text{power} = b \bmod m$
-3. วนลูปสำหรับแต่ละบิต $a_i$ ตั้งแต่บิตนัยสำคัญต่ำสุด (LSB) ไปยังบิตนัยสำคัญสูงสุด (MSB):
-   * ถ้าบิต $a_i = 1$ ให้ปรับสะสมค่า $x = (x \times \text{power}) \bmod m$
-   * อัปเดตค่ากำลังสองของฐานในรอบถัดไป: $\text{power} = (\text{power} \times \text{power}) \bmod m$
-4. คืนค่า $x$ (ใช้เวลาประมวลผลเพียง $O(\log n)$ bit operations)
-
-### 5.2 การอธิบายด้วย Python Code
-
-นี่คือตัวอย่างโค้ด Python ที่อิมพลีเมนต์แอลกอฮอริทึมข้างต้นอย่างตรงไปตรงมา:
-
-```python
-def modular_exponentiation(b, n, m):
-    """
-    คำนวณค่า (b^n) % m ด้วยวิธี Fast Modular Exponentiation (Repeated Squaring)
-    """
-    x = 1
-    power = b % m
-    
-    # วนลูปประมวลผลทีละบิตของ n จากขวาไปซ้าย (LSB -> MSB)
-    temp_n = n
-    while temp_n > 0:
-        # ตรวจสอบว่าบิตต่ำสุดปัจจุบัน (LSB) เป็น 1 หรือไม่
-        if (temp_n & 1) == 1:
-            x = (x * power) % m
-        
-        # เลื่อนบิตไปทางขวา 1 ตำแหน่ง (เท่ากับการหารสองเอาผลหาร)
-        temp_n = temp_n >> 1
-        
-        # อัปเดตค่า power สำหรับยกกำลังสองในบิตถัดไป
-        power = (power * power) % m
-        
-    return x
-
-# ตัวอย่างการใช้งาน: คำนวณ 5^600 % 13
-result = modular_exponentiation(5, 600, 13)
-print(f"ผลลัพธ์ของ 5^600 mod 13 คือ: {result}")
+```text
+Number Theory (Week 8)
+├── 1. Divisibility & Modular Arithmetic
+│   ├── 1.1 Division (a | b)
+│   │   ├── Definition: a | b iff ∃c: ac = b
+│   │   └── Theorem 1: Properties of Division
+│   ├── 1.2 Division Algorithm
+│   │   └── a = dq + r  (Euclidean Division)
+│   └── 1.3 Modular Arithmetic
+│       ├── Modulo Operator: a mod d = r
+│       ├── Congruence Modulo: a ≡ b (mod m)
+│       ├── Theorem 3: a ≡ b (mod m) ↔ a mod m = b mod m
+│       ├── Theorem 4: Properties of Congruence
+│       └── Modular Operations (Add / Mul / Exp)
+└── 2. Integer Representations [AIT/DSBA]
+    ├── 2.1 Base b Representations
+    ├── 2.2 Base Conversion Algorithm
+    └── 2.3 Fast Modular Exponentiation
 ```
 
-#### การทำงานทีละสเต็ป (Dry Run Example: $3^{11} \bmod 13$)
-* ตัวตั้งต้น: $b = 3, n = 11, m = 13$
-* แปลง $n = 11$ เป็นฐานสองได้ `1011` (มี 4 บิต: $a_0=1, a_1=1, a_2=0, a_3=1$)
-* เริ่มต้นด้วย `x = 1`, `power = 3`
+### ตารางเปรียบเทียบ Number Base ที่สำคัญในคอมพิวเตอร์
 
-1. **รอบที่ 1 (บิตที่ 0 = 1):**
-   * เนื่องจากบิตเป็น 1: `x = (1 * 3) % 13 = 3`
-   * อัปเดต `power = (3 * 3) % 13 = 9`
-   * เลื่อนบิตของ $n$ เหลือ `101` (ค่าฐานสิบคือ 5)
-
-2. **รอบที่ 2 (บิตที่ 1 = 1):**
-   * เนื่องจากบิตเป็น 1: `x = (3 * 9) % 13 = 27 % 13 = 1`
-   * อัปเดต `power = (9 * 9) % 13 = 81 % 13 = 3`
-   * เลื่อนบิตของ $n$ เหลือ `10` (ค่าฐานสิบคือ 2)
-
-3. **รอบที่ 3 (บิตที่ 2 = 0):**
-   * เนื่องจากบิตเป็น 0: ค่า `x` คงเดิมเท่ากับ `1`
-   * อัปเดต `power = (3 * 3) % 13 = 9`
-   * เลื่อนบิตของ $n$ เหลือ `1` (ค่าฐานสิบคือ 1)
-
-4. **รอบที่ 4 (บิตที่ 3 = 1):**
-   * เนื่องจากบิตเป็น 1: `x = (1 * 9) % 13 = 9`
-   * อัปเดต `power = (9 * 9) % 13 = 3`
-   * เลื่อนบิตของ $n$ เหลือ `0` (จบการวนลูป)
-
-* **ผลลัพธ์สุดท้าย:** $3^{11} \bmod 13 = 9$
+| Base | ชื่อ | Digits ที่ใช้ | ตัวอย่าง |
+| :--- | :--- | :--- | :--- |
+| 2 | Binary | 0, 1 | (1011)₂ = 11₁₀ |
+| 8 | Octal | 0–7 | (17)₈ = 15₁₀ |
+| 10 | Decimal | 0–9 | (15)₁₀ |
+| 16 | Hexadecimal | 0–9, A–F | (F)₁₆ = 15₁₀ |
 
 ---
 
-## เอกสารเชื่อมโยง (Backlinks)
-* **สัปดาห์ถัดไป:** [[Discrete Mathematics - Week 9 Primes, GCD & Cryptography]]
-* **แบบฝึกหัดทบทวนประจำสัปดาห์:** [[HW-Discrete-Math-01]]
-* **หัวข้อที่เกี่ยวข้อง:** [[Database Normalization Summary]] (การประยุกต์ใช้ Modulo ในระบบฐานข้อมูล)
+## Part 2: Module-by-Module Deep Dive
+
+### 2.1 Division (การหาร)
+
+#### นิยาม (Definition)
+
+> **Division:** ถ้า `a` และ `b` เป็นจำนวนเต็มที่ `a ≠ 0` เราบอกว่า **a หาร b** ถ้ามีจำนวนเต็ม `c` ที่ทำให้ `ac = b`
+
+```text
+สัญกรณ์ (Notation):
+  a | b    →  a หาร b ลงตัว (a divides b)
+  a ∤ b    →  a หาร b ไม่ลงตัว
+
+คำศัพท์:
+  a  =  divisor / factor / denominator (ตัวหาร)
+  b  =  dividend / numerator (ตัวตั้ง)
+  b  =  multiple of a (เมื่อ a | b)
+```
+
+ตัวอย่าง:
+- `4 | 8`   → ✅ เพราะ `4 × 2 = 8`
+- `-3 | 9`  → ✅ เพราะ `(-3) × (-3) = 9`
+- `10 | 0`  → ✅ เพราะ `10 × 0 = 0`
+- `5 | 7`   → ❌ ไม่มีจำนวนเต็ม `c` ที่ `5c = 7`
+
+---
+
+#### Theorem 1: Properties of Division
+
+ถ้า `a`, `b`, `c` เป็นจำนวนเต็มที่ `a ≠ 0` แล้ว:
+
+| กฎ | ความหมาย |
+| :--- | :--- |
+| ถ้า a or b และ a or c แล้ว a or (b + c) | ถ้าหารได้ทั้งคู่ ก็หารผลบวกได้ด้วย |
+| ถ้า a or b แล้ว a or bc สำหรับทุก c ∈ ℤ | ถ้าหาร b ได้ ก็หาร bc ได้เสมอ |
+| ถ้า a or b และ b or c แล้ว a or c | การหาร ส่งต่อ ได้ (Transitivity) |
+
+---
+
+### 2.2 Division Algorithm (Euclidean Division)
+
+> **Theorem 2:** ให้ `a ∈ ℤ` และ `d ∈ ℤ+` แล้วมี **q** และ **r** ที่ unique โดยที่ `0 ≤ r < d` และ `a = dq + r`
+
+```text
+a = dq + r
+
+  a  =  Dividend (ตัวตั้ง)
+  d  =  Divisor  (ตัวหาร)
+  q  =  Quotient (ผลหาร)   →  q = a div d
+  r  =  Remainder (เศษ)    →  r = a mod d
+```
+
+ตัวอย่าง: 101 หาร 11
+```
+101 = 11 × 9 + 2
+  q = 9, r = 2
+```
+
+ตัวอย่าง: -13 หาร 4 (กรณีตัวตั้งเป็นลบ — ปัด q ลง)
+```
+-13 = 4 × (-4) + 3
+  q = -4, r = 3  (เศษต้องไม่ติดลบ)
+```
+
+---
+
+### 2.3 Modular Arithmetic
+
+#### Modulo Operator
+
+> `a mod d = r` คือเศษที่เหลือเมื่อ `a` หารด้วย `d`; `d` เรียกว่า **modulus**
+
+สูตรสำหรับตัวเลขติดลบ:
+```
+a mod d = a - (floor(a / d) × d)
+```
+
+ตัวอย่าง: -17 mod 7
+```
+floor(-17/7) = floor(-2.43) = -3
+-17 - (-3 × 7) = -17 + 21 = 4
+ดังนั้น -17 mod 7 = 4
+```
+
+---
+
+#### Congruence Modulo (สมภาค)
+
+> **Definition:** `a ≡ b (mod m)` ถ้า `m | (a - b)`
+
+> **Theorem 3:** `a ≡ b (mod m)` ก็ต่อเมื่อ `a mod m = b mod m`
+
+| สัญกรณ์ | ชนิด | ความหมาย |
+| :--- | :--- | :--- |
+| `a ≡ b (mod m)` | Relation | a และ b สมภาคกัน mod m |
+| `a mod m = r` | Operation | ผลลัพธ์การหารเอาเศษ |
+
+ตัวอย่าง: นาฬิกา 12 ชั่วโมง
+```
+8:00 am + 6 ชั่วโมง = 14:00
+14 ≡ 2 (mod 12)  เพราะ 14 mod 12 = 2
+→ 14:00 = 2:00 pm
+```
+
+---
+
+#### Theorem 4: Congruence Properties
+
+ถ้า `a ≡ b (mod m)` และ `c ≡ d (mod m)` แล้ว:
+- `a + c ≡ b + d (mod m)` (ผลบวก)
+- `ac ≡ bd (mod m)` (ผลคูณ)
+
+---
+
+#### Modular Operations
+
+| การดำเนินการ | สูตร |
+| :--- | :--- |
+| Addition | `(a + b) mod m = ((a mod m) + (b mod m)) mod m` |
+| Multiplication | `ab mod m = ((a mod m)(b mod m)) mod m` |
+| Exponentiation | `a^b mod m = (a mod m)^b mod m` |
+
+---
+
+### 2.4 Integer Representations (การแทนค่าจำนวนเต็ม)
+
+> ทุก Positive Integer `n` สามารถเขียนในรูป: `n = a_k*b^k + ... + a_1*b + a_0` โดย `0 ≤ a_j < b`
+
+#### การแปลงจาก Base b → Decimal (ขยายค่าประจำตำแหน่ง)
+
+```
+(10101111)₂ = 1×2⁷ + 1×2⁵ + 1×2³ + 1×2² + 1×2¹ + 1×2⁰
+             = 128 + 32 + 8 + 4 + 2 + 1 = 175
+
+(7016)₈  = 7×512 + 0×64 + 1×8 + 6 = 3598
+
+(E5)₁₆   = 14×16 + 5 = 229
+```
+
+---
+
+#### Base Conversion Algorithm (Decimal → Base b)
+
+แนวคิด: หารซ้ำๆ ด้วย base เก็บเศษเป็น digit อ่านจากล่างขึ้นบน
+
+```
+Algorithm base_b_expansion(n, b):
+  q = n, k = 0
+  while q ≠ 0:
+    a_k = q mod b     // เศษคือ digit ตำแหน่งถัดไป
+    q   = q div b     // หารเพื่อลด
+    k   = k + 1
+  return (a_{k-1} ... a_1 a_0) base b
+```
+
+ตัวอย่าง: 12345 → Octal
+```
+12345 ÷ 8 = 1543 เศษ 1
+ 1543 ÷ 8 =  192 เศษ 7
+  192 ÷ 8 =   24 เศษ 0
+   24 ÷ 8 =    3 เศษ 0
+    3 ÷ 8 =    0 เศษ 3
+→ อ่านขึ้นบน: (30071)₈
+```
+
+#### Shortcut: Binary ↔ Octal ↔ Hex
+
+```
+Octal ↔ Binary:  1 octal digit = 3 binary digits
+Hex   ↔ Binary:  1 hex digit   = 4 binary digits
+
+(765)₈   = (111 110 101)₂
+(A8D)₁₆  = (1010 1000 1101)₂
+```
+
+---
+
+### 2.5 Fast Modular Exponentiation
+
+#### วิธีที่ 1: Divide and Conquer
+
+```
+ถ้า b เป็นเลขคู่:
+  a^b mod c = (a^2)^(b/2) mod c = (a^2 mod c)^(b/2) mod c
+
+ถ้า b เป็นเลขคี่:
+  a^b mod c = (a × (a^2)^((b-1)/2)) mod c
+```
+
+ตัวอย่าง: 2⁹⁰ mod 13
+```
+= (2⁵⁰ × 2⁴⁰) mod 13
+= (2⁵⁰ mod 13 × 2⁴⁰ mod 13) mod 13
+= (4 × 3) mod 13 = 12
+```
+
+#### วิธีที่ 2: Fast Modular Exponentiation (Binary Method)
+
+```
+Algorithm modular_expo(b, n=(a_{k-1}...a_1 a_0)₂, m):
+  x = 1
+  power = b mod m
+  for i in range(0, k):
+    if a_i = 1 then x = (x × power) mod m
+    power = (power × power) mod m
+  return x   // x = b^n mod m
+
+Complexity: O((log m)² log n)
+```
+
+ตัวอย่าง: 3^644 mod 645
+```
+644 = (1010000100)₂
+คำนวณ power: 3¹, 3², 3⁴, ... (แต่ละขั้น mod 645)
+คูณรวมเฉพาะที่ bit = 1
+```
+
+---
+
+## Part 3: Quick Reference & Exam Cheat Sheet
+
+### Checklist สรุปหัวใจสำคัญก่อนสอบ
+
+- [ ] **Division:** `a | b` iff ∃c ∈ ℤ such that `b = ac`
+- [ ] **Division Algorithm:** `a = dq + r`, `0 ≤ r < d`, `q = a div d`, `r = a mod d`
+- [ ] **Mod negative:** `a mod d = a - floor(a/d)×d` (เศษต้องเป็น non-negative)
+- [ ] **Congruence:** `a ≡ b (mod m)` iff `m | (a - b)` iff `a mod m = b mod m`
+- [ ] **Properties:** ถ้า `a ≡ b` และ `c ≡ d` แล้ว `a+c ≡ b+d` และ `ac ≡ bd` (mod m)
+- [ ] **Modular Ops:** ทำ mod ก่อน ค่อยบวก/คูณ แล้ว mod อีกครั้ง
+- [ ] **Base Conversion:** หารซ้ำด้วย base, เก็บเศษ, อ่านจากล่างขึ้นบน
+- [ ] **Hex shortcut:** 1 hex digit = 4 binary digits; 1 octal = 3 binary
+- [ ] **Fast Expo:** ใช้ binary expansion ของ exponent, คูณสะสมเฉพาะที่ bit = 1
+
+### สรุปสูตร / Notation ที่สำคัญ
+
+| Notation | ความหมาย |
+| :--- | :--- |
+| `a or b` (a divides b) | a หาร b ลงตัว |
+| `a = dq + r` | Division Algorithm |
+| `q = a div d` | ผลหาร (Quotient) |
+| `r = a mod d` | เศษ (Remainder) |
+| `a ≡ b (mod m)` | a สมภาคกับ b (Congruence) |
+| `(a_k...a_0) base b` | Base b Representation |
+
+### Concept Map
+
+```text
+Number Theory (Week 8)
+│
+├── Division (a | b)
+│   └── Division Algorithm: a = dq + r
+│       ├── q = a div d
+│       └── r = a mod d
+│
+├── Modular Arithmetic
+│   ├── a mod d = r
+│   ├── Congruence: a ≡ b (mod m)
+│   │   ↔ m | (a-b)
+│   │   ↔ a mod m = b mod m
+│   └── Operations: Add / Mul / Exp (mod m)
+│
+└── Integer Representations
+    ├── Base b → Decimal: positional expansion
+    ├── Decimal → Base b: successive division
+    └── Fast Expo: binary expansion of exponent
+```
+
+---
+
+## ⚠️ Common Pitfalls & Exam Traps
+
+- **`a mod d` กับ `a ≡ b (mod m)` ต่างกัน:** `mod` ตัวแรกคือ Operation ให้ผลเป็นตัวเลข ตัวหลังคือ Relation ระหว่างสองจำนวน — อย่าสับสนสัญลักษณ์ `mod` ทั้งสองแบบ
+- **เศษจากการหารต้องไม่ติดลบ (0 ≤ r < d):** เมื่อ `a` เป็นลบ ต้องปัด quotient ลง (floor) — เช่น `-13 = 4×(-4) + 3` ไม่ใช่ `4×(-3) + (-1)`
+- **Base Conversion อ่านจากล่างขึ้นบน:** เศษแรกที่ได้คือ Least Significant Digit (LSD) ไม่ใช่ Most Significant Digit
+- **Fast Modular Expo ต้องทำ mod ทุกขั้น:** หากลืม mod ระหว่าง iteration ตัวเลขจะ overflow — ต้อง `power = (power × power) mod m` ทุกรอบ
+- **Hex digits A-F คือ 10-15:** เวลาคำนวณ `(2AE0B)₁₆` → A=10, E=14, B=11 อย่าลืมแทนค่าก่อนคำนวณ
+
+---
+
+## เอกสารเชื่อมโยง (Wiki-Style Backlinks)
+
+- **วิชาและหัวข้อที่เกี่ยวข้อง:**
+  - [[Discrete Mathematics - Week 9 Primes, GCD & Cryptography]] (เนื้อหาต่อเนื่อง Week 8 — Prime Numbers, GCD, และการประยุกต์ Modular Arithmetic ใน Cryptography)
+  - [[Discrete Mathematics - Week 10 Relations]] (Congruence Modulo เป็นตัวอย่างของ Equivalence Relation)
+
+- **แหล่งข้อมูล:**
+  - Source: `Resources/Books/Discrete Mathematics/myDiscrete_Week8.pdf` (54 slides, Dr. Sirasit Lochanachit)
