@@ -242,61 +242,111 @@ Discrete Mathematics - Week 10 Relations.md
 
 ## 6. Source Extraction Workflow (PDF/Slides)
 
-When the source is a PDF or slide deck, follow this **exact workflow** — no exceptions:
+When the source is a PDF or slide deck, follow this **Docling-first pipeline**:
 
 ```text
-STEP 1: CHECK tools availability
+             User
+               │
+               ▼
+        ┌──────────────┐
+        │ AIOS Manager │
+        └──────┬───────┘
+               │
+               ▼
+       ┌────────────────┐
+       │ learning-tutor │
+       └───────┬────────┘
+               │
+        Need document?
+               │
+               ▼
+        ┌──────────────┐
+        │    Docling   │
+        │     MCP      │
+        └──────┬───────┘
+               │
+               ▼
+      Structured Document
+               │
+               ▼
+       learning-tutor
+               │
+        Understand/Teach
+               │
+               ▼
+     how-to-write-note
+               │
+               ▼
+       AIOS Course Note
+```
+
+### Step-by-Step Workflow
+
+```text
+STEP 1: TRY Docling MCP (Primary)
 ─────────────────────────────────────────────────────
-python -c "import pymupdf; print('PyMuPDF OK')"
+Use convert_document_into_docling_document to extract the PDF.
+→ Returns a document_key for the cached result.
 
-If NOT available:
-  → python -c "from pypdf import PdfReader; print('pypdf OK')"
+Use get_overview_of_document_anchors to inspect structure.
+Use export_docling_document_to_markdown for full text content.
+Use page_thumbnail to inspect visual pages when needed.
 
-NEVER use browser_subagent to open local PDF — Playwright
-may not be installed on this machine.
-
-
-STEP 2: EXTRACT to scratch file (UTF-8, mandatory)
+STEP 2: VERIFY extraction quality
 ─────────────────────────────────────────────────────
-python -c "
-import pymupdf, sys
-sys.stdout.reconfigure(encoding='utf-8')
-doc = pymupdf.open(r'[ABSOLUTE_PATH_TO_PDF]')
-print(f'Total pages: {len(doc)}')
-out = r'C:/Users/sirav/.gemini/antigravity-ide/brain/[CONV_ID]/scratch/[name]_raw.txt'
-with open(out, 'w', encoding='utf-8') as f:
-    for i, page in enumerate(doc):
-        f.write(f'=== PAGE {i+1} ===\n{page.get_text()}\n')
-doc.close()
-print('Done:', out)
-"
+Check that headings, tables, and body text are present.
+If Thai text is garbled or content is missing, flag it.
+Never assume extraction is complete without verification.
 
-NEVER pipe output directly to terminal — Thai text causes
-cp874 UnicodeEncodeError on Windows. Always write to file first.
-
-
-STEP 3: READ temp file in chunks
+STEP 3: FALLBACK — PyMuPDF / pypdf (if Docling unavailable)
 ─────────────────────────────────────────────────────
-view_file(StartLine=1, EndLine=200)
-view_file(StartLine=200, EndLine=400)
-... repeat until all pages are read
+If Docling MCP is unavailable or fails:
 
+  python -c "import pymupdf; print('PyMuPDF OK')"
+  → If available, extract text page-by-page to a scratch file (UTF-8).
+
+  python -c "from pypdf import PdfReader; print('pypdf OK')"
+  → Use as secondary fallback.
+
+  NEVER pipe output directly to terminal — Thai text causes
+  cp874 UnicodeEncodeError on Windows. Always write to file first.
 
 STEP 4: MAP content → note structure
 ─────────────────────────────────────────────────────
 Identify: chapter title, learning objectives, sections, key concepts,
-tables, examples, diagrams, constraints, formulas
+tables, examples, diagrams, constraints, formulas.
+learning-tutor analyzes and understands the content.
 
-
-STEP 5: WRITE note file
+STEP 5: WRITE note file (via how-to-write-note)
 ─────────────────────────────────────────────────────
 write_to_file to AIOS/01 Learning/Courses/[Subject]/[FileName].md
 
-
 STEP 6: VERIFY
 ─────────────────────────────────────────────────────
-Confirm file exists, backlinks are correct [[wikilink]] format
+Confirm file exists, backlinks are correct [[wikilink]] format.
 ```
+
+### Docling MCP Tool Reference
+
+| Tool | Purpose |
+|------|---------|
+| `convert_document_into_docling_document` | Convert PDF → structured cache |
+| `get_overview_of_document_anchors` | Inspect document structure & headings |
+| `export_docling_document_to_markdown` | Export full Markdown text |
+| `page_thumbnail` | Inspect visual layout, diagrams, tables |
+| `search_for_text_in_document_anchors` | Find specific sections |
+| `get_text_of_document_item_at_anchor` | Read a specific section |
+
+### Role Boundaries (Critical)
+
+| Role | Responsibility |
+|------|---------------|
+| **Docling MCP** | PDF extraction only — structured text, tables, figures |
+| **learning-tutor** | Understand, analyze, explain, and teach the content |
+| **how-to-write-note** | Note structure, formatting, canonical form |
+| **aios-manager** | Orchestration, routing, coordination |
+
+Docling is a **document-processing tool**, not the teaching or note-writing authority.
 
 ### Windows PowerShell Gotchas (CRITICAL)
 | ❌ Wrong (Linux) | ✅ Correct (Windows PowerShell) |

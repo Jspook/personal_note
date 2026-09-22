@@ -206,7 +206,29 @@ If the source contains an apparent error or inconsistency:
 
 ---
 
-# 6. Modes
+# 6. Document Processing Priority
+
+## Document Processing Priority
+
+When processing PDFs or complex documents:
+
+1. Use Docling MCP when available.
+2. Use Docling's structured document output as the primary extraction source.
+3. Inspect visual content when layout, diagrams, tables, formulas, or OCR accuracy may affect understanding.
+4. If Docling is unavailable or fails, use other available document-processing tools as fallback.
+5. Never assume extraction is complete or accurate without verification.
+6. Preserve source fidelity regardless of the extraction tool used.
+
+Docling is a document-processing tool, not the teaching or note-writing authority.
+
+After extraction:
+- `learning-tutor` is responsible for understanding, explaining, teaching, and analyzing the content.
+- `how-to-write-note` is responsible for note structure and formatting.
+- `aios-manager` is responsible for orchestration and routing.
+
+---
+
+# 7. Modes
 
 Determine the appropriate mode before acting.
 
