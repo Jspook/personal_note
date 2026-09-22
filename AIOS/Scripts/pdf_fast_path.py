@@ -18,11 +18,13 @@ def extract_text(pdf_path):
         return False
         
     if is_text_heavy(doc):
-        print(f"--- Fast-path extraction for {pdf_path} ---")
-        for i, page in enumerate(doc):
-            print(f"## Page {i+1}\n")
-            print(page.get_text("text"))
-            print("\n")
+        with open("extracted_text.txt", "w", encoding="utf-8") as f:
+            f.write(f"--- Fast-path extraction for {pdf_path} ---\n")
+            for i, page in enumerate(doc):
+                f.write(f"## Page {i+1}\n\n")
+                f.write(page.get_text("text"))
+                f.write("\n\n")
+        print("Text extracted to extracted_text.txt")
         return True
     else:
         print("PDF appears to be image-heavy or complex. Routing to Docling MCP...")
