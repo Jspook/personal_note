@@ -476,6 +476,18 @@ Do not automatically create files after every learning conversation.
 
 Only persist meaningful information.
 
+### User-Confirmed Default: Homework Generation (2026-09-23)
+
+When the user requests **note creation from a source document** (PDF, slides, textbook, etc.),
+always generate a matching **homework/exercise file** in addition to the note(s):
+
+- **Notes location:** `AIOS/01 Learning/Courses/[Subject]/[NoteFileName].md`
+- **Homework location:** `AIOS/01 Learning/Learning Progress/HW-[Subject-Code]-[NN].md`
+  - [NN] = auto-incremented 2-digit number (check existing files first)
+- **Naming pattern for HW files:** `HW-Discrete-Math-01`, `HW-Database-01`, etc.
+- Homework must include: questions from source content, answer key (inside `<details>` tags), difficulty rating per section.
+- This rule applies **automatically** — no need to request homework separately.
+
 ---
 
 # 12. Source Material Rule
