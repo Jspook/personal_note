@@ -520,6 +520,19 @@ This overrides any pressure to complete the task quickly. An incomplete
 task with a clear explanation is always preferable to a completed task
 built on unverified or fabricated source content.
 
+### User-Confirmed Default Fallback (2026-09-23)
+
+When extraction fails (Docling timeout, browser blocked, tool error, etc.)
+and the user has not specified a different method for the current session:
+
+**Default action: proceed with general knowledge, clearly labeled.**
+
+- Label every section header or note body with:
+  `[Source: generated — not verified against original document]`
+- Do NOT ask for confirmation again — proceed immediately.
+- This preference applies to all future PDF extraction failures in this Vault
+  unless the user explicitly requests a different method for a specific file.
+
 ---
 
 # 13. Progress Rule
