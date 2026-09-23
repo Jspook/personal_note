@@ -44,7 +44,7 @@
 ### 2.2 โครงสร้าง EJS Partial Templates
 * **Partials:** เทคนิคการแยกโค้ด HTML ส่วนย่อยที่ใช้งานซ้ำในหลายๆ หน้าออกเป็นไฟล์แม่แบบย่อย
 * **ไวยากรณ์การดึง Partials:**
-  $$\text{\texttt{<\%- include('partials/header') \%>}}$$
+  `<%- include('partials/header') %>`
   *(ต้องใช้แท็ก `<%-` แบบ Unescaped Output เพื่อให้เบราว์เซอร์ตีความโครงสร้างโค้ด HTML ดิบ)*
 
 ---

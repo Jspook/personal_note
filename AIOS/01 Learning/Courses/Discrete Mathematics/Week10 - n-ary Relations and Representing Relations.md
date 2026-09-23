@@ -104,7 +104,8 @@ R = {(Ash, 231455, IT), (Blue, 888323, IT), (Green, 102147, DSBA)}
 
 > ให้ $R$ เป็น relation จาก $A = \{a_1, \ldots, a_m\}$ ไปยัง $B = \{b_1, \ldots, b_n\}$
 > แทน $R$ ด้วย **matrix** $M_R = [m_{ij}]$ ขนาด $m \times n$ โดยที่:
-> $$m_{ij} = \begin{cases} 1 & \text{ถ้า } (a_i, b_j) \in R \\ 0 & \text{ถ้า } (a_i, b_j) \notin R \end{cases}$$
+
+$$m_{ij} = \begin{cases} 1 & \text{ถ้า } (a_i, b_j) \in R \\ 0 & \text{ถ้า } (a_i, b_j) \notin R \end{cases}$$
 
 **ตัวอย่าง:** $A = \{1, 2, 3\}$, $B = \{1, 2\}$, $R = \{(a,b) \mid a > b\}$
 

@@ -25,7 +25,8 @@ Properties of Relations
 ### 1. Reflexive Relations (ความสัมพันธ์แบบ Reflexive)
 
 > **นิยาม:** $R$ เป็น **reflexive** ถ้า $(a, a) \in R$ สำหรับทุก $a \in A$
-> $$\forall a \big[(a, a) \in R\big]$$
+
+$$\forall a \big[(a, a) \in R\big]$$
 
 ทุก element ต้องสัมพันธ์กับ **ตัวเอง**
 
@@ -56,7 +57,8 @@ Properties of Relations
 ### 2. Symmetric Relations (ความสัมพันธ์แบบ Symmetric)
 
 > **นิยาม:** $R$ เป็น **symmetric** ถ้า $(b,a) \in R$ ทุกครั้งที่ $(a,b) \in R$
-> $$\forall a \forall b \big[(a,b) \in R \rightarrow (b,a) \in R\big]$$
+
+$$\forall a \forall b \big[(a,b) \in R \rightarrow (b,a) \in R\big]$$
 
 ถ้า a สัมพันธ์กับ b แล้ว b ต้องสัมพันธ์กับ a ด้วย → ความสัมพันธ์แบบ **mutual** (เช่น เพื่อน)
 
@@ -87,7 +89,8 @@ Properties of Relations
 ### 3. Antisymmetric Relations (ความสัมพันธ์แบบ Antisymmetric)
 
 > **นิยาม:** $R$ เป็น **antisymmetric** ถ้า $(a,b) \in R$ และ $(b,a) \in R$ แล้ว $a = b$
-> $$\forall a \forall b \big[(a,b) \in R \wedge (b,a) \in R \rightarrow (a = b)\big]$$
+
+$$\forall a \forall b \big[(a,b) \in R \wedge (b,a) \in R \rightarrow (a = b)\big]$$
 
 กล่าวอีกนัยหนึ่ง: ไม่มีสอง element ต่างกันที่ **สัมพันธ์กันทั้งสองทาง**
 
@@ -120,7 +123,8 @@ Properties of Relations
 ### 4. Transitive Relations (ความสัมพันธ์แบบ Transitive)
 
 > **นิยาม:** $R$ เป็น **transitive** ถ้าเมื่อ $(a,b) \in R$ และ $(b,c) \in R$ แล้ว $(a,c) \in R$
-> $$\forall a \forall b \forall c \big[(a,b) \in R \wedge (b,c) \in R \rightarrow (a,c) \in R\big]$$
+
+$$\forall a \forall b \forall c \big[(a,b) \in R \wedge (b,c) \in R \rightarrow (a,c) \in R\big]$$
 
 ถ้า a→b และ b→c แล้ว a→c ต้องมีด้วย (เหมือน "การเดินทางผ่าน")
 
@@ -165,7 +169,8 @@ Properties of Relations
 
 > **นิยาม:** ให้ $R$ เป็น equivalence relation บน $A$
 > **Equivalence class** ของ $a$ คือเซตของ element ทั้งหมดที่สัมพันธ์กับ $a$:
-> $$[a]_R = \{s \mid (a, s) \in R\}$$
+
+$$[a]_R = \{s \mid (a, s) \in R\}$$
 
 - ทุก element ใน class สามารถเป็น **representative** ของ class ได้
 - Equivalence classes จะ **แบ่งเซต** ออกเป็น disjoint subsets (partition)
