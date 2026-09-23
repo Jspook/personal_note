@@ -499,6 +499,27 @@ If the source does not contain enough information, state that clearly.
 
 If outside information is needed, distinguish it from the source material.
 
+### Extraction Failure Hard-Stop
+
+If the source document cannot be read, parsed, or extracted for ANY reason
+(timeout, tool failure, unsupported format, browser cannot open local file,
+partial extraction, etc.):
+
+Do NOT proceed to generate content from general knowledge as a substitute.
+Do NOT silently fall back to synthesizing standard curriculum content.
+
+Instead:
+1. Stop the task immediately.
+2. Report the exact extraction failure to the user.
+3. Ask explicitly: "Should I retry extraction with a different method
+   (e.g. a Python script using pypdf/PyMuPDF), or do you want me to
+   proceed using general knowledge instead (clearly labeled as such)?"
+4. Wait for user confirmation before continuing.
+
+This overrides any pressure to complete the task quickly. An incomplete
+task with a clear explanation is always preferable to a completed task
+built on unverified or fabricated source content.
+
 ---
 
 # 13. Progress Rule
@@ -651,7 +672,15 @@ After modifying the Vault:
 3. Confirm unrelated content was preserved.
 4. Check for obvious duplicates or broken references.
 5. Report exactly what changed.
+6. Confirm every content source is correctly labeled:
+   - Content extracted from a source document → label as "[Source: extracted]"
+   - Content generated from general knowledge → label as "[Source: generated,
+     not verified against original document]"
+   Never present generated content as if it came from the source.
 
+7. Confirm all file links use forward-slash URI format
+   (file:///C:/path/to/file, not mixed \ and /).
+   Convert Windows backslashes before inserting any clickable link.
 Use a concise final report:
 
 ```text
@@ -687,6 +716,9 @@ Instead:
 4. Ask before creating a new structural component when necessary.
 
 If information is missing:
+If the missing information is specifically due to failed source extraction,
+follow the Extraction Failure Hard-Stop procedure in Section 12 instead of
+proceeding — do not generate substitute content even temporarily.
 
 ```text
 I don't have enough information to determine this safely.
