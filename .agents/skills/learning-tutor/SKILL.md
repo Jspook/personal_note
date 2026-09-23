@@ -212,14 +212,17 @@ If the source contains an apparent error or inconsistency:
 
 When processing PDFs or complex documents:
 
-1. Use Docling MCP when available.
-2. Use Docling's structured document output as the primary extraction source.
+1. **Pre-Inspect File:** Check file type, page count, and layout structure (Paper/Textbook vs. Lecture Slides/Worksheet).
+2. **Select Appropriate Tool:**
+   - *Textbook / Academic Paper / Multi-column / Complex Tables:* Use **Docling MCP** (primary for structured docs).
+   - *Lecture Slides / Lab Worksheet / High Page Count (> 25 pages):* Use **PyMuPDF / pypdf** (fast, avoids timeouts on free-form layouts).
+   - *Scanned Image / Diagram-heavy:* Use **Visual Page Render / Vision tools**.
 3. Inspect visual content when layout, diagrams, tables, formulas, or OCR accuracy may affect understanding.
-4. If Docling is unavailable or fails, use other available document-processing tools as fallback.
+4. If the selected tool fails, follow the fallback cascade (Fast script → Labeled general knowledge fallback).
 5. Never assume extraction is complete or accurate without verification.
 6. Preserve source fidelity regardless of the extraction tool used.
 
-Docling is a document-processing tool, not the teaching or note-writing authority.
+Docling / PDF parsers are **document-processing tools**, not the teaching or note-writing authority.
 
 After extraction:
 - `learning-tutor` is responsible for understanding, explaining, teaching, and analyzing the content.

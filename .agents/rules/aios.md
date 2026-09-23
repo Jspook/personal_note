@@ -62,10 +62,10 @@ For academic notes, follow this pipeline:
 User Request
   │
   ▼
-AIOS Manager ──► learning-tutor ──(Need doc?)──► Docling MCP (extract structured content)
+AIOS Manager ──► learning-tutor ──(Need doc?)──► File Pre-Inspection (Check Type / Length / Layout)
                        │                               │
                        ▼                               ▼
-                 Understand/Teach ◄────────────── Structured Output
+                 Understand/Teach ◄────────────── Extraction Tool (Docling / PyMuPDF / Vision)
                        │
                        ▼
                how-to-write-note (apply canonical structure & backlinks)
@@ -74,9 +74,14 @@ AIOS Manager ──► learning-tutor ──(Need doc?)──► Docling MCP (ex
                Plan → Confirm → Write → Verify
 ```
 
+- **File Pre-Inspection:** ก่อนดึงข้อมูล ต้องตรวจสอบลักษณะไฟล์:
+  - *Textbook / Paper / Complex Table / Multi-column:* ➡️ ใช้ **Docling MCP** (โครงสร้าง Markdown สวยงาม)
+  - *Lecture Slides / Lab Handout / High Page Count (> 25 หน้า):* ➡️ ใช้ **PyMuPDF / pypdf** (เร็ว ป้องกัน timeout)
+  - *Image / Scanned Diagram:* ➡️ ใช้ **Visual Render / Multimodal Vision**
+  - *Extraction Failure:* ➡️ ใช้ **General Knowledge Fallback** (ระบุ label ชัดเจน)
 - `learning-tutor` controls **what the content means and how it should be taught**.
 - `how-to-write-note` controls **how persistent academic content is structured and formatted**.
-- `Docling MCP` handles **raw document extraction** only.
+- Document tools handle **raw document extraction** only.
 
 ---
 

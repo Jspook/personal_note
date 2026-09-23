@@ -283,14 +283,32 @@ When the source is a PDF or slide deck, follow this **Docling-first pipeline**:
 ### Step-by-Step Workflow
 
 ```text
-STEP 1: TRY Docling MCP (Primary)
+STEP 0: PRE-INSPECTION & TOOL SELECTION (ตรวจสอบไฟล์ก่อนเลือกเครื่องมือ)
 ─────────────────────────────────────────────────────
-Use convert_document_into_docling_document to extract the PDF.
-→ Returns a document_key for the cached result.
+Inspect the file characteristics (type, page count, layout) before selecting an extraction tool:
 
-Use get_overview_of_document_anchors to inspect structure.
-Use export_docling_document_to_markdown for full text content.
-Use page_thumbnail to inspect visual pages when needed.
+┌──────────────────────────────────────────────┬───────────────────────────────┐
+│ File Type & Characteristics                  │ Recommended Extraction Tool   │
+├──────────────────────────────────────────────┼───────────────────────────────┤
+│ 1. Textbooks / Papers / Formal Reports       │ Docling MCP                   │
+│    (Multi-column, complex tables, math)      │ (Best for structured docs)    │
+├──────────────────────────────────────────────┼───────────────────────────────┤
+│ 2. Lecture Slides / Lab Worksheets /         │ PyMuPDF / pypdf (Python)      │
+│    Presentation Decks / High Page Count      │ (Fast, prevents timeout on    │
+│    (> 25 pages)                              │ free-form / slide layouts)    │
+├──────────────────────────────────────────────┼───────────────────────────────┤
+│ 3. Scanned PDFs / Diagram-heavy              │ Visual Page Render / Vision   │
+├──────────────────────────────────────────────┼───────────────────────────────┤
+│ 4. Extraction Failure / Unreadable File      │ Labeled General Knowledge     │
+│                                              │ Fallback                      │
+└──────────────────────────────────────────────┴───────────────────────────────┘
+
+STEP 1: EXECUTE SELECTED EXTRACTION METHOD
+─────────────────────────────────────────────────────
+• If Docling selected:
+  Use convert_document_into_docling_document → export_docling_document_to_markdown.
+• If PyMuPDF/pypdf selected:
+  Extract page text to scratch file (UTF-8, avoid terminal print to prevent cp874 error).
 
 STEP 2: VERIFY extraction quality
 ─────────────────────────────────────────────────────
@@ -298,18 +316,11 @@ Check that headings, tables, and body text are present.
 If Thai text is garbled or content is missing, flag it.
 Never assume extraction is complete without verification.
 
-STEP 3: FALLBACK — PyMuPDF / pypdf (if Docling unavailable)
+STEP 3: FALLBACK CASCADE (if selected method fails)
 ─────────────────────────────────────────────────────
-If Docling MCP is unavailable or fails:
-
-  python -c "import pymupdf; print('PyMuPDF OK')"
-  → If available, extract text page-by-page to a scratch file (UTF-8).
-
-  python -c "from pypdf import PdfReader; print('pypdf OK')"
-  → Use as secondary fallback.
-
-  NEVER pipe output directly to terminal — Thai text causes
-  cp874 UnicodeEncodeError on Windows. Always write to file first.
+If Primary method fails/timeouts:
+1. Fallback to PyMuPDF / pypdf (if Docling failed).
+2. If all extraction fails: follow User-Confirmed Fallback (General Knowledge labeled).
 
 STEP 4: MAP content → note structure
 ─────────────────────────────────────────────────────

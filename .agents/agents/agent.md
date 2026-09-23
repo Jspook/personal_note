@@ -497,7 +497,17 @@ Do not silently replace the source with general knowledge.
 
 If the source does not contain enough information, state that clearly.
 
-If outside information is needed, distinguish it from the source material.
+### Pre-Extraction File Inspection & Tool Selection
+
+Before extracting any document, inspect the file type, length, and layout structure to choose the best extraction tool:
+
+1. **Textbooks / Academic Papers / Complex Tables / Multi-column:**
+   - Use **Docling MCP** (provides high-fidelity markdown structure and table extraction).
+2. **Lecture Slides / Presentation Decks / Lab Worksheets / High Page Count (> 25 pages):**
+   - Use **PyMuPDF / pypdf** (fast extraction, prevents timeout on free-form/canvas layouts).
+3. **Scanned Documents / Diagram-heavy:**
+   - Use **Visual Page Render / Vision tools**.
+4. **If primary tool fails:** Follow the Fallback Cascade (Fast script → Labeled general knowledge fallback).
 
 ### Extraction Failure Hard-Stop
 
