@@ -39,7 +39,7 @@ Outer Query (คำถามหลัก)
 
 ### 2.1 Single-Row Subquery
 
-> **Single-Row Subquery** คือ Subquery ที่ return ค่า **เพียง 1 ค่า (scalar)** ใช้กับ Comparison Operators ทั่วไป เช่น `=`, `>`, `<`, `!=`
+> > **Single-Row Subquery** คือ Subquery ที่ return ค่า **เพียง 1 ค่า (scalar)** ใช้กับ Comparison Operators ทั่วไป เช่น `=, >, <, !=`
 
 ```sql
 -- Syntax
