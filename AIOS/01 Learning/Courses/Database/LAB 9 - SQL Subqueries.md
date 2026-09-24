@@ -150,7 +150,7 @@ WHERE salary > ALL (
 | :--- | :--- | :--- |
 | `> ANY` | สูงกว่าค่าใดค่าหนึ่ง | `> MIN(subquery)` |
 | `< ANY` | ต่ำกว่าค่าใดค่าหนึ่ง | `< MAX(subquery)` |
-| `= ANY` | เท่ากับค่าใดค่าหนึ่ง | `IN (subquery)` |
+| `=` `ANY` | เท่ากับค่าใดค่าหนึ่ง | `IN (subquery)` |
 | `> ALL` | สูงกว่าทุกค่า | `> MAX(subquery)` |
 | `< ALL` | ต่ำกว่าทุกค่า | `< MIN(subquery)` |
 | `!= ALL` | ไม่เท่ากับทุกค่า | `NOT IN (subquery)` |
@@ -264,7 +264,7 @@ FROM employees;
 
 | ประเภท | Syntax | Operators ที่ใช้ได้ |
 | :--- | :--- | :--- |
-| Single-Row | `WHERE col = (SELECT single FROM ...)` | `= != < > <= >=` |
+| Single-Row | `WHERE col = (SELECT single FROM ...)` | `=`, `!=`, `<`, `>`, `<=`, `>=` |
 | Multi-Row IN | `WHERE col IN (SELECT multi FROM ...)` | `IN`, `NOT IN` |
 | Multi-Row ANY | `WHERE col > ANY (SELECT ...)` | `> < >= <= = !=` + ANY |
 | Multi-Row ALL | `WHERE col > ALL (SELECT ...)` | `> < >= <= = !=` + ALL |

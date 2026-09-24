@@ -27,14 +27,14 @@ Result Set
 
 ### ตารางเปรียบเทียบ Operator ที่ใช้ใน WHERE
 
-| กลุ่ม | Operator | ตัวอย่าง |
-| :--- | :--- | :--- |
-| **Comparison** | `= != < > <= >=` | `salary > 5000` |
-| **Range** | `BETWEEN ... AND ...` | `salary BETWEEN 3000 AND 8000` |
-| **List** | `IN (...)`, `NOT IN (...)` | `dept_id IN (10, 20, 30)` |
-| **Pattern** | `LIKE`, `NOT LIKE` | `last_name LIKE 'S%'` |
-| **NULL check** | `IS NULL`, `IS NOT NULL` | `manager_id IS NULL` |
-| **Logical** | `AND`, `OR`, `NOT` | `salary > 5000 AND dept_id = 10` |
+| กลุ่ม          | Operator                        | ตัวอย่าง                         |
+| :------------- | :------------------------------ | :------------------------------- |
+| **Comparison** | `=`, `!=`, `<`, `>`, `<=`, `>=` | `salary > 5000`                  |
+| **Range**      | `BETWEEN ... AND ...`           | `salary BETWEEN 3000 AND 8000`   |
+| **List**       | `IN (...)`, `NOT IN (...)`      | `dept_id IN (10, 20, 30)`        |
+| **Pattern**    | `LIKE`, `NOT LIKE`              | `last_name LIKE 'S%'`            |
+| **NULL check** | `IS NULL`, `IS NOT NULL`        | `manager_id IS NULL`             |
+| **Logical**    | `AND`, `OR`, `NOT`              | `salary > 5000 AND dept_id = 10` |
 
 ---
 
@@ -187,7 +187,7 @@ WHERE UPPER(first_name) LIKE '%A%';
 ### 2.5 IS NULL และ IS NOT NULL
 
 > `NULL` คือค่าที่ **ไม่ทราบ / ไม่มีข้อมูล** — ไม่ใช่ 0 หรือ empty string
-> **ใช้ `= NULL` ไม่ได้เด็ดขาด** ต้องใช้ `IS NULL` เท่านั้น
+> **ใช้ `col = NULL` ไม่ได้เด็ดขาด** ต้องใช้ `IS NULL` เท่านั้น
 
 ```sql
 -- ✅ ถูกต้อง
@@ -317,11 +317,11 @@ ORDER BY salary DESC, last_name ASC;     -- ORDER BY
 
 ### Checklist สรุปหัวใจสำคัญก่อนสอบ
 
-- [ ] **Comparison operators:** `= != <> > < >= <=` — ใช้ได้กับ number, string, date
+- [ ] **Comparison operators:** `=`, `!=`, `<>`, `>`, `<`, `>=`, `<=` — ใช้ได้กับ number, string, date
 - [ ] **BETWEEN:** inclusive ทั้งสองขอบ — `BETWEEN 5000 AND 10000` รวม 5000 และ 10000
-- [ ] **IN:** เทียบเท่า OR หลายตัว — `IN (10, 20, 30)` = `= 10 OR = 20 OR = 30`
+- [ ] **IN:** เทียบเท่า OR หลายตัว — `IN (10, 20, 30)` เทียบเท่า `col = 10 OR col = 20 OR col = 30`
 - [ ] **LIKE Wildcards:** `%` = หลายตัว, `_` = 1 ตัวพอดี
-- [ ] **NULL:** ใช้ `IS NULL` / `IS NOT NULL` เท่านั้น — ห้ามใช้ `= NULL`
+- [ ] **NULL:** ใช้ `IS NULL` / `IS NOT NULL` เท่านั้น — ห้ามใช้ `col = NULL`
 - [ ] **AND vs OR Precedence:** AND มีลำดับสูงกว่า OR — ใช้วงเล็บถ้าไม่แน่ใจ
 - [ ] **ORDER BY:** ASC (default), DESC — อยู่ท้ายสุดของ query เสมอ
 
@@ -352,7 +352,7 @@ ORDER BY col1 DESC, col2 ASC;            -- Sort
 
 ## ⚠️ Common Pitfalls & Exam Traps
 
-- **`= NULL` ใช้ไม่ได้:** `WHERE column = NULL` จะ return 0 แถวเสมอ เพราะ NULL ไม่เท่ากับอะไรแม้แต่ NULL เอง — ใช้ `IS NULL` เท่านั้น
+- **`col = NULL` ใช้ไม่ได้:** `WHERE column = NULL` จะ return 0 แถวเสมอ เพราะ NULL ไม่เท่ากับอะไรแม้แต่ NULL เอง — ใช้ `IS NULL` เท่านั้น
 - **BETWEEN เป็น inclusive:** `BETWEEN 5000 AND 10000` รวม 5000 และ 10000 ในผลลัพธ์ด้วย
 - **LIKE case-sensitive ใน Oracle:** `LIKE 'smith%'` ≠ `LIKE 'Smith%'` — ใช้ `UPPER()` หรือ `LOWER()` ถ้าต้องการ case-insensitive
 - **AND มี precedence สูงกว่า OR:** `WHERE a OR b AND c` = `WHERE a OR (b AND c)` ไม่ใช่ `WHERE (a OR b) AND c` — ใส่วงเล็บเสมอ
