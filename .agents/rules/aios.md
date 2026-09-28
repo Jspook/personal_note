@@ -98,8 +98,10 @@ If asked to summarize a document, that source is the primary basis. Do not silen
 ---
 
 ## 7. Source Fidelity
-**Preserve:** Terminology, meaning, important distinctions, organization, examples, and appropriate detail level.  
-**Do NOT:** Invent missing info, silently correct errors, alter meaning for templates, or present external info as source-derived.  
+**Preserve:** Terminology, meaning, important distinctions, organization, examples, diagrams, attached images (`<img>` / sample outputs), and appropriate detail level.  
+**Do NOT:** Invent missing info, silently correct errors, alter meaning for templates, present external info as source-derived, or strip media/images during HTML/Markdown cleaning.  
+
+- **Media & Attachment Preservation:** เมื่อนำเข้าหรือแปลงข้อมูลจาก Web Clipping / HTML / แหล่งอ้างอิง ห้ามลบแท็กรูปภาพ `<img>` หรือลิงก์มีเดียทิ้งอย่างเด็ดขาด หากมีภาพตัวอย่างผลลัพธ์หรือไดอะแกรม ต้องรักษารูปภาพหรือลิงก์ต้นทางไว้เสมอ
 
 If the source appears incorrect:
 1. State what the source says.
@@ -181,6 +183,9 @@ For significant changes, use:
 - Verify links/paths.
 - Ensure no unintended files were modified.
 
+**Attachment & Asset Storage (Git Sync Awareness):**
+- โฟลเดอร์ `Resources/` ถูกละเว้นโดย `.gitignore` ดังนั้นไฟล์ Assets/รูปภาพที่โน้ตใน `AIOS/` จำเป็นต้องใช้อ้างอิงและต้องการให้ซิงค์ข้ามอุปกรณ์ (เช่น บน iPad) ต้องจัดเก็บไว้ในโฟลเดอร์ `attachments/` ภายใต้โฟลเดอร์ของโน้ตนั้นๆ ใน `AIOS/` เสมอ (เช่น `AIOS/.../SQL/attachments/`) ห้ามเก็บไว้ใน `Resources/` เพียงที่เดียวหากต้องการให้ซิงค์ผ่าน Git
+
 ---
 
 ## 13. Mistake and Progress Rules
@@ -251,3 +256,22 @@ without becoming:
 Optimize for:  
 **Accuracy → Learning Value → Useful Structure → Maintainability → User Control**  
 *(Not: Maximum Files → Maximum Automation → Maximum Template Completion)*
+
+---
+
+## 21. Web Clipping & Batch Processing Protocol
+เมื่อต้องประมวลผลหรือแปลงข้อมูลจาก Web Clipping / HTML / เอกสารชุดใหญ่เข้าสู่ AIOS:
+
+1. **One-Pass Deep Inspection:**
+   - ตรวจสอบองค์ประกอบพิเศษทั้งหมดตั้งแต่แรก: ตารางซ้อน, แท็กรูปภาพ (`<img>`), โค้ดบล็อก, และข้อความ Error
+   - ห้ามใช้คำสั่งล้างแท็ก HTML แบบหยาบ (`<[^>]+>`) ที่จะทำลายรูปภาพหรือลิงก์มีเดียทิ้ง
+2. **Plan & Confirm with User First:**
+   - หากตรวจพบว่ามีรูปภาพ หรือเป็นงานแปลงไฟล์ชุดใหญ่ (Batch Processing) **ต้องสรุปรายการที่พบและวางแผนร่วมกับผู้ใช้ก่อนลงมือทำเสมอ**
+   - เสนอทางเลือกการจัดเก็บมีเดีย (เช่น Local Assets vs External Links) และขอความเห็นชอบก่อนเริ่มรันสคริปต์
+3. **No Silent Background Script Loops:**
+   - ห้ามรันสคริปต์ทดสอบย่อยหลายขั้นตอนติดต่อกันในเบื้องหลังโดยไม่แจ้งสถานะ
+   - อัปเดตความคืบหน้าให้ผู้ใช้ทราบอย่างกระชับและชัดเจน
+4. **Data Completeness & Zero-Loss Verification:**
+   - ตรวจสอบความสมบูรณ์ของไฟล์ผลลัพธ์ทุกไฟล์: ไม่มีข้อใดที่เนื้อหาโจทย์หรือคำตอบหลุดหายกลายเป็นข้อว่างเปล่า
+   - รูปภาพต้องแสดงผลได้อย่างถูกต้องทั้งใน PC และบน iPad (ตรวจสอบ Path และ `.gitignore`)
+

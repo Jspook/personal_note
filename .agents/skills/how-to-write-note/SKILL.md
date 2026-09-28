@@ -366,6 +366,11 @@ Docling is a **document-processing tool**, not the teaching or note-writing auth
 | `dir /s /b filename` | `cmd /c "dir /s /b filename"` |
 | `python ... \| head` | Write to file, then `view_file` |
 
+### Image & Attachment Handling (CRITICAL)
+- **Do not strip images:** Never delete `<img>` tags or image links when cleaning Web Clippings / HTML.
+- **Git Sync Awareness:** Folder `Resources/` is ignored by `.gitignore`. Any persistent note in `AIOS/` that requires image assets to sync across devices (e.g. iPad) MUST store images in an `attachments/` folder adjacent to the note (e.g. `AIOS/.../SQL/attachments/`).
+- **Embedding Format:** Use relative markdown embed: `![caption](attachments/filename.png)` accompanied by original external link for verification if available.
+
 ---
 
 ## 7. Quality Checklist
@@ -377,11 +382,12 @@ Before saving a note, verify all items:
 [ ] Part 1 has ASCII diagram AND comparison table
 [ ] Every ### sub-section has concrete examples
 [ ] Code blocks have language tag and Thai comments
+[ ] Images and sample output captures preserved and stored in local attachments/
 [ ] Part 3 checklist covers all key exam concepts
 [ ] Common Pitfalls section has ≥3 specific entries
 [ ] Backlinks use [[wikilink]] format (not markdown links)
 [ ] Each backlink has a reason in parentheses
 [ ] Source cited in backlinks section
-[ ] File name follows: [Subject] - [ID] [Title].md
-[ ] Stored in AIOS/01 Learning/Courses/[Subject]/
+[ ] File name follows canonical conventions
+[ ] Stored in correct AIOS/ directory
 ```
