@@ -27,144 +27,157 @@
 ## รายการโจทย์ วิธีคิด และคำตอบ
 
 ### ข้อที่ 1: แสดงชื่อประเทศและชื่อเมือง โดยแสดงประเทศทั้งหมด (รวมประเทศที่ไม่มีเมือง)
-* **หัวข้อ:** `LEFT OUTER JOIN`
-* **แนวคิด:**
-  * ต้องการข้อมูลประเทศทั้งหมด แม้ว่าประเทศนั้นจะไม่มีเมือง (`locations`) บันทึกอยู่ก็ตาม
-  * ใช้ `LEFT JOIN` โดยตั้ง `countries` เป็นตารางฝั่งซ้าย (Left Table) เพื่อรักษาแถวของประเทศทั้งหมดไว้ และนำ `locations` มาจับคู่ด้วย `country_id`
-* **SQL Query:**
-```sql
-SELECT c.country_name, l.city
-FROM countries c
-LEFT JOIN locations l ON c.country_id = l.country_id;
-```
+
+> [!success]- เฉลยและวิธีทำ (คลิกเพื่อดูเฉลย)
+> * **หัวข้อ:** `LEFT OUTER JOIN`
+> * **แนวคิด:**
+>   * ต้องการข้อมูลประเทศทั้งหมด แม้ว่าประเทศนั้นจะไม่มีเมือง (`locations`) บันทึกอยู่ก็ตาม
+>   * ใช้ `LEFT JOIN` โดยตั้ง `countries` เป็นตารางฝั่งซ้าย (Left Table) เพื่อรักษาแถวของประเทศทั้งหมดไว้ และนำ `locations` มาจับคู่ด้วย `country_id`
+> * **SQL Query:**
+>   ```sql
+>   SELECT c.country_name, l.city
+>   FROM countries c
+>   LEFT JOIN locations l ON c.country_id = l.country_id;
+>   ```
 
 ---
 
 ### ข้อที่ 2: แสดงชื่อ-นามสกุลพนักงาน (ตั้งชื่อคอลัมน์ Name) และชื่อตำแหน่งงาน
-* **หัวข้อ:** `INNER JOIN` และการเชื่อมข้อความ (String Concatenation)
-* **แนวคิด:**
-  * รวม `first_name` และ `last_name` เข้าด้วยกันและเว้นวรรค 1 ช่อง พร้อมตั้ง Alias เป็น `"Name"`
-  * เชื่อมตาราง `employees` กับ `jobs` ผ่าน `job_id` เพื่อดึง `job_title`
-* **SQL Query:**
-```sql
-SELECT `CONCAT(e.first_name, ' ', e.last_name) AS "Name"`, j.job_title
-FROM employees e
-JOIN jobs j ON e.job_id = j.job_id;
-```
-> **หมายเหตุ:** ใน MySQL หรือบาง RDBMS สามารถใช้  `e.first_name || ' ' || e.last_name AS "Name"`
+
+> [!success]- เฉลยและวิธีทำ (คลิกเพื่อดูเฉลย)
+> * **หัวข้อ:** `INNER JOIN` และการเชื่อมข้อความ (String Concatenation)
+> * **แนวคิด:**
+>   * รวม `first_name` และ `last_name` เข้าด้วยกันและเว้นวรรค 1 ช่อง พร้อมตั้ง Alias เป็น `"Name"`
+>   * เชื่อมตาราง `employees` กับ `jobs` ผ่าน `job_id` เพื่อดึง `job_title`
+> * **SQL Query:**
+>   ```sql
+>   SELECT CONCAT(e.first_name, ' ', e.last_name) AS "Name", j.job_title
+>   FROM employees e
+>   JOIN jobs j ON e.job_id = j.job_id;
+>   ```
+> * **หมายเหตุ:** ใน MySQL หรือบาง RDBMS สามารถใช้ `e.first_name || ' ' || e.last_name AS "Name"`
 
 ---
 
 ### ข้อที่ 3: แสดงชื่อประเทศและชื่อภูมิภาค เฉพาะที่มีรหัสภูมิภาคตรงกัน
-* **หัวข้อ:** `INNER JOIN`
-* **แนวคิด:**
-  * เชื่อมตาราง `countries` และ `regions` โดยใช้เงื่อนไข `c.region_id = r.region_id`
-  * ดึงเฉพาะข้อมูลที่มีค่าเชื่อมโยงตรงกันทั้งสองฝั่ง
-* **SQL Query:**
-```sql
-SELECT c.country_name, r.region_name
-FROM countries c
-JOIN regions r ON c.region_id = r.region_id;
-```
+
+> [!success]- เฉลยและวิธีทำ (คลิกเพื่อดูเฉลย)
+> * **หัวข้อ:** `INNER JOIN`
+> * **แนวคิด:**
+>   * เชื่อมตาราง `countries` และ `regions` โดยใช้เงื่อนไข `c.region_id = r.region_id`
+>   * ดึงเฉพาะข้อมูลที่มีค่าเชื่อมโยงตรงกันทั้งสองฝั่ง
+> * **SQL Query:**
+>   ```sql
+>   SELECT c.country_name, r.region_name
+>   FROM countries c
+>   JOIN regions r ON c.region_id = r.region_id;
+>   ```
 
 ---
 
 ### ข้อที่ 4: หาค่าเงินเดือนขั้นต่ำที่สูงที่สุด และค่าเงินเดือนขั้นสูงที่ต่ำที่สุด เฉพาะรหัสตำแหน่งที่ขึ้นต้นด้วย 'AD'
-* **หัวข้อ:** `Aggregate Functions` (`MAX`, `MIN`) ร่วมกับ `LIKE` Wildcard
-* **แนวคิด:**
-  * กรองข้อมูลตำแหน่งงานเฉพาะที่ `job_id LIKE 'AD%'`
-  * หาเงินเดือนขั้นต่ำที่สูงที่สุดด้วย `MAX(min_salary)`
-  * หาเงินเดือนขั้นสูงที่ต่ำที่สุดด้วย `MIN(max_salary)`
-* **SQL Query:**
-```sql
-SELECT MAX(min_salary) AS max_min_salary, 
-       MIN(max_salary) AS min_max_salary
-FROM jobs
-WHERE job_id LIKE 'AD%';
-```
+
+> [!success]- เฉลยและวิธีทำ (คลิกเพื่อดูเฉลย)
+> * **หัวข้อ:** `Aggregate Functions` (`MAX`, `MIN`) ร่วมกับ `LIKE` Wildcard
+> * **แนวคิด:**
+>   * กรองข้อมูลตำแหน่งงานเฉพาะที่ `job_id LIKE 'AD%'`
+>   * หาเงินเดือนขั้นต่ำที่สูงที่สุดด้วย `MAX(min_salary)`
+>   * หาเงินเดือนขั้นสูงที่ต่ำที่สุดด้วย `MIN(max_salary)`
+> * **SQL Query:**
+>   ```sql
+>   SELECT MAX(min_salary) AS max_min_salary, 
+>          MIN(max_salary) AS min_max_salary
+>   FROM jobs
+>   WHERE job_id LIKE 'AD%';
+>   ```
 
 ---
 
 ### ข้อที่ 5: หาจำนวนแผนกทั้งหมดแยกตามรหัสสถานที่ตั้ง
-* **หัวข้อ:** `GROUP BY` และ `COUNT()`
-* **แนวคิด:**
-  * จัดกลุ่มข้อมูลตามสถานที่ตั้ง (`GROUP BY location_id`)
-  * นับจำนวนแผนกในแต่ละกลุ่มด้วย `COUNT(department_id)`
-* **SQL Query:**
-```sql
-SELECT location_id, 
-       COUNT(department_id) AS total_departments
-FROM departments
-GROUP BY location_id;
-```
+
+> [!success]- เฉลยและวิธีทำ (คลิกเพื่อดูเฉลย)
+> * **หัวข้อ:** `GROUP BY` และ `COUNT()`
+> * **แนวคิด:**
+>   * จัดกลุ่มข้อมูลตามสถานที่ตั้ง (`GROUP BY location_id`)
+>   * นับจำนวนแผนกในแต่ละกลุ่มด้วย `COUNT(department_id)`
+> * **SQL Query:**
+>   ```sql
+>   SELECT location_id, 
+>          COUNT(department_id) AS total_departments
+>   FROM departments
+>   GROUP BY location_id;
+>   ```
 
 ---
 
 ### ข้อที่ 6: แสดงชื่อ-นามสกุลผู้จัดการ (name_manager) รหัสตำแหน่ง และรายได้ ที่เงินเดือน > 5,500 (1 คนต่อ 1 row)
-* **หัวข้อ:** `Subquery` (Filtering by set membership)
-* **แนวคิด:**
-  * ผู้จัดการคือพนักงานที่มี `employee_id` ปรากฏอยู่ในคอลัมน์ `manager_id` ของตารางพนักงาน
-  * ใช้ Subquery `SELECT manager_id FROM employees WHERE manager_id IS NOT NULL` เพื่อหาชุดรหัสของผู้จัดการ
-  * ใช้ `WHERE employee_id IN (...)` พร้อมเงื่อนไขเงินเดือน `salary > 5500`
-  * การใช้ `WHERE employee_id IN (...)` บนตาราง `employees` จะได้ผลลัพธ์ 1 คนต่อ 1 แถวโดยอัตโนมัติ (ไม่เกิดแถวซ้ำเหมือนการทำ Self-Join โดยตรง)
-* **SQL Query:**
-```sql
-SELECT first_name || ' ' || last_name AS name_manager, 
-       job_id, 
-       salary
-FROM employees
-WHERE employee_id IN (
-    SELECT manager_id 
-    FROM employees 
-    WHERE manager_id IS NOT NULL
-) AND salary > 5500;
-```
+
+> [!success]- เฉลยและวิธีทำ (คลิกเพื่อดูเฉลย)
+> * **หัวข้อ:** `Subquery` (Filtering by set membership)
+> * **แนวคิด:**
+>   * ผู้จัดการคือพนักงานที่มี `employee_id` ปรากฏอยู่ในคอลัมน์ `manager_id` ของตารางพนักงาน
+>   * ใช้ Subquery `SELECT manager_id FROM employees WHERE manager_id IS NOT NULL` เพื่อหาชุดรหัสของผู้จัดการ
+>   * ใช้ `WHERE employee_id IN (...)` พร้อมเงื่อนไขเงินเดือน `salary > 5500`
+>   * การใช้ `WHERE employee_id IN (...)` บนตาราง `employees` จะได้ผลลัพธ์ 1 คนต่อ 1 แถวโดยอัตโนมัติ (ไม่เกิดแถวซ้ำเหมือนการทำ Self-Join โดยตรง)
+> * **SQL Query:**
+>   ```sql
+>   SELECT first_name || ' ' || last_name AS name_manager, 
+>          job_id, 
+>          salary
+>   FROM employees
+>   WHERE employee_id IN (
+>       SELECT manager_id 
+>       FROM employees 
+>       WHERE manager_id IS NOT NULL
+>   ) AND salary > 5500;
+>   ```
 
 ---
 
 ### ข้อที่ 7: แสดงรหัสแผนกและรหัสตำแหน่งจากประวัติการทำงาน ที่มีเงินเดือนสูงสุด > 10,000 และแสดงแค่ 1 บรรทัด
-* **หัวข้อ:** `INNER JOIN` และการจำกัดจำนวนแถวผลลัพธ์ (`Row Limiting`)
-* **แนวคิด:**
-  * เชื่อม `job_history` กับ `jobs` ผ่าน `job_id`
-  * กรองเฉพาะตำแหน่งที่ `j.max_salary > 10000`
-  * จำกัดผลลัพธ์ให้แสดงเพียง 1 แถวแรก
-* **SQL Query (Standard / PostgreSQL / MySQL):**
-```sql
-SELECT jh.department_id, jh.job_id
-FROM job_history jh
-JOIN jobs j ON jh.job_id = j.job_id
-WHERE j.max_salary > 10000
-LIMIT 1;
-```
 
-> **หมายเหตุ:** สำหรับ Oracle Database 12c+ ให้ใช้ `FETCH FIRST 1 ROWS ONLY` แทน `LIMIT 1`
-
-```sql
--- สำหรับ Oracle SQL
-SELECT jh.department_id, jh.job_id
-FROM job_history jh
-JOIN jobs j ON jh.job_id = j.job_id
-WHERE j.max_salary > 10000
-FETCH FIRST 1 ROWS ONLY;
-```
+> [!success]- เฉลยและวิธีทำ (คลิกเพื่อดูเฉลย)
+> * **หัวข้อ:** `INNER JOIN` และการจำกัดจำนวนแถวผลลัพธ์ (`Row Limiting`)
+> * **แนวคิด:**
+>   * เชื่อม `job_history` กับ `jobs` ผ่าน `job_id`
+>   * กรองเฉพาะตำแหน่งที่ `j.max_salary > 10000`
+>   * จำกัดผลลัพธ์ให้แสดงเพียง 1 แถวแรก
+> * **SQL Query (Standard / PostgreSQL / MySQL):**
+>   ```sql
+>   SELECT jh.department_id, jh.job_id
+>   FROM job_history jh
+>   JOIN jobs j ON jh.job_id = j.job_id
+>   WHERE j.max_salary > 10000
+>   LIMIT 1;
+>   ```
+> * **SQL Query (สำหรับ Oracle SQL 12c+):**
+>   ```sql
+>   SELECT jh.department_id, jh.job_id
+>   FROM job_history jh
+>   JOIN jobs j ON jh.job_id = j.job_id
+>   WHERE j.max_salary > 10000
+>   FETCH FIRST 1 ROWS ONLY;
+>   ```
 
 ---
 
 ### ข้อที่ 8: แสดงรหัสตำแหน่ง รหัสแผนก และผลรวมเงินเดือน (Sum salary of the jobs) จัดกลุ่มตามแผนกและตำแหน่ง เรียงตามรหัสแผนกจากน้อยไปมาก
-* **หัวข้อ:** Multiple Column `GROUP BY`, `SUM()`, `ORDER BY`
-* **แนวคิด:**
-  * จัดกลุ่มตาม 2 คอลัมน์คือ `department_id` และ `job_id`
-  * รวมยอดเงินเดือนของแต่ละกลุ่มด้วย `SUM(salary)`
-  * เรียงลำดับผลลัพธ์ตาม `department_id ASC`
-* **SQL Query:**
-```sql
-SELECT job_id, 
-       department_id, 
-       SUM(salary) AS "Sum salary of the jobs"
-FROM employees
-GROUP BY department_id, job_id
-ORDER BY department_id ASC;
-```
+
+> [!success]- เฉลยและวิธีทำ (คลิกเพื่อดูเฉลย)
+> * **หัวข้อ:** Multiple Column `GROUP BY`, `SUM()`, `ORDER BY`
+> * **แนวคิด:**
+>   * จัดกลุ่มตาม 2 คอลัมน์คือ `department_id` และ `job_id`
+>   * รวมยอดเงินเดือนของแต่ละกลุ่มด้วย `SUM(salary)`
+>   * เรียงลำดับผลลัพธ์ตาม `department_id ASC`
+> * **SQL Query:**
+>   ```sql
+>   SELECT job_id, 
+>          department_id, 
+>          SUM(salary) AS "Sum salary of the jobs"
+>   FROM employees
+>   GROUP BY department_id, job_id
+>   ORDER BY department_id ASC;
+>   ```
 
 ---
 
