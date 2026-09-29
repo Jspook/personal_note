@@ -125,7 +125,7 @@ $$R = \{(a,b) \in A \times B : a \mid b\}$$
 
 การแสดงความสัมพันธ์ระหว่างสองเซต $A$ และ $B$ สามารถเขียนเป็นไดอะแกรมลูกศร (Arrow Diagram หรือ Bipartite Matching) เพื่อแสดงให้เห็นคู่อันดับจาก Domain ไปยัง Codomain:
 
-![แบบจำลองการแสดงความสัมพันธ์ด้วยภาพ](attachments/relations_bipartite_arrow_diagram.svg)
+![แบบจำลองการแสดงความสัมพันธ์ด้วยภาพ](attachments/relations_bipartite_arrow_diagram.png)
 *(ตัวอย่าง: แผนภาพแสดงการจับคู่ $|A|=3, |B|=3, |R|=5$)*
 
 สมมติ $A = \{2,3\}$, $B = \{4,6,9\}$  

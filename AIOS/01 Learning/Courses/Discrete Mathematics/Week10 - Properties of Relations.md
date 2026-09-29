@@ -31,7 +31,7 @@ $$\forall a \big[(a, a) \in R\big]$$
 
 ทุก element ต้องสัมพันธ์กับ **ตัวเอง**
 
-![Reflexive Self-loops Diagram](attachments/relations_reflexive_self_loops.svg)
+![Reflexive Self-loops Diagram](attachments/relations_reflexive_self_loops.png)
 *💡 สังเกตเส้นห่วงกลม (Self-loops) จะต้องปรากฏขึ้นครบถ้วนทุกโหนดในเซต*
 
 **ตัวอย่าง** บน $\{1, 2, 3, 4\}$:
@@ -213,7 +213,7 @@ $$[1]_R = \{1, -1\}, \quad [2]_R = \{2, -2\}, \quad [0]_R = \{0\}$$
 
 เซต $\mathbb{Z}$ อนันต์ถูกเจียน partition เป็นเพียง **3 class** อย่างพอดิบพะดี (ตาม Partition Theorem)
 
-![แผนภูมิวงกลมแบ่งตาม Equivalence Classes](attachments/relations_congruence_modulo_circle.svg)
+![แผนภูมิวงกลมแบ่งตาม Equivalence Classes](attachments/relations_congruence_modulo_circle.png)
 *แผนภูมิวงกลมแสดงการแบ่งพาร์ทิชันของจำนวนเต็มตาม Equivalence Classes ($\pmod 3$)*
 
 > คำตอบสามารถเขียนด้วยตัวแทนต่างกันก็ถูก: $[0]_{\equiv_3}, [1]_{\equiv_3}, [2]_{\equiv_3}$ **หรือ** $[3]_{\equiv_3}, [-2]_{\equiv_3}, [5]_{\equiv_3}$ ล้วนเป็นคำตอบที่ถูกทั้งคู่

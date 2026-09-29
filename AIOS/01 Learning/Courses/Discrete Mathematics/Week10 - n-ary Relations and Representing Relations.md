@@ -192,10 +192,10 @@ $$M_R = \begin{pmatrix} 1 & 1 & 0 \\ 1 & 1 & 1 \\ 0 & 1 & 1 \end{pmatrix}$$
 *(หมายเหตุ: $(b,b)$ คือ loop ที่โหนด $b$)*
 
 **ตัวอย่างที่ 2 (จาก Reference):** เซต $A = \{A, B, C\}$ และ $R = \{(A,B), (B,C), (C,A)\}$
-![กราฟระบุทิศทางแบบวงกลม 3 โหนด](attachments/relations_digraph_abc_cycle.svg)
+![กราฟระบุทิศทางแบบวงกลม 3 โหนด](attachments/relations_digraph_abc_cycle.png)
 
 **ตัวอย่างที่ 3 (จาก Reference):** ความสัมพันธ์ $\leq$ บนเซต $A = \{1, 2, 3, 4\}$ ที่ $R = \{(1,1),(1,2),(1,3),(1,4),(2,2),(2,3),(3,3),(3,4),(4,4)\}$
-![กราฟระบุทิศทางของความสัมพันธ์อันดับบางส่วน 4 โหนด](attachments/relations_digraph_1234_partial_order.svg)
+![กราฟระบุทิศทางของความสัมพันธ์อันดับบางส่วน 4 โหนด](attachments/relations_digraph_1234_partial_order.png)
 *💡 สังเกต Self-loops บนทุกโหนด (Reflexive) และเส้นทางทิศทางเดียว (Antisymmetric)*
 
 ---
