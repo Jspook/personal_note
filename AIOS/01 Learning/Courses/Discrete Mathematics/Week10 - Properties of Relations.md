@@ -2,7 +2,8 @@
 
 **วิชา:** Discrete Mathematics
 **สถาบัน:** มหาวิทยาลัย (Sirasit Lochanachit, PhD)
-**Source:** `Resources/Books/Discrete Mathematics/myDiscrete_Week10.pdf` (58 pages, slides)
+**Source:** `Resources/Books/Discrete Mathematics/myDiscrete_Week10.pdf` (58 pages, slides)  
+**Reference เพิ่มเติม:** `Resources/References/ระบบเรียนรู้เรื่องความสัมพันธ์แบบโต้ตอบ (Relations Interactive Guide) 1.md` & `2.md` (Interactive Guide, noswolf.github.io)
 
 ---
 
@@ -29,6 +30,9 @@ Properties of Relations
 $$\forall a \big[(a, a) \in R\big]$$
 
 ทุก element ต้องสัมพันธ์กับ **ตัวเอง**
+
+![Reflexive Self-loops Diagram](attachments/relations_reflexive_self_loops.svg)
+*💡 สังเกตเส้นห่วงกลม (Self-loops) จะต้องปรากฏขึ้นครบถ้วนทุกโหนดในเซต*
 
 **ตัวอย่าง** บน $\{1, 2, 3, 4\}$:
 
@@ -158,30 +162,65 @@ $$\forall a \forall b \forall c \big[(a,b) \in R \wedge (b,c) \in R \rightarrow 
 > - **Symmetric** และ
 > - **Transitive**
 
+ความสัมพันธ์สมมูล (Equivalence Relation) แทน **ความเท่าเทียมกันในบางแง่มุม** ของสมาชิกในเซต
+
 **ตัวอย่าง:** จาก $R_1$–$R_6$ บนจำนวนเต็ม:
 - $R_4$: $a = b$ → Reflexive ✅, Symmetric ✅, Transitive ✅ → **Equivalence Relation** ✅
 - $R_3$: $a = b$ หรือ $a = -b$ → Reflexive ✅, Symmetric ✅, Transitive ✅ → **Equivalence Relation** ✅
 - $R_1$: $a \leq b$ → Reflexive ✅, Symmetric ❌ → **ไม่ใช่** ❌
 
+**ตัวอย่างเพิ่มเติมจาก Reference:**
+1. **ความสัมพันธ์ “มีค่าเท่ากัน” บน $\mathbb{Z}$:** Reflexive ($a=a$), Symmetric ($a=b \Rightarrow b=a$), Transitive ($a=b, b=c \Rightarrow a=c$) → เป็น equivalence relation
+2. **ความสัมพันธ์ “หารแล้วได้เศษเท่ากัน” บน $\mathbb{Z}$ (Congruence Modulo $m$):** Reflexive, Symmetric, Transitive → เป็น equivalence relation
+
 ---
 
 #### Equivalence Classes
 
-> **นิยาม:** ให้ $R$ เป็น equivalence relation บน $A$
-> **Equivalence class** ของ $a$ คือเซตของ element ทั้งหมดที่สัมพันธ์กับ $a$:
+> **นิยาม:** ให้ $R$ เป็น equivalence relation บน $A$ และ $a \in A$
+> **Equivalence class** ของ $a$ เมื่ออิงจาก $R$ :
 
 $$[a]_R = \{s \mid (a, s) \in R\}$$
 
-- ทุก element ใน class สามารถเป็น **representative** ของ class ได้
-- Equivalence classes จะ **แบ่งเซต** ออกเป็น disjoint subsets (partition)
+หรือในรูปแบบที่เขียนชัดจาก Reference:
+
+$$[a]_{R} = \{x \in A : (x, a) \in R\}$$
+
+ให้นึกภาพว่า Equivalence Relation คือ **กฎเจดสมาชิกเข้ากล่องหลาย ๆ กล่อง** และ Equivalence Class คือกล่องที่แต่ละสมาชิกอยู่ — **ถ้า $(a,b) \in R$ แล้ว $[a]_R = [b]_R$**
+
+- ทุก element ใน class สามารถเป็น **ตัวแทน (Representative)** ของ class ได้
+- Equivalence classes จะ **แบ่งเซต** ออกเป็น disjoint subsets (partition) โดย class ต่างๆ ไม่มีผลตัดกัน
 
 **ตัวอย่าง:** $R$ บนจำนวนเต็มที่ $(a,b) \in R$ ถ้า $a = b$ หรือ $a = -b$
 $$[1]_R = \{1, -1\}, \quad [2]_R = \{2, -2\}, \quad [0]_R = \{0\}$$
 
-**Congruence Modulo เป็น Equivalence Relation:**
-- ทุก pair ใน slice เดียวกัน สัมพันธ์กัน (symmetric)
-- ค่าไม่ข้าม slice (well-defined partition)
-- Modular arithmetic → equivalence classes คือ $\{0, m, 2m, \ldots\}$, $\{1, m+1, 2m+1, \ldots\}$, etc.
+---
+
+#### Congruence Modulo เป็น Equivalence Relation (ซึ่งสำคัญมาก — ออกสอบบ่อย)
+
+ความสัมพันธ์ **Congruence Modulo $m$** บน $\mathbb{Z}$ (เขียน $a \equiv b \pmod{m}$) เป็น equivalence relation เป็นเพราะ:
+- **Reflexive:** $a \equiv a \pmod{m}$ เสมอ
+- **Symmetric:** ถ้า $a \equiv b \pmod{m}$ แล้ว $b \equiv a \pmod{m}$
+- **Transitive:** ถ้า $a \equiv b$ และ $b \equiv c$ แล้ว $a \equiv c \pmod{m}$
+
+**ตัวอย่าง Congruence Modulo 3:** Equivalence classes ที่หารด้วย 3 ได้เศษได้เพียง 3 ค่า (0, 1, 2):
+
+| Class | สมาชิก | ตัวแทนที่นิยมใช้ |
+|:---:|:---|:---:|
+| $[0]_{\equiv_3}$ | $\{\ldots,-6,-3,0,3,6,\ldots\}$ | $[0]$ |
+| $[1]_{\equiv_3}$ | $\{\ldots,-5,-2,1,4,7,\ldots\}$ | $[1]$ |
+| $[2]_{\equiv_3}$ | $\{\ldots,-4,-1,2,5,8,\ldots\}$ | $[2]$ |
+
+เซต $\mathbb{Z}$ อนันต์ถูกเจียน partition เป็นเพียง **3 class** อย่างพอดิบพะดี (ตาม Partition Theorem)
+
+![แผนภูมิวงกลมแบ่งตาม Equivalence Classes](attachments/relations_congruence_modulo_circle.svg)
+*แผนภูมิวงกลมแสดงการแบ่งพาร์ทิชันของจำนวนเต็มตาม Equivalence Classes ($\pmod 3$)*
+
+> คำตอบสามารถเขียนด้วยตัวแทนต่างกันก็ถูก: $[0]_{\equiv_3}, [1]_{\equiv_3}, [2]_{\equiv_3}$ **หรือ** $[3]_{\equiv_3}, [-2]_{\equiv_3}, [5]_{\equiv_3}$ ล้วนเป็นคำตอบที่ถูกทั้งคู่
+
+**Modular arithmetic เชื่อมโยง:**
+- Equivalence classes ของ modulo $m$ คือ $\{0, m, 2m,\ldots\}$, $\{1, m+1, 2m+1,\ldots\}$, etc.
+- แต่ละ class ใน slice เดียวกันสัมพันธ์กัน (symmetric), ไม่ข้าม slice (well-defined partition)
 
 ---
 
@@ -199,13 +238,20 @@ $$[1]_R = \{1, -1\}, \quad [2]_R = \{2, -2\}, \quad [0]_R = \{0\}$$
 
 ## Part 3: Quick Reference & Exam Cheat Sheet
 
-| Property | สัญลักษณ์ | Digraph ลักษณะ |
-|:---|:---|:---|
-| Reflexive | $(a,a) \in R$ ∀a | **Loop** ที่ทุก vertex |
-| Symmetric | $(a,b) \Rightarrow (b,a)$ | ทุก edge มี **edge ย้อนกลับ** |
-| Antisymmetric | $(a,b) \wedge (b,a) \Rightarrow a=b$ | **ไม่มี** edge คู่ (ยกเว้น loop) |
-| Transitive | $(a,b) \wedge (b,c) \Rightarrow (a,c)$ | ทุก path ยาว 2 มี **shortcut** |
-| Equivalence | Reflexive + Symmetric + Transitive | — |
+| Property | สัญลักษณ์ | Matrix $M_R$ | Digraph ลักษณะ |
+|:---|:---|:---|:---|
+| Reflexive | $(a,a) \in R$ ∀a | **diagonal** ทุกช่อง = 1 | **Loop** ที่ทุก vertex |
+| Symmetric | $(a,b) \Rightarrow (b,a)$ | $m_{ij} = m_{ji}$ (สมมาตร) | ทุก edge มี **edge ย้อนกลับ** |
+| Antisymmetric | $(a,b) \wedge (b,a) \Rightarrow a=b$ | ถ้า $i\neq j$: $m_{ij}$ และ $m_{ji}$ ไม่เป็น 1 พร้อมกัน | **ไม่มี** edge คู่ |
+| Transitive | $(a,b) \wedge (b,c) \Rightarrow (a,c)$ | ตรวจเส้นทางยาว 2 | ทุก path ยาว 2 มี **shortcut** |
+| Equivalence | Reflexive + Symmetric + Transitive | — | — |
+
+### Checklist สรุปหัวใจสำคัญก่อนสอบ
+* [ ] **Reflexive:** ทุก element ต้องมี $(a,a) \in R$ — ตรวจครบทุก element ใน domain
+* [ ] **Symmetric:** ทุก $(a,b)$ ต้องมี $(b,a)$ ด้วย — เหมือนการเป็นเพื่อน (mutual)
+* [ ] **Antisymmetric:** ห้ามมีคู่สวนทางระหว่าง element ที่ต่างกัน
+* [ ] **Transitive:** ทุก path a→b→c ต้องมี a→c ด้วย
+* [ ] **Equivalence Class:** $[a]_R$ เป็น disjoint partition ของ $A$
 
 ---
 
@@ -226,3 +272,8 @@ $$[1]_R = \{1, -1\}, \quad [2]_R = \{2, -2\}, \quad [0]_R = \{0\}$$
 - [[Week10 - Relations and Binary Relations]] (พื้นฐาน — นิยาม relation และ binary relation)
 - [[Week10 - n-ary Relations and Representing Relations]] (การแทน relation ด้วย matrix และ digraph)
 - [[Week9 - Applications of Congruences]] (Congruence Modulo เป็น equivalence relation)
+
+**แหล่งข้อมูล:**
+- Source: `Resources/Books/Discrete Mathematics/myDiscrete_Week10.pdf` (58 pages, slides)
+- Reference 1: `Resources/References/ระบบเรียนรู้เรื่องความสัมพันธ์แบบโต้ตอบ (Relations Interactive Guide) 1.md` — Properties, Matrix, Digraph
+- Reference 2: `Resources/References/ระบบเรียนรู้เรื่องความสัมพันธ์แบบโต้ตอบ (Relations Interactive Guide) 2.md` — Equivalence Relation, Equivalence Class, Congruence Modulo

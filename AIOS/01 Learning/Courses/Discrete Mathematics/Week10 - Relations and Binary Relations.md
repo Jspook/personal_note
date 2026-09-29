@@ -2,7 +2,8 @@
 
 **วิชา:** Discrete Mathematics
 **สถาบัน:** มหาวิทยาลัย (Sirasit Lochanachit, PhD)
-**Source:** `Resources/Books/Discrete Mathematics/myDiscrete_Week10.pdf` (58 pages, slides)
+**Source:** `Resources/Books/Discrete Mathematics/myDiscrete_Week10.pdf` (58 pages, slides)  
+**Reference เพิ่มเติม:** `Resources/References/ระบบเรียนรู้เรื่องความสัมพันธ์แบบโต้ตอบ (Relations Interactive Guide).md` (Interactive Guide, noswolf.github.io)
 
 ---
 
@@ -50,13 +51,20 @@ $$A \times B = \{(a,1),\ (a,2),\ (a,3),\ (b,1),\ (b,2),\ (b,3)\}$$
 
 #### Relation (ความสัมพันธ์)
 
-> **นิยาม:** Relation จาก $A$ ไปยัง $B$ คือ **subset ใด ๆ** ของ $A \times B$
+> **นิยาม:** **Binary Relation** $R$ จากเซต $A$ ไปยังเซต $B$ คือ subset ใด ๆ ของผลคูณคาร์ทีเซียน $A \times B$ (เขียนแทนด้วย $R \subseteq A \times B$)
+> ในกรณีที่ $A = B$ จะเรียก $R$ จาก $A$ ไป $A$ ว่า **ความสัมพันธ์บนเซต $A$** (Relation on set $A$)
 
 ```
 เปรียบเทียบ:
   A × B  = ทุก ordered pair ที่เป็นไปได้
   R ⊆ A×B = relation = เลือกมาบางคู่ตามเงื่อนไข
 ```
+
+สำหรับความสัมพันธ์ $R$ ใด ๆ ถ้า $(a, b) \in R$ เราเขียนได้ว่า $aRb$ ซึ่งอ่านว่า "$a$ มีความสัมพันธ์ $R$ กับ $b$"
+
+**ตัวอย่างจากบริบทจริง:**
+- $T = \{(5,a),(1,c),(3,d)\}$ เป็นความสัมพันธ์จากเซต $\{1,2,3,4,5\}$ ไปยัง $\{a,b,c,d\}$
+- $\alpha = \{(PSCP, A),(ICS, C),(DM, A)\}$ เป็นความสัมพันธ์จากเซตของรายวิชาไปยังเซตของผลการเรียน
 
 ---
 
@@ -96,6 +104,42 @@ $$R = \{(1,1),(1,2),(1,3),(1,4),(2,2),(2,4),(3,3),(4,4)\}$$
 
 ---
 
+### ตัวอย่างความสัมพันธ์ที่กำหนดด้วยเงื่อนไข (Relations Defined by Conditions)
+
+ในทางคณิตศาสตร์และวิทยาการคอมพิวเตอร์ เรามักกำหนดเงื่อนไขเพื่อสร้างเซตความสัมพันธ์ที่มีความหมาย:
+
+#### ความสัมพันธ์ "น้อยกว่า" (Less Than)
+
+$$R = \{(a,b) \in A \times B : a < b\}$$
+
+สมมติ $A = \{1,2,3\}$, $B = \{2,3\}$  
+$R = \{(1,2),(1,3),(2,3)\}$
+
+#### ความสัมพันธ์ "หารลงตัว" (Divisibility)
+
+$$R = \{(a,b) \in A \times B : a \mid b\}$$
+
+---
+
+#### แบบจำลองการแสดงความสัมพันธ์ด้วยภาพ (Arrow / Bipartite Matching Diagram)
+
+การแสดงความสัมพันธ์ระหว่างสองเซต $A$ และ $B$ สามารถเขียนเป็นไดอะแกรมลูกศร (Arrow Diagram หรือ Bipartite Matching) เพื่อแสดงให้เห็นคู่อันดับจาก Domain ไปยัง Codomain:
+
+![แบบจำลองการแสดงความสัมพันธ์ด้วยภาพ](attachments/relations_bipartite_arrow_diagram.svg)
+*(ตัวอย่าง: แผนภาพแสดงการจับคู่ $|A|=3, |B|=3, |R|=5$)*
+
+สมมติ $A = \{2,3\}$, $B = \{4,6,9\}$  
+$R = \{(2,4),(2,6),(3,6),(3,9)\}$
+
+#### ความสัมพันธ์ "กำลังสอง" (Square of)
+
+$$R = \{(a,b) \in A \times B : b = a^{2}\}$$
+
+สมมติ $A = \{2,3,4\}$, $B = \{4,9,10\}$  
+$R = \{(2,4),(3,9)\}$ *(4 ไม่เข้าเงื่อนไขเพราะ $4^2=16 \notin B$)*
+
+---
+
 ## Part 3: Quick Reference & Exam Cheat Sheet
 
 | แนวคิด | นิยาม |
@@ -119,5 +163,10 @@ $$R = \{(1,1),(1,2),(1,3),(1,4),(2,2),(2,4),(3,3),(4,4)\}$$
 
 ## เอกสารเชื่อมโยง (Wiki-Style Backlinks)
 
-- [[Week10 - Properties of Relations]] (ต่อจาก binary relations — Reflexive, Symmetric, Transitive)
-- [[Week10 - n-ary Relations and Representing Relations]] (ขยาย relation เป็น n sets + database model)
+- [[Week10 - Properties of Relations]] (ต่อจาก binary relations — Reflexive, Symmetric, Antisymmetric, Transitive, Equivalence)
+- [[Week10 - n-ary Relations and Representing Relations]] (ขยาย relation เป็น n sets + database model + Matrix + Digraph)
+- [[Week9 - Applications of Congruences]] (Congruence Modulo ใช้ Relation เป็นฐาน)
+
+**แหล่งข้อมูล:**
+- Source: `Resources/Books/Discrete Mathematics/myDiscrete_Week10.pdf` (58 pages, slides)
+- Reference: ระบบเรียนรู้เรื่องความสัมพันธ์แบบโต้ตอบ — `Resources/References/ระบบเรียนรู้เรื่องความสัมพันธ์แบบโต้ตอบ (Relations Interactive Guide).md` (noswolf.github.io)

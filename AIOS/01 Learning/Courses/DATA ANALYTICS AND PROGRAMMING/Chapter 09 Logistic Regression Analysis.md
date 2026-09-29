@@ -223,12 +223,12 @@ $$\text{Wald} = \left(\frac{b_i}{\text{S.E.}_{b_i}}\right)^2$$
 (นำตัวแปรทั้งหมดเข้าสมการพร้อมกัน)                       │
                                  ┌─────────────────────┴─────────────────────┐
                                  ▼                                           ▼
-                         Forward Stepwise                            Backward Stepwise
-                      (เริ่มจาก 0 แล้วทยอยเพิ่มตัวแปร)               (เริ่มจากใส่ครบ แล้วทยอยตัดออก)
-                                 │                                           │
-                    ┌────────────┼────────────┐                 ┌────────────┼────────────┐
-                    ▼            ▼            ▼                 ▼            ▼            ▼
-                 [2] LR       [4] Wald   [6] Conditional     [3] LR       [5] Wald   [7] Conditional
+                         Forward Stepwise                         Backward Stepwise
+                      (เริ่มจาก 0 แล้วทยอยเพิ่มตัวแปร)           (เริ่มจากใส่ครบ แล้วทยอยตัดออก)
+                 _______________│                           │
+    ┌────────────┼────────────┐                ┌────────────┼────────────┐
+    ▼            ▼            ▼                ▼            ▼            ▼
+[2] LR       [4] Wald   [6] Conditional     [3] LR       [5] Wald   [7] Conditional
 ```
 
 1. **Enter:** นำตัวแปรอิสระทั้งหมดที่กำหนดไว้เข้าสู่สมการพร้อมกันในขั้นตอนเดียว
@@ -506,8 +506,8 @@ Logistic Regression Architecture
 ## เอกสารเชื่อมโยง (Wiki-Style Backlinks)
 
 * **วิชาและหัวข้อที่เกี่ยวข้อง:**
-  * [[DATA ANALYTICS AND PROGRAMMING - Chapter 08 Linear Regression]] (พื้นฐานการวิเคราะห์การถดถอยเชิงเส้น และข้อจำกัดที่นำไปสู่การพัฒนา Logistic Regression)
-  * [[DATA ANALYTICS AND PROGRAMMING - Chapter 10 Discriminant Analysis]] (เทคนิคการจำแนกกลุ่มแบบ Supervised Learning ทางสถิติอีกวิธีหนึ่งสำหรับตัวแปรตามเชิงกลุ่ม)
+  * [[Chapter 08 Linear Regression]] (พื้นฐานการวิเคราะห์การถดถอยเชิงเส้น และข้อจำกัดที่นำไปสู่การพัฒนา Logistic Regression)
+  * [[Chapter 10 Discriminant Analysis]] (เทคนิคการจำแนกกลุ่มแบบ Supervised Learning ทางสถิติอีกวิธีหนึ่งสำหรับตัวแปรตามเชิงกลุ่ม)
   * [[Probability and Statistics]] (ทฤษฎีความน่าจะเป็น การแจกแจงทวินาม การอนุมานสถิติ และการทดสอบสมมติฐาน Chi-Square)
   * [[Linear Algebra]] (ระบบสมการเชิงเส้น เมทริกซ์ และการคำนวณ Gradient/Hessian ในอัลกอริทึม Optimization ของ MLE)
   * [[Data & AI Engineer Skill Matrix]] (ทักษะด้าน Classification, Predictive Modeling, และการประเมินผล Model Performance ในงาน Data Science)

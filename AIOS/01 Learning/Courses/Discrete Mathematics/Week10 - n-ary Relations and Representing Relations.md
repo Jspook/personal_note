@@ -2,7 +2,8 @@
 
 **วิชา:** Discrete Mathematics
 **สถาบัน:** มหาวิทยาลัย (Sirasit Lochanachit, PhD)
-**Source:** `Resources/Books/Discrete Mathematics/myDiscrete_Week10.pdf` (58 pages, slides)
+**Source:** `Resources/Books/Discrete Mathematics/myDiscrete_Week10.pdf` (58 pages, slides)  
+**Reference เพิ่มเติม:** `Resources/References/ระบบเรียนรู้เรื่องความสัมพันธ์แบบโต้ตอบ (Relations Interactive Guide) 3.md` (Interactive Guide, noswolf.github.io)
 
 ---
 
@@ -34,6 +35,17 @@ n-ary Relations & Representing Relations
 > **n-ary relation** บนเซตเหล่านี้คือ subset ของ $A_1 \times A_2 \times \cdots \times A_n$
 > - $A_1, A_2, \ldots, A_n$ เรียกว่า **domains** ของ relation
 > - $n$ เรียกว่า **degree** ของ relation
+
+สูตรผลคูณคาร์ทีเซียน n เซต:
+$$A_1 \times A_2 \times \cdots \times A_n = \{(a_1, a_2, \ldots, a_n) : a_i \in A_i \text{ สำหรับ } i = 1, 2, \ldots, n\}$$
+
+**คำศัพท์เฉพาะทาง (Terminologies):**
+
+| คำศัพท์ | ความหมาย | ตัวอย่าง |
+|:---|:---|:---|
+| **Domain** | เซต $A_1, A_2, \ldots, A_n$ — ช่วงชนิดข้อมูลที่ยอมรับได้ในแต่ละ component | ชื่อนักศึกษา, รหัสวิชา, หน่วยกิต |
+| **Degree** | ค่า $n$ = จำนวน domain ใน relation | $n=2$ คือ Binary, $n=3$ คือ Ternary |
+| **n-tuple** | $(a_1, a_2, \ldots, a_n)$ = ordered collection มี $n$ สมาชิก | $(660101, พีระพงษ์, IT)$ |
 
 ---
 
@@ -76,9 +88,18 @@ Degree = **5**, Domains = {airlines}, {flight numbers}, {cities}, {cities}, {tim
 
 > Database ประกอบด้วย **records** ซึ่งก็คือ n-tuples ที่แต่ละ field คือ component
 
+ในทางวิทยาการคอมพิวเตอร์ ทฤษฎีความสัมพันธ์ n-ary ถูกนำมาใช้เป็นรากฐานคณิตศาสตร์ของ **Relational Database System** เสนอโดย E.F. Codd แนวที่เปรียบเทียบ:
+
+| คณิตศาสตร์ | ความหมายใน DB | เพิ่มเติม |
+|:---|:---|:---|
+| Domain $A_i$ | สดมภ์ / Attribute (Column/Field) | ขอบเขตชนิดข้อมูลที่ยอมรับได้ในคอลัมน์นั้น ๆ |
+| n-tuple | แถว / Record (Row) | ข้อมูล 1 แถว |
+| Relation | ตารางข้อมูล (Table) | เซตของ n-tuples ทั้งหมด |
+| Degree $n$ | จำนวน Column ใน Table | ตาราง 3 คอลัมน์ = Degree 3 |
+
 - **Relational Data Model:** แทน database เป็น n-ary relation
 - Relations ที่ใช้แทน database เรียกว่า **tables**
-- **Primary Key:** domain ที่ค่าของมันกำหนด n-tuple ได้อย่างเป็นเอกลักษณ์ — ไม่มีสอง n-tuple ที่ค่า domain นี้เหมือนกัน
+- **Primary Key:** domain ที่ค่าของมันกำหนด n-tuple ได้อย่างเป็นเอกลักษณ์ — ไม่มีสอง n-tuple ที่ค่า domain นี้เหมือนกัน (ค่าไม่ซ้ำกันเลย = Unique)
 
 **ตัวอย่าง:**
 
@@ -95,6 +116,23 @@ R = {(Ash, 231455, IT), (Blue, 888323, IT), (Green, 102147, DSBA)}
 - Degree = 3
 - Primary Key = **ID** (ทุก ID ต่างกัน)
 - Name ไม่ใช่ Primary Key ได้ (อาจมีชื่อซ้ำ)
+
+---
+
+#### ตัวอย่าง: ตารางรายวิชา (Course Database)
+
+จาก Reference: ตารางรายวิชา IT ที่มี Degree = 3 (3 domains):
+
+| รหัสวิชา | ชื่อวิชา | จำนวนหน่วยกิต |
+|:---|:---|:---:|
+| 06066000 | DISCRETE MATHEMATICS | 3 |
+| 06066300 | DATABASE SYSTEM CONCEPTS | 3 |
+| 06016403 | MULTIMEDIA TECHNOLOGY | 3 |
+
+- **Primary Key: "รหัสวิชา" และ "ชื่อวิชา"** — แต่ละแถวมีค่าไม่ซ้ำกัน (เป็น Unique)
+- **ไม่ใช่ Primary Key: "จำนวนหน่วยกิต"** — มีค่าซ้ำกันหลายแถว
+
+**Primary Key Constraint:** ระบบจะตรวจสอบและบังคับให้ domain ที่เป็น Primary Key ไม่มีค่าซ้ำกันเกิดขึ้นในตาราง (สัมพันธ์กับ **Reflexive property** ย้อนกลับไปได้ในแง่มุมที่ว่าแต่ละ ID สัมพันธ์กับตัวเอง)
 
 ---
 
@@ -143,7 +181,7 @@ $$M_R = \begin{pmatrix} 1 & 1 & 0 \\ 1 & 1 & 1 \\ 0 & 1 & 1 \end{pmatrix}$$
 > - **Terminal vertex** ของ $(a,b)$: vertex $b$
 > - **Loop:** edge $(a, a)$ — จาก vertex ไปตัวเอง
 
-**ตัวอย่าง:** Vertices $\{a,b,c,d\}$, Edges $\{(a,b),(a,d),(b,b),(b,d),(c,a),(c,b),(d,b)\}$
+**ตัวอย่างที่ 1:** Vertices $\{a,b,c,d\}$, Edges $\{(a,b),(a,d),(b,b),(b,d),(c,a),(c,b),(d,b)\}$
 
 ```
  c ──► a ──► b ◄── c
@@ -151,8 +189,14 @@ $$M_R = \begin{pmatrix} 1 & 1 & 0 \\ 1 & 1 & 1 \\ 0 & 1 & 1 \end{pmatrix}$$
        ▼     ▼
        d ◄── b
 ```
+*(หมายเหตุ: $(b,b)$ คือ loop ที่โหนด $b$)*
 
-*(b,b) คือ loop ที่ b)*
+**ตัวอย่างที่ 2 (จาก Reference):** เซต $A = \{A, B, C\}$ และ $R = \{(A,B), (B,C), (C,A)\}$
+![กราฟระบุทิศทางแบบวงกลม 3 โหนด](attachments/relations_digraph_abc_cycle.svg)
+
+**ตัวอย่างที่ 3 (จาก Reference):** ความสัมพันธ์ $\leq$ บนเซต $A = \{1, 2, 3, 4\}$ ที่ $R = \{(1,1),(1,2),(1,3),(1,4),(2,2),(2,3),(3,3),(3,4),(4,4)\}$
+![กราฟระบุทิศทางของความสัมพันธ์อันดับบางส่วน 4 โหนด](attachments/relations_digraph_1234_partial_order.svg)
+*💡 สังเกต Self-loops บนทุกโหนด (Reflexive) และเส้นทางทิศทางเดียว (Antisymmetric)*
 
 ---
 
@@ -196,3 +240,8 @@ $$M_R = \begin{pmatrix} 1 & 1 & 0 \\ 1 & 1 & 1 \\ 0 & 1 & 1 \end{pmatrix}$$
 
 - [[Week10 - Relations and Binary Relations]] (พื้นฐาน — Cartesian product และ binary relation)
 - [[Week10 - Properties of Relations]] (Reflexive/Symmetric/Antisymmetric/Transitive ที่นำมาแสดงใน matrix และ digraph)
+- [[Week9 - Applications of Congruences]] (Modular arithmetic — ไอเดียเดียวกับ Primary Key / Partition)
+
+**แหล่งข้อมูล:**
+- Source: `Resources/Books/Discrete Mathematics/myDiscrete_Week10.pdf` (58 pages, slides)
+- Reference: `Resources/References/ระบบเรียนรู้เรื่องความสัมพันธ์แบบโต้ตอบ (Relations Interactive Guide) 3.md` — n-ary Relation, Relational Database, Primary Key (noswolf.github.io)

@@ -397,7 +397,7 @@ Regression Analysis
 ## เอกสารเชื่อมโยง (Wiki-Style Backlinks)
 
 * **วิชาและหัวข้อที่เกี่ยวข้อง:**
-  * [[DATA ANALYTICS - Chapter 09 Logistic Regression Analysis]] — Extension: กรณีที่ Y เป็น Categorical Variable ไม่ใช่ Continuous
+  * [[Chapter 09 Logistic Regression Analysis]] — Extension: กรณีที่ Y เป็น Categorical Variable ไม่ใช่ Continuous
   * [[Probability and Statistics]] — พื้นฐานสถิติที่ใช้ใน Regression: การแจกแจงปกติ, การทดสอบสมมติฐาน, Confidence Interval
   * [[Linear Algebra]] — Matrix Operation ที่ใช้ใน Multiple Regression (Normal Equation)
 
