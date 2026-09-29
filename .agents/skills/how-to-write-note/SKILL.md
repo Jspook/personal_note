@@ -15,6 +15,11 @@ The primary goal is:
 
 > Every note must be self-contained, scannable, and cross-linked — usable as a study reference, exam cheat sheet, and knowledge graph node.
 
+### Core Principles for Note Creation
+1. **Course Consistency & Backlink Alignment (รักษาความต่อเนื่องทั้งวิชา):** สามารถเปิดดู/อ้างอิงโน้ตบทก่อนหน้าในวิชาเดียวกันได้ เพื่อรักษาโทนการเขียน (Tone of Voice), มาตรฐาน Metadata และนำมาเชื่อมโยง Wiki-Style Backlinks ข้ามบทได้อย่างสมบูรณ์
+2. **Content Enrichment (ขยายความเชิงลึกจากหัวข้อใหญ่):** สไลด์บรรยายมักมีเนื้อหาเป็น Bullet สั้นๆ ให้อธิบายเชิงลึก ยกตัวอย่างสถานการณ์จริง เสริมทฤษฎี/แนวคิดสากลเพิ่มเติมได้ภายใต้ขอบเขตหัวข้อใหญ่ของบทนั้นๆ
+3. **Zero-Loss & Preserved Media:** รักษาคำศัพท์เทคนิค รูปภาพประกอบ ไดอะแกรม และความสัมพันธ์ของเนื้อหาไว้ครบถ้วน
+
 ---
 
 ## 2. Canonical Note Structure
