@@ -140,6 +140,8 @@ phone_ok = re.fullmatch(r"0\d{9}", "0812345678")                         # เ�
 
 $$IQR = Q3 - Q1,\quad \text{Outlier ถ้า } x < Q1 - 1.5\,IQR \ \text{หรือ}\ x > Q3 + 1.5\,IQR$$
 
+![Data Cleansing Boxplot & Outlier Detection Rule](attachments/de_ch02_iqr_boxplot.png)
+
 ---
 
 ### 2.4 Distributed Data Processing

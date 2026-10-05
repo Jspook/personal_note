@@ -10,14 +10,16 @@
 
 ลองนึกถึง **ระบบประปา**: น้ำ (ข้อมูล) ต้องถูกสูบจากแหล่งน้ำ (Data Source) ผ่านท่อ (Pipeline) ผ่านการกรอง (Transform) แล้วไปเก็บที่ถังพัก (Staging / Destination) ก่อนส่งให้บ้านแต่ละหลัง Chapter 1 สอนว่า "ท่อ" นี้ออกแบบอย่างไร และเมื่อข้อมูลมาจากหลายแหล่งที่หน้าตาไม่เหมือนกัน เราจะ **Integrate** ให้เป็นชุดเดียวกันได้อย่างไร
 
-```text
-Data Source                  Data Pipeline                         Destination
-┌──────────────┐   Extract   ┌────────────────────────┐   Load    ┌─────────────────┐
-│ Database     │ ──────────► │ Staging Area           │ ────────► │ Data Lake /     │
-│ API          │             │  Transform (clean,     │           │ Data Warehouse  │
-│ Files        │             │  join, aggregate)      │           └─────────────────┘
-└──────────────┘             └────────────────────────┘
-        ETL  = E → T → L        ELT = E → L → T (transform ทีหลังที่ปลายทาง)
+```mermaid
+flowchart TD
+    subgraph ETL["1. ETL Pattern (Traditional)"]
+        direction LR
+        S1["Sources (DB/API)"] --> E1["Extract"] --> T1["Transform (Staging)"] --> L1["Load (DWH)"]
+    end
+    subgraph ELT["2. ELT Pattern (Modern Cloud)"]
+        direction LR
+        S2["Sources (DB/API)"] --> E2["Extract"] --> L2["Load (Lake/DWH)"] --> T2["Transform (SQL)"]
+    end
 ```
 
 ### ตารางเปรียบเทียบ ETL vs ELT vs Reverse ETL

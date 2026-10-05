@@ -12,17 +12,7 @@
 
 Chapter 0 ตอบ 3 คำถามพื้นฐาน: (1) DE คืออาชีพอะไร ต่างจากสายอื่นอย่างไร (2) Big Data คืออะไร ทำไมต้องมีระบบพิเศษ (3) ข้อมูลมีกี่ประเภท และควรเก็บไว้ที่ไหน
 
-```text
-[Data Sources]            [Ingest / Pipeline]        [Store]                 [Serve]
- App / Website   ──┐                              ┌─ Database (OLTP)
- IoT Sensors     ──┼──►  Extract → Transform ──►  ├─ Data Warehouse (OLAP) ──► BI / Dashboard
- 3rd-party API   ──┤        → Load                └─ Data Lake (Files)     ──► ML / Data Science
- Files (CSV...)  ──┘
-                          ▲
-                          └── Orchestration + Automation (Chapter 4)
-
-หัวข้อของ Course Outline:  CH1 Collect → CH2 Cleanse → CH3 Cloud → CH4 Pipeline → CH5 Warehouse → CH6 Dashboard → CH7 Advanced
-```
+![End-to-End Data Engineering Architecture](attachments/de_ch00_macro_architecture.png)
 
 ### ตารางเปรียบเทียบ Database vs Data Warehouse vs Data Lake
 
@@ -44,9 +34,17 @@ Chapter 0 ตอบ 3 คำถามพื้นฐาน: (1) DE คืออ�
 
 > **จุดที่ควรจำ:** คอร์สนี้เล่าเป็นเรื่องราวต่อเนื่อง ผู้เรียน "ได้รับเข้าทำงานเป็น Data Engineer" และได้ **Mission แรก** คือทำ Data Pipeline ให้ทีม Sales กับ Marketing ที่ต้องการขยายไลน์ธุรกิจ ทุก Workshop (1-6) จึงต่อกันเป็นท่อเดียวตั้งแต่ต้นจนจบ
 
-```text
-Workshop 1 (ดึงข้อมูล) → W2 (ล้างข้อมูล) → W3 (เก็บใน Data Lake)
-        → W4 (Airflow อัตโนมัติ) → W5 (โหลดเข้า BigQuery) → W6 (Dashboard)
+```mermaid
+flowchart TD
+    subgraph Row1["Phase 1: Ingestion & Storage"]
+        direction LR
+        W1["W1: ดึงข้อมูล (API/DB)"] --> W2["W2: ล้างข้อมูล (Spark)"] --> W3["W3: Data Lake (GCS)"]
+    end
+    subgraph Row2["Phase 2: Pipeline & Serving"]
+        direction LR
+        W4["W4: อัตโนมัติ (Airflow)"] --> W5["W5: โหลด DWH (BigQuery)"] --> W6["W6: รายงาน (Looker)"]
+    end
+    W3 --> W4
 ```
 
 **คำแนะนำการเรียน `[เสริมนอกสไลด์]`:** อย่าท่องคำสั่ง ให้จำ "ทำไมต้องมีขั้นตอนนี้" แล้วลองเขียน Pipeline ซ้ำด้วยข้อมูลของตัวเอง เช่น ข้อมูลรายจ่ายส่วนตัวหรือ Dataset จาก Kaggle

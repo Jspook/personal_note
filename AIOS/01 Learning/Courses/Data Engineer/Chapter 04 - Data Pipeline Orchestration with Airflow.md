@@ -164,6 +164,26 @@ t1 >> [t2, t3]      # Fan-out: t1 เสร็จแล้ว t2 และ t3 �
 [t2, t3] >> t4      # Fan-in:  t2 และ t3 เสร็จทั้งคู่ถึงรัน t4
 ```
 
+```mermaid
+flowchart TD
+    subgraph Linear["Linear: t1 >> t2"]
+        direction LR
+        L1["t1"] --> L2["t2"]
+    end
+
+    subgraph FanOut["Fan-out: t1 >> [t2, t3]"]
+        direction LR
+        F1["t1"] --> F2["t2"]
+        F1 --> F3["t3"]
+    end
+
+    subgraph FanIn["Fan-in: [t2, t3] >> t4"]
+        direction LR
+        I1["t2"] --> I3["t4"]
+        I2["t3"] --> I3
+    end
+```
+
 #### 2.4.5 Bonus: Atomic & Idempotent
 
 | หลักการ | ความหมาย `[คำอธิบายขยายนอกสไลด์]` | ตัวอย่าง |
