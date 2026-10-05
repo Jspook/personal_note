@@ -46,11 +46,11 @@ Google Cloud Platform (GCP)
 
 #### 2.1.2 ประเภทของ Cloud
 
-| ประเภท | ลักษณะ | ตัวอย่าง |
-| :--- | :--- | :--- |
-| **Public Cloud** | ใช้ทรัพยากรของผู้ให้บริการสาธารณะ | AWS, Azure, Google Cloud (+ IBM, Alibaba, Huawei, Tencent Cloud) |
-| **Private Cloud** | สร้าง Cloud ส่วนตัวใน Data Center ขององค์กร | องค์กรที่ต้องคุมข้อมูลเอง |
-| **Hybrid Cloud** | รวม On-premise + Cloud (Public & Private) | ข้อมูลอ่อนไหวอยู่ในองค์กร งานหนักใช้ Cloud |
+| ประเภท            | ลักษณะ                                      | ตัวอย่าง                                                         |
+| :---------------- | :------------------------------------------ | :--------------------------------------------------------------- |
+| **Public Cloud**  | ใช้ทรัพยากรของผู้ให้บริการสาธารณะ           | AWS, Azure, Google Cloud (+ IBM, Alibaba, Huawei, Tencent Cloud) |
+| **Private Cloud** | สร้าง Cloud ส่วนตัวใน Data Center ขององค์กร | องค์กรที่ต้องคุมข้อมูลเอง                                        |
+| **Hybrid Cloud**  | รวม On-premise + Cloud (Public & Private)   | ข้อมูลอ่อนไหวอยู่ในองค์กร งานหนักใช้ Cloud                       |
 
 ---
 
