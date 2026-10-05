@@ -207,18 +207,240 @@ flowchart TD
 
 ### 2.5 Workshop 4: Automated Data Pipeline with Airflow
 
-**ลำดับ (ตามสไลด์):**
+* **เป้าหมาย:** นำ Pipeline ที่เขียนไว้ใน Workshop 1 มาเปลี่ยนให้เป็นระบบอัตโนมัติบน Apache Airflow (Cloud Composer) ดึงข้อมูลจาก MySQL และ Currency API นำมาผสาน (Merge) คำนวณยอดขาย และบันทึกเป็น Parquet ส่งเข้า Data Lake (GCS)
+
+---
+
+#### 2.5.1 การเตรียมสภาพแวดล้อมและโค้ดผ่าน Cloud Shell
 
 1. จัดการ Composer environment และติดตั้ง **Python packages** (ใช้เวลาราว 7-10 นาที)
-2. `git clone` ไฟล์โปรเจกต์ (r2de3-workshops) จาก GitHub
-3. เปิด Airflow UI
-4. Upload ไฟล์ DAG ไปที่โฟลเดอร์ `dags` ใน GCS ของ Composer (`/home/airflow/gcs/dags/`)
-5. ทำ Exercise: **Simple Pipeline (TaskFlow)**, **Fan-out Pipeline**, **Fan-in Pipeline** (ใช้ `EmptyOperator`/`DummyOperator`)
-6. ใช้ **GCS mount** ใน Composer: `/home/airflow/gcs/data/` ตรงกับ `gs://[CLOUD_COMPOSER_BUCKET]/data/`
-7. สร้าง **Connection** (เช่น MySQL) ให้ Airflow เชื่อมต่อระบบอื่น
-8. Bonus: เขียนคำอธิบาย DAG ด้วย `doc_md`
+2. **Clone โค้ดเริ่มต้นผ่าน Git บน Cloud Shell:**
+   ```bash
+   git clone https://github.com/DataTH-Team/r2de3-workshops.git
+   cd r2de3-workshops/dags
+   ```
+3. เปิดแก้ไขโค้ดด้วย Cloud Shell Editor
+4. **Deploy DAG ขึ้น Cloud Composer:**
+   เมื่อแก้ไขไฟล์เสร็จแล้ว ให้คัดลอกไฟล์ขึ้นโฟลเดอร์ `dags` ใน GCS Bucket ของ Composer:
+   ```bash
+   gsutil cp file.py gs://<CLOUD-COMPOSER-BUCKET>/dags
+   ```
+   > 💡 **โครงสร้าง GCS Mount ใน Composer:**
+   > - โฟลเดอร์ DAGs: `/home/airflow/gcs/dags/` ตรงกับ `gs://<CLOUD-COMPOSER-BUCKET>/dags/`
+   > - โฟลเดอร์ Data: `/home/airflow/gcs/data/` ตรงกับ `gs://<CLOUD-COMPOSER-BUCKET>/data/`
 
-> **Connection:** การเชื่อมต่อ Airflow เข้ากับระบบอื่น และเก็บข้อมูลเชื่อมต่อไว้ให้ DAG ใช้ `[หลักปฏิบัติเสริมนอกสไลด์: ห้ามเขียนรหัสผ่านในโค้ด DAG ให้เก็บใน Connection/Secret Manager]`
+---
+
+#### 2.5.2 การสร้าง MySQL Connection บน Airflow UI
+
+1. กดปุ่ม **OPEN AIRFLOW UI** จาก Cloud Composer Console
+   
+   ![Open Airflow UI](attachments/de_ws4_composer_airflow_ui.png)
+
+2. ไปที่เมนู **Admin > Connections** แล้วกดปุ่ม **+** (Add a new record)
+   
+   ![Airflow Connections Menu](attachments/de_ws4_airflow_connections_menu.png)
+
+3. กรอกข้อมูลการเชื่อมต่อฐานข้อมูลตามตาราง และกด **Save**:
+
+   | ฟิลด์ | ค่าที่ต้องกรอก |
+   | :--- | :--- |
+   | **Connection Id \*** | `mysql_default` |
+   | **Connection Type \*** | `MySQL` |
+   | **Description** | `R2DE database` |
+   | **Host** | `34.136.184.58` |
+   | **Schema** | `r2de3` |
+   | **Login** | `r2de3` |
+   | **Password** | `Roady-to-DE-star-3.0` |
+   | **Port** | `3306` |
+
+   ![MySQL Connection Form](attachments/de_ws4_airflow_mysql_connection_config.png)
+
+> 🔒 **Connection Security:** การใช้ Airflow Connection ช่วยแยก Credentials ออกจากโค้ด DAG เพื่อความปลอดภัยและเป็นไปตามหลัก Twelve-Factor App ห้าม Hardcode Password ในโค้ด Python
+
+---
+
+#### 2.5.3 แบบฝึกหัดปูพื้นฐาน (Exercise 1 - 3)
+
+##### Exercise 1: TaskFlow API (Airflow 2.0+)
+โค้ดแบบ TaskFlow ใช้ Decorator `@dag` และ `@task` ทำให้อ่านง่ายและรองรับ XCom ส่งค่าง่ายขึ้น:
+
+```python
+import datetime
+from airflow.decorators import dag, task
+from airflow.utils.dates import days_ago
+
+default_args = {'owner': 'datath'}
+
+@task()
+def print_hello():
+    print("Hello World!")
+
+@task()
+def print_date():
+    print(datetime.datetime.now())
+
+@dag(default_args=default_args, schedule_interval="@once", start_date=days_ago(1), tags=['exercise'])
+def exercise1_taskflow_dag():
+    t1 = print_hello()
+    t2 = print_date()
+    t1 >> t2
+
+exercise1_dag = exercise1_taskflow_dag()
+```
+
+##### Exercise 2: Fan-out Pipeline (การแตกสายงานแบบ Parallel)
+กระจายงานให้ทำงานพร้อมกัน โดยผสมผสาน TaskFlow เข้ากับ Standard Operator (เช่น `BashOperator`):
+
+```python
+import datetime
+from airflow.decorators import dag, task
+from airflow.operators.bash import BashOperator
+from airflow.utils.dates import days_ago
+
+default_args = {'owner': 'datath'}
+
+@task()
+def print_hello():
+    print("Hello World!")
+
+@task()
+def print_date():
+    print(datetime.datetime.now())
+
+@dag(default_args=default_args, schedule_interval="@once", start_date=days_ago(1), tags=['exercise'])
+def exercise2_taskflow_dag():
+    t1 = print_hello()
+    t2 = print_date()
+    t3 = BashOperator(task_id="list_file_gcs", bash_command="gsutil ls")
+
+    # Fan-out: เมื่อ t1 จบ ให้รัน t2 และ t3 แบบคู่ขนาน
+    t1 >> [t2, t3]
+
+exercise2_dag = exercise2_taskflow_dag()
+```
+
+##### Exercise 3: Fan-in Pipeline (การรวมสายงาน)
+การรวมงานหลายตัวเข้าสู่จุดเดียว และการใช้ Loop สร้าง Tasks แบบกระชับ:
+
+```python
+from airflow.models import DAG
+from airflow.operators.dummy import DummyOperator
+from airflow.utils.dates import days_ago
+
+with DAG("exercise3_fan_in_dag_w_loop", start_date=days_ago(1), schedule_interval="@once", tags=["exercise"], owner="datath") as dag:
+    dag.doc_md = """
+    # Exercise 3: Fan-in Pipeline แบบใช้ loop
+    สร้าง task จำลองด้วย DummyOperator เพื่อกำหนด Dependency ซับซ้อน
+    """
+    t = [DummyOperator(task_id=f"task_{i}") for i in range(7)]
+
+    # Fan-in: t0, t1, t2 ทำงานเสร็จ จึงเริ่ม t4
+    [t[0], t[1], t[2]] >> t[4]
+    # รวมผลลัพธ์ t3, t4, t5 เข้าสู่ขั้นตอนสุดท้าย t6
+    [t[3], t[4], t[5]] >> t[6]
+```
+
+---
+
+#### 2.5.4 โค้ด Production Pipeline ฉบับสมบูรณ์ (`workshop4.py`)
+
+โค้ดรวมทั้ง Pipeline: ดึง MySQL ด้วย `MySqlHook`, ดึง API ด้วย `requests`, Transform รวมข้อมูลด้วย `pandas`, และบันทึกเป็น Parquet ขึ้น GCS mount:
+
+```python
+from airflow.models import DAG
+from airflow.decorators import dag, task
+from airflow.providers.mysql.hooks.mysql import MySqlHook
+from airflow.utils.dates import days_ago
+import pandas as pd
+import requests
+
+MYSQL_CONNECTION = "mysql_default"
+CONVERSION_RATE_URL = "https://r2de3-currency-api-vmftiryt6q-as.a.run.app/gbp_thb"
+
+# กำหนดเส้นทางไฟล์ใน GCS mount ของ Cloud Composer
+mysql_output_path = "/home/airflow/gcs/data/transaction_data_merged.parquet"
+conversion_rate_output_path = "/home/airflow/gcs/data/conversion_rate.parquet"
+final_output_path = "/home/airflow/gcs/data/workshop4_output.parquet"
+
+default_args = {'owner': 'datath'}
+
+@dag(default_args=default_args, schedule_interval="@once", start_date=days_ago(1), tags=["workshop"])
+def workshop4_pipeline():
+    """
+    # Workshop 4: Final Pipeline
+    นำโค้ดจาก Workshop 1 มาจัดวางเป็น Automated Pipeline บน Airflow
+    """
+
+    @task()
+    def get_data_from_mysql(output_path):
+        # เชื่อมต่อ MySQL ด้วย MySqlHook ผ่าน connection ที่สร้างไว้
+        mysqlserver = MySqlHook(MYSQL_CONNECTION)
+        product = mysqlserver.get_pandas_df(sql="SELECT * FROM r2de3.product")
+        customer = mysqlserver.get_pandas_df(sql="SELECT * FROM r2de3.customer")
+        transaction = mysqlserver.get_pandas_df(sql="SELECT * FROM r2de3.transaction")
+
+        # Merge 3 ตารางเข้าด้วยกัน
+        merged_transaction = transaction.merge(
+            product, how="left", left_on="ProductNo", right_on="ProductNo"
+        ).merge(
+            customer, how="left", left_on="CustomerNo", right_on="CustomerNo"
+        )
+        
+        # เซฟเป็น Parquet ไปที่ GCS Mount
+        merged_transaction.to_parquet(output_path, index=False)
+        print(f"Output to {output_path}")
+
+    @task()
+    def get_conversion_rate(output_path):
+        # เรียก REST API ดึงอัตราแลกเปลี่ยน
+        r = requests.get(CONVERSION_RATE_URL)
+        result_conversion_rate = r.json()
+        df = pd.DataFrame(result_conversion_rate).drop(columns=['id'])
+
+        # แปลงเป็น date format แล้วเซฟ Parquet
+        df['date'] = pd.to_datetime(df['date'])
+        df.to_parquet(output_path, index=False)
+        print(f"Output to {output_path}")
+
+    @task()
+    def merge_data(transaction_path, conversion_rate_path, output_path):
+        transaction = pd.read_parquet(transaction_path)
+        conversion_rate = pd.read_parquet(conversion_rate_path)
+
+        # Merge ข้อมูลธุรกรรมเข้ากับอัตราแลกเปลี่ยนตามวันที่
+        final_df = transaction.merge(conversion_rate, how="left", left_on="Date", right_on="date")
+        
+        # คำนวณยอดขายรวม (GBP) และแปลงเป็นเงินบาท (THB)
+        final_df["total_amount"] = final_df["Price"] * final_df["Quantity"]
+        final_df["thb_amount"] = final_df["total_amount"] * final_df["gbp_thb"]
+
+        # คลีนคอลัมน์และกำหนด Schema มาตรฐาน
+        final_df = final_df.drop(["date", "gbp_thb"], axis=1)
+        final_df.columns = [
+            'transaction_id', 'date', 'product_id', 'price', 'quantity', 'customer_id',
+            'product_name', 'customer_country', 'customer_name', 'total_amount', 'thb_amount'
+        ]
+
+        # บันทึกไฟล์ Parquet ขั้นสุดท้าย
+        final_df.to_parquet(output_path, index=False)
+        print(f"Output to {output_path}")
+        print("== End of Workshop 4 ʕ•́ᴥ•̀ʔっ♡ ==")
+
+    # กำหนด Tasks
+    t1 = get_data_from_mysql(output_path=mysql_output_path)
+    t2 = get_conversion_rate(output_path=conversion_rate_output_path)
+    t3 = merge_data(
+        transaction_path=mysql_output_path,
+        conversion_rate_path=conversion_rate_output_path,
+        output_path=final_output_path
+    )
+
+    # Dependency: t1 และ t2 ทำงานคู่ขนานกัน แล้วส่งต่อให้ t3
+    [t1, t2] >> t3
+
+workshop4_pipeline()
+```
 
 ---
 

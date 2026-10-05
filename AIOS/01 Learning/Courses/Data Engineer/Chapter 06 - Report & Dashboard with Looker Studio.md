@@ -105,9 +105,11 @@ SUM(thb_amount)                       -- ยอดขายรวม
 ### 2.3 Workshop 6: Data Visualisation with Looker Studio
 
 #### 2.3.1 Input / Output
+* **Input:** ข้อมูลใน BigQuery (Table จาก Workshop 5 หรือใช้ไฟล์ Parquet สำรอง `workshop4_output.parquet` อัปโหลดสร้าง Table ใหม่)
+* **Output:** Report และ Interactive Dashboard ออนไลน์บน Looker Studio
+* **แดชบอร์ดตัวอย่างที่สร้างเสร็จสมบูรณ์:** [คลิกเปิดดู Live Dashboard บน Looker Studio](https://lookerstudio.google.com/reporting/097af711-c110-4512-84f4-c80422a46a50)
 
-* **Input:** ข้อมูลใน BigQuery (Table จาก Workshop 5 หรือดาวน์โหลดไฟล์ Parquet จากระบบเรียนแล้วสร้าง Table ใหม่)
-* **Output:** Report และ Dashboard ออนไลน์
+![Looker Studio Completed Dashboard](attachments/de_ws6_looker_studio_dashboard.png)
 
 #### 2.3.2 การเชื่อมกับฝั่งธุรกิจ (Recap Mission)
 
@@ -119,34 +121,51 @@ flowchart LR
 ```
 
 **Dashboard Wireframe จาก BA:**
-1. **Sales Performance Dashboard:** ข้อมูลการขาย (รายได้ ฯลฯ)
-2. **Customer Insights Dashboard:** ข้อมูลลูกค้า
+1. **Sales Performance Dashboard:** ข้อมูลการขาย (ยอดขายรวม, แนวโน้มรายวัน, สินค้าขายดี)
+2. **Customer Insights Dashboard:** ข้อมูลลูกค้า (ประเทศของลูกค้า, ความถี่ในการซื้อ)
 
 > **หลักคิด:** เริ่มจาก Requirement ทางธุรกิจ → Wireframe → Data → Dashboard ไม่ใช่เริ่มจากกราฟสวยๆ
 
-#### 2.3.3 ขั้นตอน (ตาม Overview)
+#### 2.3.3 ขั้นตอนการปฏิบัติการจริง
 
 | ขั้น | ทำอะไร | หมายเหตุ |
 | :--- | :--- | :--- |
-| 1 | เตรียม Table ใน BigQuery | ข้ามได้ถ้าทำ Workshop 5 เสร็จแล้ว |
-| 2 | **สร้าง View** ให้ Data Analyst เห็นเฉพาะข้อมูลที่ใช้ทำ Dashboard | เช่น `vw_customer_purchase` |
-| 3 | สร้าง **Dashboard 1: Sales Performance** | |
-| 4 | สร้าง **Dashboard 2: Customer Insights** | |
-| 5 | Bonus: Parameter + Calculated Field, Report-level, Section/Header/Divider | |
+| **1** | เตรียม Table ใน BigQuery | ข้ามได้ถ้าทำ Workshop 5 เสร็จแล้ว (หรือใช้ไฟล์ `workshop4_output.parquet`) |
+| **2** | **สร้าง View** ให้ Data Analyst | กรองข้อมูลและแปลง Data Types ให้อยู่ในฟอร์แมตที่ Looker Studio อ่านได้ทันที |
+| **3** | เชื่อมต่อ Looker Studio กับ View | สร้าง Data Source ใหม่โดยเลือก Connector เป็น BigQuery |
+| **4** | สร้าง **Dashboard 1: Sales Performance** | รวม Scorecard, Time Series Chart, และ Bar Chart สินค้าขายดี |
+| **5** | สร้าง **Dashboard 2: Customer Insights** | เจาะลึกรายประเทศและพฤติกรรมลูกค้า |
+| **6** | Bonus: Parameter + Calculated Field | เพิ่มตัวกรอง (Filter Controls) และ Calculated Fields เช่น อัตราการเติบโต |
 
 ```sql
--- View ให้ Analyst เห็นเฉพาะที่จำเป็น (ชื่อ View ตามสไลด์ คอลัมน์เป็นตัวอย่าง)
-CREATE OR REPLACE VIEW workshop.vw_customer_purchase AS
-SELECT date, customer_id, product_id, thb_amount     -- เลือกเฉพาะที่ Dashboard ต้องใช้
-FROM workshop.transaction;
+-- โค้ดสร้าง View สำหรับ Workshop 6 (BigQuery SQL)
+CREATE OR REPLACE VIEW `road-to-data-engineer-sql-db.r2de3_mock.ws6_view`
+AS
+SELECT
+  -- แปลง Microseconds จาก Parquet ให้กลายเป็น TIMESTAMP มาตรฐาน
+  TIMESTAMP_MICROS(CAST(date / 1000 AS INT64)) AS date_converted
+  ,thb_amount
+  ,transaction_id
+  ,product_id
+  ,product_name
+  ,quantity
+  ,customer_id
+  ,customer_name
+  ,customer_country
+FROM `road-to-data-engineer-sql-db.r2de3_mock.ws4_output`
+WHERE total_amount > 0;  -- กรองตัดรายการคืนเงินหรือยอดขายติดลบออก
 ```
 
-> **ทำไมต้องสร้าง View ก่อน `[คำอธิบายเสริมนอกสไลด์]`:** (1) จำกัดข้อมูลที่เปิดให้ BI เห็น (เรื่องสิทธิ์ ความปลอดภัย) (2) ตรรกะคำนวณอยู่ที่เดียว ไม่กระจายอยู่ในหลาย Dashboard (3) ถ้า Table ต้นทางเปลี่ยน แก้ที่ View จุดเดียว
+> 💡 **ทำไมต้องแปลง `TIMESTAMP_MICROS` และสร้าง View ก่อน:**
+> 1. **Timestamp Conversion:** ไฟล์ Parquet มักเก็บ Timestamp ในรูปแบบ Unix Integer (Microseconds) การใช้ `TIMESTAMP_MICROS(CAST(date / 1000 AS INT64))` ทำให้ Looker Studio รู้จักว่าเป็น Date/Time และพล็อตแกนเวลาได้ถูกต้องอัตโนมัติ
+> 2. **Business Rule Isolation:** การใส่ `WHERE total_amount > 0` ไว้ที่ View ทำให้ Dashboard ทุกหน้าได้ตัวเลขยอดขายที่สะอาดตรงกัน โดยไม่ต้องไปเขียน Filter ซ้ำในแต่ละกราฟ
+> 3. **Data Governance & Security:** ซ่อนโครงสร้างตารางหลัก ให้ Business / BI เห็นเฉพาะฟิลด์ที่ได้รับอนุญาต
 
 #### 2.3.4 การคำนวณใน Dashboard (ตามสไลด์ P.59)
 
 1. คำนวณผลรวมยอดขาย: `SUM(thb_amount)`
-2. คำนวณจำนวนการซื้อ `[รายละเอียดสูตรที่เหลือดูสไลด์ P.59]`
+2. คำนวณจำนวนการซื้อ (Transaction Count): `COUNT(DISTINCT transaction_id)`
+3. คำนวณจำนวนลูกค้า (Customer Count): `COUNT(DISTINCT customer_id)`
 
 ---
 

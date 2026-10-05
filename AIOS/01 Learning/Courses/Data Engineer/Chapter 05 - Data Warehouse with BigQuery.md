@@ -212,17 +212,176 @@ load_to_bq = GCSToBigQueryOperator(
 
 ### 2.5 Workshop 5: Data Warehouse with BigQuery
 
-**โจทย์ (ตามสไลด์):** มีข้อมูลใน GCS และมี Airflow แล้ว จะทำให้ข้อมูลเข้า Data Warehouse **อัตโนมัติ** ได้อย่างไร
+* **โจทย์:** จาก Workshop 4 ที่ได้ไฟล์ Parquet บน GCS Data Lake แล้ว จะนำข้อมูลเข้าสู่ BigQuery Data Warehouse โดยอัตโนมัติได้อย่างไร
+* **การจัดการโค้ดบน Cloud Shell:**
+  ```bash
+  # Clone โค้ดลงในโฟลเดอร์ใหม่ workshop5
+  git clone https://github.com/DataTH-Team/r2de3-workshops.git workshop5
+  cd workshop5/dags
 
-| ขั้น | ทำอะไร |
-| :--- | :--- |
-| 1 | สร้าง **Dataset** ใน BigQuery (เลือก Data location ให้สอดคล้องกับที่เก็บข้อมูล) |
-| 2.1 | Manual: Import ข้อมูลผ่าน Console จาก GCS |
-| 3 | ทดสอบ Query เช่น `SELECT count(distinct date) FROM workshop.transaction;` |
-| 2.2 | Automatic: ใช้ `bq load` ใน `BashOperator` |
-| 2.3 | Automatic: ใช้ `GCSToBigQueryOperator` |
+  # สำหรับกรณีใช้โปรเจกต์เดิมแล้วติด conflict จากไฟล์ที่แก้ไข:
+  git stash        # เก็บการเปลี่ยนแปลงไว้ชั่วคราว
+  git pull         # อัปเดตโค้ดล่าสุดจากรีโป
+  git stash pop    # นำการเปลี่ยนแปลงกลับคืนมา
+  ```
 
-> **ทำไมต้อง Manual ก่อน Automatic:** ทำมือให้เห็นผลลัพธ์ที่ถูกต้อง แล้วค่อยแปลงเป็น Task เพื่อรู้ว่าอะไรคือ "ผลลัพธ์ที่คาดหวัง"
+---
+
+#### 2.5.1 ภาพรวมลำดับการทำงาน (Workflow Progression)
+
+| ขั้น | วิธีการ | รายละเอียด |
+| :--- | :--- | :--- |
+| **1** | สร้าง **Dataset** ใน BigQuery | ตั้งชื่อ Dataset เช่น `workshop` (เลือก Data location ให้ตรงกับ Bucket) |
+| **2.1** | Manual Ingestion | ทดลอง Load ไฟล์ Parquet ผ่าน BigQuery Console ด้วยตนเอง เพื่อตรวจสอบ Schema |
+| **3** | ทดสอบ Query เบื้องต้น | `SELECT count(distinct date) FROM workshop.transaction;` |
+| **2.2** | Automatic: CLI ผ่าน `BashOperator` | ใช้คำสั่ง `bq load` โหลดไฟล์จาก GCS เข้า BigQuery Table |
+| **2.3** | Automatic: Native Provider | ใช้ `GCSToBigQueryOperator` ของ Airflow จัดการแบบ Declarative |
+
+> 💡 **ทำไมต้อง Manual ก่อน Automatic:**
+> การทำมือ (Manual) ช่วยให้เห็น Data Types, ตรวจสอบ Schema Mismatch และมั่นใจในผลลัพธ์ที่ถูกต้องก่อน เมื่อนำไปทำเป็น Automation ใน DAG จึงมี Baseline ในการตรวจสอบว่า Task ทำงานถูกต้อง
+
+---
+
+#### 2.5.2 แนวทางที่ 1: โหลดข้อมูลด้วย `BashOperator` + `bq load` (`workshop5_bq_load.py`)
+
+ใช้ CLI `bq load` สั่งการ BigQuery โดยตรงผ่าน `BashOperator`:
+
+```python
+from airflow.models import DAG
+from airflow.decorators import dag, task
+from airflow.operators.bash import BashOperator
+from airflow.providers.mysql.hooks.mysql import MySqlHook
+from airflow.utils.dates import days_ago
+import pandas as pd
+import requests
+
+MYSQL_CONNECTION = "mysql_default"
+CONVERSION_RATE_URL = "https://r2de3-currency-api-vmftiryt6q-as.a.run.app/gbp_thb"
+
+mysql_output_path = "/home/airflow/gcs/data/transaction_data_merged.parquet"
+conversion_rate_output_path = "/home/airflow/gcs/data/conversion_rate.parquet"
+final_output_path = "/home/airflow/gcs/data/workshop4_output.parquet"
+
+default_args = {'owner': 'datath'}
+
+@task()
+def get_data_from_mysql(output_path):
+    mysqlserver = MySqlHook(MYSQL_CONNECTION)
+    product = mysqlserver.get_pandas_df(sql="SELECT * FROM r2de3.product")
+    customer = mysqlserver.get_pandas_df(sql="SELECT * FROM r2de3.customer")
+    transaction = mysqlserver.get_pandas_df(sql="SELECT * FROM r2de3.transaction")
+
+    merged = transaction.merge(product, how="left", on="ProductNo").merge(customer, how="left", on="CustomerNo")
+    merged.to_parquet(output_path, index=False)
+
+@task()
+def get_conversion_rate(output_path):
+    r = requests.get(CONVERSION_RATE_URL)
+    df = pd.DataFrame(r.json()).drop(columns=['id'])
+    df['date'] = pd.to_datetime(df['date'])
+    df.to_parquet(output_path, index=False)
+
+@task()
+def merge_data(transaction_path, conversion_rate_path, output_path):
+    transaction = pd.read_parquet(transaction_path)
+    conversion_rate = pd.read_parquet(conversion_rate_path)
+
+    final_df = transaction.merge(conversion_rate, how="left", left_on="Date", right_on="date")
+    final_df["total_amount"] = final_df["Price"] * final_df["Quantity"]
+    final_df["thb_amount"] = final_df["total_amount"] * final_df["gbp_thb"]
+    final_df = final_df.drop(["date", "gbp_thb"], axis=1)
+    final_df.columns = [
+        'transaction_id', 'date', 'product_id', 'price', 'quantity', 'customer_id',
+        'product_name', 'customer_country', 'customer_name', 'total_amount', 'thb_amount'
+    ]
+    final_df.to_parquet(output_path, index=False)
+
+@dag(default_args=default_args, schedule_interval="@once", start_date=days_ago(1), tags=["workshop"])
+def workshop5_bash():
+    """โหลดข้อมูลเข้า BigQuery ด้วย bq load ผ่าน BashOperator"""
+    t1 = get_data_from_mysql(output_path=mysql_output_path)
+    t2 = get_conversion_rate(output_path=conversion_rate_output_path)
+    t3 = merge_data(
+        transaction_path=mysql_output_path,
+        conversion_rate_path=conversion_rate_output_path,
+        output_path=final_output_path
+    )
+
+    # Task 4: เรียกคำสั่ง bq load ใน bash
+    t4 = BashOperator(
+        task_id="bq_load",
+        bash_command="bq load --source_format=PARQUET workshop.transaction1 gs://<CLOUD-COMPOSER-BUCKET>/data/workshop4_output.parquet"
+    )
+
+    [t1, t2] >> t3 >> t4
+
+workshop5_bash()
+```
+
+---
+
+#### 2.5.3 แนวทางที่ 2: โหลดข้อมูลด้วย Native Provider (`workshop5_gcs_to_bq.py`)
+
+ใช้ `GCSToBigQueryOperator` ซึ่งเป็น Best Practice บน Airflow มี Error Handling และ State Management ที่รัดกุมกว่า:
+
+```python
+from airflow.decorators import dag, task
+from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
+from airflow.providers.mysql.hooks.mysql import MySqlHook
+from airflow.utils.dates import days_ago
+import pandas as pd
+import requests
+
+MYSQL_CONNECTION = "mysql_default"
+CONVERSION_RATE_URL = "https://r2de3-currency-api-vmftiryt6q-as.a.run.app/gbp_thb"
+
+mysql_output_path = "/home/airflow/gcs/data/transaction_data_merged.parquet"
+conversion_rate_output_path = "/home/airflow/gcs/data/conversion_rate.parquet"
+final_output_path = "/home/airflow/gcs/data/workshop4_output.parquet"
+
+default_args = {'owner': 'datath'}
+
+# Tasks: get_data_from_mysql, get_conversion_rate, merge_data (เหมือนในหัวข้อ 2.5.2)
+
+@dag(default_args=default_args, schedule_interval="@once", start_date=days_ago(1), tags=["workshop"])
+def workshop5():
+    """โหลดข้อมูลเข้า BigQuery ผ่าน GCSToBigQueryOperator"""
+    t1 = get_data_from_mysql(output_path=mysql_output_path)
+    t2 = get_conversion_rate(output_path=conversion_rate_output_path)
+    t3 = merge_data(
+        transaction_path=mysql_output_path,
+        conversion_rate_path=conversion_rate_output_path,
+        output_path=final_output_path
+    )
+
+    # Task 4: Native Operator สำหรับ GCS -> BigQuery
+    t4 = GCSToBigQueryOperator(
+        task_id="gcs_to_bigquery",
+        bucket="<CLOUD-COMPOSER-BUCKET>",
+        source_objects=["data/workshop4_output.parquet"],
+        source_format="PARQUET",
+        destination_project_dataset_table="workshop.transaction",
+        write_disposition="WRITE_TRUNCATE"  # เขียนทับทุกครั้งเพื่อรองรับ Idempotency
+    )
+
+    [t1, t2] >> t3 >> t4
+
+workshop5()
+```
+
+---
+
+#### 2.5.4 การตรวจสอบความถูกต้องใน BigQuery (Data Verification)
+
+หลังจาก DAG รันสำเร็จ สามารถเปิด BigQuery Studio และรัน SQL เพื่อตรวจสอบความสมบูรณ์ของข้อมูล:
+
+```sql
+-- 1. ตรวจสอบจำนวนวันทั้งหมดที่มีธุรกรรม
+SELECT count(distinct date) AS total_dates FROM `workshop.transaction`;
+
+-- 2. ตรวจสอบยอดขายรวมสกุลเงินบาท
+SELECT SUM(thb_amount) AS total_revenue_thb FROM `workshop.transaction`;
+```
 
 **Bonus Tools:** `bigframes` ไลบรารี Python เขียน DataFrame แบบ Pandas แต่รัน Job บน BigQuery
 

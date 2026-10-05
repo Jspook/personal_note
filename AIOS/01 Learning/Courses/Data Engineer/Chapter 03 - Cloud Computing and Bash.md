@@ -171,16 +171,17 @@ wc -l *.csv                    # นับจำนวนบรรทัดข�
 
 ### 2.5 Workshop 3: Upload to Data Lake
 
-**เป้าหมาย:** Upload ไฟล์ข้อมูลเข้า **Google Cloud Storage** ที่ใช้เป็น Data Lake
+* **แหล่งดาวน์โหลดไฟล์ข้อมูล:** [Documentation & Data File (Designil)](https://file.designil.com/f/6BamyF+)
+* **เป้าหมาย:** Upload ไฟล์ข้อมูลเข้า **Google Cloud Storage (GCS)** ซึ่งทำหน้าที่เป็น Data Lake ในระบบ
+* **เตรียมตัว:** สมัคร Google Cloud รับเครดิตฟรี $300 ใช้ได้ใน 90 วันแรก (สำหรับลูกค้าใหม่ ตามสไลด์)
 
-**เตรียมตัว:** สมัคร Google Cloud รับเครดิตฟรี $300 ใช้ได้ใน 90 วันแรก (สำหรับลูกค้าใหม่ ตามสไลด์)
-
-**2 ทางหลักในการ Upload:**
+#### 2.5.1 ช่องทางการ Upload ข้อมูลขึ้น GCS
 
 | วิธี | ขั้นตอน | เหมาะกับ |
 | :--- | :--- | :--- |
 | **Web UI (Cloud Console)** | สร้าง Bucket → กดปุ่ม Upload | ไฟล์ไม่กี่ไฟล์ ทำครั้งเดียว |
-| **Cloud Shell + `gsutil`** | upload ไฟล์เข้า Cloud Shell ก่อน แล้วใช้ `gsutil` | ทำซ้ำได้ เขียนเป็นสคริปต์ |
+| **Cloud Shell + `gsutil`** | upload ไฟล์เข้า Cloud Shell ก่อน แล้วใช้ `gsutil` | ทำซ้ำได้ เขียนเป็นสคริปต์ใน Terminal |
+| **Python Client Library (SDK)** | เขียนสคริปต์ผ่าน Cloud Shell Editor เพื่อจัดการ Programmatically | เชื่อมต่อเข้ากับ Data Pipeline หรือ Microservices |
 
 ```bash
 # [เสริมนอกสไลด์] รูปแบบคำสั่ง gsutil ที่ใช้บ่อย
@@ -190,6 +191,68 @@ gsutil ls gs://my-datalake-bucket/raw/                  # ดูไฟล์ใ�
 ```
 
 > **หมายเหตุ `[เสริมนอกสไลด์]`:** Google สนับสนุนเครื่องมือใหม่ `gcloud storage` ที่ใช้แทน `gsutil` ได้ในปัจจุบัน ถ้าคำสั่งเปลี่ยน ให้ดูเอกสารทางการ
+
+---
+
+#### 2.5.2 โค้ดปฏิบัติการ Python SDK (`workshop3.py`)
+
+ใน Workshop นี้ ผู้เรียนจะเปิด **Cloud Shell Editor** และสร้างไฟล์ Python เพื่อเชื่อมต่อจัดการ Bucket ด้วยไลบรารี `google-cloud-storage`:
+
+```python
+from google.cloud import storage
+
+
+def upload_blob(bucket_name, source_file_name, destination_blob_name):
+    """Uploads a file to the bucket with race-condition protection."""
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(destination_blob_name)
+
+    # Optional: ตั้ง generation-match precondition เพื่อหลีกเลี่ยง race conditions และ data corruption
+    # กำหนด generation_match_precondition = 0 สำหรับไฟล์ใหม่ที่ยังไม่เคยมีอยู่ใน bucket
+    generation_match_precondition = 0
+
+    blob.upload_from_filename(
+        source_file_name, 
+        if_generation_match=generation_match_precondition
+    )
+
+    print(f"File {source_file_name} uploaded to {destination_blob_name}.")
+
+
+def download_blob(bucket_name, source_blob_name, destination_file_name):
+    """Downloads a blob from the bucket."""
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+
+    # Construct client-side representation ของ blob โดยยังไม่ดาวน์โหลด payload ทันที
+    blob = bucket.blob(source_blob_name)
+    blob.download_to_filename(destination_file_name)
+
+    print(
+        f"Downloaded storage object {source_blob_name} from bucket {bucket_name} to local file {destination_file_name}."
+    )
+
+
+if __name__ == "__main__":
+    mode = input("Upload (u) or Download (d)? ")
+    bucket_name = input("Please enter bucket name: ")
+    source_file = input("Please enter source file: ")
+    destination = input("Please enter destination file (leave blank if use the same name): ")
+    
+    if destination is None or destination == "":
+        destination = source_file.split("/")[-1]
+    
+    if mode.strip().lower() in ["upload", "u"]: 
+        upload_blob(bucket_name, source_file, destination)
+    elif mode.strip().lower() in ["download", "d"]: 
+        download_blob(bucket_name, source_file, destination)
+    else:
+        print("Invalid command")
+```
+
+> 💡 **วิศวกรรมข้อมูลน่ารู้ (Generation Match Precondition):**
+> ค่า `generation_match_precondition = 0` ใน GCS เปรียบเสมือน **Optimistic Concurrency Control** เพื่อรับประกันว่าการ Upload จะล้มเหลวทันทีหากมี Process อื่นสร้างไฟล์ชื่อเดียวกันนี้ขึ้นมาก่อนหน้า ป้องกันการเขียนทับโดยไม่ตั้งใจ (Data Corruption)
 
 **Bonus: Storage Object Lifecycle** ตั้งกฎจัดการไฟล์ระยะยาว เช่น ย้ายไฟล์เก่าไปชั้นเก็บที่ถูกลง หรือลบอัตโนมัติ (สไลด์เตือนว่า **Delete แล้ว undo ไม่ได้**) สไลด์มีตัวอย่าง Storage Lifecycle ของ AWS เทียบด้วย
 

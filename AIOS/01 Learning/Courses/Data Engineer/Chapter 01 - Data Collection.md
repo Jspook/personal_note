@@ -151,9 +151,51 @@ print(df)
 
 ### 2.6 Workshop 1: Data Collection with Python
 
-**โจทย์:** ดึงข้อมูลจาก Database (3 Tables ที่ทีมสอนแบ่งมาจาก Kaggle ตามสไลด์ Pre-Workshop) เป็นจุดเริ่มของ Mission
+* **แหล่งเรียนรู้ & โน้ตบุ๊กปฏิบัติการ:** [Google Colab - Workshop 1 (กด File > Save a copy in Drive)](https://colab.research.google.com/drive/1O4k37OvuBw1YlGcRPV17vIVbS6lJIZxX?usp=sharing)
+* **โจทย์:** ดึงข้อมูลจาก MySQL Database (3 Tables ที่ทีมสอนแบ่งมาจาก Kaggle ตามสไลด์ Pre-Workshop) และดึงข้อมูลอัตราแลกเปลี่ยนจาก REST API เพื่อเตรียมข้อมูลรวมสำหรับ Mission ของทีม Sales & Marketing
 
-**เครื่องมือที่ใช้ตามสไลด์:**
+#### 2.6.1 แหล่งข้อมูลที่ต้องสกัด (Source Ingestion)
+
+1. **MySQL Database (ฐานข้อมูลหลัก):**
+   * **Host:** `34.136.184.58`
+   * **Port:** `3306`
+   * **User:** `r2de3`
+   * **Password:** `Roady-to-DE-star-3.0`
+   * **Database:** `r2de3`
+   * **Charset:** `utf8mb4`
+
+   > 🔒 **Security Best Practice (Colab Secrets):**
+   > ห้าม Hardcode Password ในโค้ด ให้ใส่ค่าทั้งหมดลงในแท็บ **Secrets (ไอคอนรูปกุญแจ 🔑)** ใน Colab และเปิดสวิตช์ **Notebook access** ให้เป็นสีฟ้า เพื่อเรียกใช้ผ่าน `google.colab.userdata`
+   >
+   > ![Colab Secrets Setup](attachments/de_ws1_colab_secrets.png)
+
+   **Table ที่ใช้จาก Database:**
+   * `r2de3.transaction` — ข้อมูลการทำธุรกรรมและการขายสินค้า (Transaction No, Date, ProductNo, CustomerNo, Price, Quantity)
+   * `r2de3.product` — รายละเอียดสินค้า (ProductNo, ProductName, CostPrice)
+   * `r2de3.customer` — ข้อมูลลูกค้า (CustomerNo, CustomerName, Country)
+
+2. **REST API อัตราแลกเปลี่ยนเงิน (Currency Conversion API):**
+   * **Endpoint:** `https://r2de3-currency-api-vmftiryt6q-as.a.run.app/gbp_thb`
+   * **รูปแบบข้อมูลที่ได้รับ (JSON):**
+     ```json
+     [
+       {
+         "date": "2023-05-01",
+         "gbp_thb": 42.761,
+         "id": "ebf2"
+       },
+       {
+         "date": "2023-05-02",
+         "gbp_thb": 42.477,
+         "id": "101a"
+       }
+     ]
+     ```
+   * **เป้าหมาย:** สกัดข้อมูลค่าเงิน GBP เป็น THB รายวัน เพื่อนำไปคูณยอดขายแปลงเป็นสกุลเงินบาทในขั้นตอน Transform
+
+---
+
+#### 2.6.2 เครื่องมือและการประมวลผล (ตามสไลด์)
 
 | เครื่องมือ | จุดเด่น (ตามสไลด์) |
 | :--- | :--- |
@@ -170,7 +212,7 @@ df = con.execute("SELECT product_id, SUM(amount) AS total FROM t GROUP BY 1").pl
 print(df)
 ```
 
-**หลักการที่ Workshop ต้องการสอน:** ดึงข้อมูล (Extract) จากหลายแหล่งให้ครบ เก็บไว้เป็นรูปแบบที่ขั้นถัดไป ([[Chapter 02 - Data Cleansing with Spark]]) ใช้ต่อได้
+**หลักการที่ Workshop ต้องการสอน:** ดึงข้อมูล (Extract) จากหลายแหล่ง (Database + API) ให้ครบ แล้วรวมและเก็บไว้เป็นรูปแบบที่ขั้นตอนถัดไป ([[Chapter 02 - Data Cleansing with Spark]]) ใช้ต่อได้
 
 ---
 

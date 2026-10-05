@@ -221,7 +221,35 @@ spark.sql("SELECT city, SUM(amount) FROM t GROUP BY city").show()   # Action: �
 
 ### 2.6 Workshop 2: Data Cleansing with Spark
 
-ทำสิ่งที่เรียนทั้งหมด: (1) ติดตั้ง Spark และข้อมูล (2) ตรวจสอบข้อมูล (3) ล้างข้อมูลด้วย Spark `[ขั้นตอนละเอียดดูสไลด์ P.57]` ใช้ไฟล์เริ่มต้นจาก Google Colab (File > Save a Copy in Drive)
+* **แหล่งเรียนรู้ & โน้ตบุ๊กปฏิบัติการ:** [Google Colab - Workshop 2 (กด File > Save a copy in Drive)](https://colab.research.google.com/drive/18lqcIn47PfOXcFQSghlfW_9sSwXfMin2)
+* **เป้าหมาย:** นำข้อมูลที่ได้จาก Workshop 1 (Transactions, Products, Customer) มาทำความสะอาดด้วย Apache Spark บน Colab โดยปฏิบัติตามหลักการ Data Profiling และจัดการ Anomalies ทั้ง 4 ประเภท
+
+#### ขั้นตอนการปฏิบัติการ (Implementation Pipeline):
+
+1. **ติดตั้งและสร้าง SparkSession บน Colab:**
+   ```python
+   !pip install pyspark
+   from pyspark.sql import SparkSession
+   from pyspark.sql import functions as F
+   from pyspark.sql.types import *
+
+   spark = SparkSession.builder.appName("R2DE3_Workshop2").getOrCreate()
+   ```
+
+2. **Data Ingestion & Profiling (สำรวจหาความผิดปกติ):**
+   * โหลดไฟล์ข้อมูลเข้า Spark DataFrame: `df = spark.read.csv("...", header=True, inferSchema=True)`
+   * ตรวจสอบ Schema: `df.printSchema()`
+   * ดูภาพรวมสถิติ: `df.describe().show()`
+   * ตรวจสอบค่า Missing (Coverage Anomalies): นับค่า `null` ในแต่ละคอลัมน์ด้วย `F.count(F.when(F.isnan(c) | F.col(c).isNull(), c))`
+
+3. **Data Cleansing & Transformation (แก้ไขปัญหาตาม 4 Anomalies):**
+   * **Syntactical Anomaly:** ปรับรูปแบบวันที่ให้เป็นมาตรฐานเดียวกันด้วย `F.to_date(F.col("Date"), "yyyy-MM-dd")`
+   * **Semantic Anomaly:** ตรวจสอบความถูกต้องของรหัส เช่น `Country` หรือ `ProductNo` ที่ไม่ตรงกับ Business Rules
+   * **Coverage Anomaly (Missing Values):** จัดการค่าสูญหายด้วยกลยุทธ์ที่เหมาะสม เช่น ใช้ `df.dropna(subset=["CustomerID"])` หรือแทนค่า Default ด้วย `df.fillna()`
+   * **Outliers / Integrity Constraints:** กรองข้อมูลที่ผิดธรรมชาติ เช่น จำนวนสินค้าติดลบ `df.filter(F.col("Quantity") > 0)`
+
+4. **Export Cleaned Data:**
+   * บันทึกข้อมูลที่สะอาดแล้วในรูปแบบ Parquet เพื่อคงโครงสร้าง Data Types และเพิ่มประสิทธิภาพการประมวลผลสำหรับขั้นตอนถัดไป ([[Chapter 03 - Cloud Computing and Bash]])
 
 ---
 
