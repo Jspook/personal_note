@@ -222,34 +222,228 @@ spark.sql("SELECT city, SUM(amount) FROM t GROUP BY city").show()   # Action: �
 ### 2.6 Workshop 2: Data Cleansing with Spark
 
 * **แหล่งเรียนรู้ & โน้ตบุ๊กปฏิบัติการ:** [Google Colab - Workshop 2 (กด File > Save a copy in Drive)](https://colab.research.google.com/drive/18lqcIn47PfOXcFQSghlfW_9sSwXfMin2)
-* **เป้าหมาย:** นำข้อมูลที่ได้จาก Workshop 1 (Transactions, Products, Customer) มาทำความสะอาดด้วย Apache Spark บน Colab โดยปฏิบัติตามหลักการ Data Profiling และจัดการ Anomalies ทั้ง 4 ประเภท
+* **บริบทธุรกิจ (Business Context):** บริษัท Chic & Cozy มีข้อมูลธุรกรรมการค้าปลีกปริมาณมหาศาลจาก Workshop 1 แต่พบปัญหาข้อมูลผิดรูป สะกดผิด และค่าสูญหาย Data Engineer จึงต้องทำความสะอาดด้วย Apache Spark เพื่อเตรียมข้อมูลให้พร้อมก่อนส่งต่อไปยัง Cloud Storage และ BigQuery Data Warehouse ใน [[Chapter 03 - Cloud Computing and Bash]] และ [[Chapter 05 - Data Warehouse with BigQuery]]
 
-#### ขั้นตอนการปฏิบัติการ (Implementation Pipeline):
+---
 
-1. **ติดตั้งและสร้าง SparkSession บน Colab:**
-   ```python
-   !pip install pyspark
-   from pyspark.sql import SparkSession
-   from pyspark.sql import functions as F
-   from pyspark.sql.types import *
+#### 2.6.1 การติดตั้งและสร้าง SparkSession (Spark 4.x / PySpark)
 
-   spark = SparkSession.builder.appName("R2DE3_Workshop2").getOrCreate()
-   ```
+```python
+# 1. ติดตั้ง Java 17 (สำหรับ Spark 4.x) และ PySpark บน Google Colab
+!apt-get update -qq
+!apt-get install openjdk-17-jdk-headless -qq > /dev/null
 
-2. **Data Ingestion & Profiling (สำรวจหาความผิดปกติ):**
-   * โหลดไฟล์ข้อมูลเข้า Spark DataFrame: `df = spark.read.csv("...", header=True, inferSchema=True)`
-   * ตรวจสอบ Schema: `df.printSchema()`
-   * ดูภาพรวมสถิติ: `df.describe().show()`
-   * ตรวจสอบค่า Missing (Coverage Anomalies): นับค่า `null` ในแต่ละคอลัมน์ด้วย `F.count(F.when(F.isnan(c) | F.col(c).isNull(), c))`
+import os
+os.environ["JAVA_HOME"] = "/usr/lib/jvm/java-17-openjdk-amd64"
 
-3. **Data Cleansing & Transformation (แก้ไขปัญหาตาม 4 Anomalies):**
-   * **Syntactical Anomaly:** ปรับรูปแบบวันที่ให้เป็นมาตรฐานเดียวกันด้วย `F.to_date(F.col("Date"), "yyyy-MM-dd")`
-   * **Semantic Anomaly:** ตรวจสอบความถูกต้องของรหัส เช่น `Country` หรือ `ProductNo` ที่ไม่ตรงกับ Business Rules
-   * **Coverage Anomaly (Missing Values):** จัดการค่าสูญหายด้วยกลยุทธ์ที่เหมาะสม เช่น ใช้ `df.dropna(subset=["CustomerID"])` หรือแทนค่า Default ด้วย `df.fillna()`
-   * **Outliers / Integrity Constraints:** กรองข้อมูลที่ผิดธรรมชาติ เช่น จำนวนสินค้าติดลบ `df.filter(F.col("Quantity") > 0)`
+!pip uninstall -y -q pyspark py4j 2>/dev/null || true
+!pip install -q pyspark==4.1.2
 
-4. **Export Cleaned Data:**
-   * บันทึกข้อมูลที่สะอาดแล้วในรูปแบบ Parquet เพื่อคงโครงสร้าง Data Types และเพิ่มประสิทธิภาพการประมวลผลสำหรับขั้นตอนถัดไป ([[Chapter 03 - Cloud Computing and Bash]])
+# 2. เริ่มต้นสร้าง SparkSession แบบ Local Multi-Core
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as f
+from pyspark.sql.functions import col, sum, when
+
+spark = SparkSession.builder \
+    .master("local[*]") \
+    .appName("Road to Data Engineer 3.0 - Workshop 2") \
+    .getOrCreate()
+
+# 3. ดาวน์โหลดไฟล์ข้อมูล Parquet จาก Workshop 1 ที่มี Anomaly จำลอง
+!wget https://file.designil.com/f/6BamyF+ -O w2_input.parquet
+dt = spark.read.parquet('w2_input.parquet')
+print(f"Total Rows: {dt.count()}, Total Columns: {len(dt.columns)}")
+```
+
+---
+
+#### 2.6.2 การทำ Data Profiling (สำรวจสถิติและตรวจหา Missing Values)
+
+การทำความเข้าใจภาพรวมข้อมูลเพื่อวางแผนจุดที่ต้องตรวจสอบ:
+```python
+# 1. ตรวจสอบ Schema และ Data Types
+dt.printSchema()
+
+# 2. สรุปข้อมูลสถิติเบื้องต้น (Count, Mean, Stddev, Min, Max, Percentiles)
+dt.summary().show()
+
+# 3. ตรวจสอบหา Missing Value (Exercise 1)
+# พบว่า customer_id มีจำนวนแถวไม่ครบเท่าคอลัมน์อื่น
+dt.summary("count").show()
+
+# กรองดูแถวที่เป็น Null
+dt.where(dt.customer_id.isNull()).show(5)
+```
+
+> 💡 **Bonus Tool (ydata-profiling):**
+> สามารถสร้างรายงาน EDA อัตโนมัติในคลิกเดียวด้วย:
+> ```python
+> !pip install ydata-profiling==4.18.4
+> from ydata_profiling import ProfileReport
+> profile = ProfileReport(dt.toPandas(), title="Profiling Report")
+> profile
+> ```
+
+---
+
+#### 2.6.3 การทำ Exploratory Data Analysis (EDA)
+
+##### 1. Non-Graphical EDA (ใช้ Spark Filter/Where)
+```python
+# ค้นหาธุรกรรมราคาสูง
+dt.where(dt.price >= 100).show(5)
+
+# นับธุรกรรมตามเงื่อนไขเวลา (Exercise 2)
+may_count = dt.where(dt.date.startswith("2024-05")).count()
+june_count = dt.where(dt.date.startswith("2024-06")).count()
+print(f"May 2024: {may_count}, June 2024: {june_count}")
+```
+
+##### 2. Graphical EDA (แปลงเป็น Pandas เพื่อ Plot ด้วย Seaborn & Matplotlib)
+```python
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+dt_pd = dt.toPandas()
+
+# Plot 1: Boxplot ดูการกระจายตัวของราคา
+sns.boxplot(x=dt_pd['price'])
+
+# Plot 2: Histogram ซูมดูช่วงราคาต่ำกว่า 40 ปอนด์ (Exercise 3)
+sns.histplot(dt_pd[dt_pd['price'] < 40]['price'], bins=10)
+
+# Plot 3: Scatterplot ดูความสัมพันธ์ระหว่าง Quantity และ Price
+sns.scatterplot(x=dt_pd.quantity, y=dt_pd.price)
+```
+
+---
+
+#### 2.6.4 ขั้นตอนการล้างข้อมูลตาม 5 ความผิดปกติ (Data Cleansing Deep Dive)
+
+##### ปัญหาที่ 1: Data Type ไม่ถูกต้อง (String → Timestamp)
+คอลัมน์ `date` ถูกอ่านเป็น String ต้องแปลงเป็น Timestamp มาตรฐาน:
+```python
+# แปลงคอลัมน์ date เป็น timestamp
+dt_clean = dt.withColumn("date", f.to_timestamp(dt.date, 'yyyy-MM-dd'))
+
+# ตรวจสอบช่วงวันที่ของข้อมูลด้วย Min และ Max
+dt_clean.select(f.min(dt_clean.date), f.max(dt_clean.date)).show()
+
+# ประโยชน์: สามารถใช้ Date functions เช่น f.dayofmonth, f.month, f.year ในการ Filter ได้ทันที
+first_half_jan = dt_clean.where(
+    (f.dayofmonth(dt_clean.date) <= 15) & (f.month(dt_clean.date) == 1) & (f.year(dt_clean.date) == 2024)
+).count()
+```
+
+##### ปัญหาที่ 2: Syntactical Anomalies (Lexical Errors - คำสะกดผิด)
+ตรวจสอบรายชื่อประเทศใน `customer_country` พบคำว่า `'Japane'`:
+```python
+# สำรวจชื่อประเทศทั้งหมดแบบเรียงลำดับ
+dt_clean.select("customer_country").distinct().sort("customer_country").show(40)
+
+# แก้ไขคำสะกดผิดด้วย when...otherwise (Exercise 4)
+dt_clean_country = dt_clean.withColumn(
+    "customer_country_update",
+    when(dt_clean['customer_country'] == 'Japane', 'Japan').otherwise(dt_clean['customer_country'])
+)
+
+# ลบคอลัมน์เก่าและเปลี่ยนชื่อคอลัมน์ใหม่ให้เหมือนเดิม
+dt_clean_v2 = dt_clean_country.drop("customer_country").withColumnRenamed('customer_country_update', 'customer_country')
+```
+
+##### ปัญหาที่ 3: Semantic Anomalies (Integrity Constraints - รหัสสินค้าเกินมาตรฐาน)
+รหัส `product_id` มาตรฐานต้องยาว 5 ตัวอักษร แต่พบว่ามีรหัสยาวเกิน 5 ตัว (เช่น `15044A`, `15044C` มีตัวอักษรระบุสีหรือ Variation ต่อท้าย):
+```python
+# 1. ตรวจสอบสัดส่วนรหัสที่ถูกต้องตาม Regular Expression ^.{5}$ (Exercise 5)
+valid_ratio = dt_clean_v2.where(dt_clean_v2["product_id"].rlike("^.{5}$")).count() / dt_clean_v2.count()
+print("Valid Product ID Ratio:", valid_ratio)  # พบผิดปกติประมาณ 10%
+
+# 2. ค้นหาแถวที่ผิดปกติด้วย .subtract()
+dt_correct = dt_clean_v2.filter(dt_clean_v2["product_id"].rlike("^.{5}$"))
+dt_incorrect = dt_clean_v2.subtract(dt_correct)
+dt_incorrect.select("product_id", "product_name").show(5, truncate=False)
+
+# 3. ตัดให้เหลือเฉพาะรหัสสินค้า 5 ตัวแรกด้วย f.substring
+dt_clean_v3 = dt_clean_v2.withColumn('product_id', f.substring('product_id', 1, 5))
+```
+
+##### ปัญหาที่ 4: Missing Values (จัดการค่าว่าง NULL)
+ตรวจพบ `customer_id` เป็นค่าว่าง:
+```python
+# 1. นับจำนวน Null ในทุกคอลัมน์ด้วย List Comprehension
+dt_nulllist = dt_clean_v3.select([
+    sum(col(c).isNull().cast("int")).alias(c) for c in dt_clean_v3.columns
+])
+dt_nulllist.show()
+
+# 2. แทนค่า NULL ของ customer_id ด้วย '00000' ตามข้อกำหนดของทีม Data Analyst (Exercise 6)
+dt_clean_v4 = dt_clean_v3.withColumn(
+    "customer_id",
+    when(dt_clean_v3['customer_id'].isNull(), '00000').otherwise(dt_clean_v3['customer_id'])
+)
+```
+
+##### ปัญหาที่ 5: Outliers (ค่าสุดโต่ง)
+จากการพล็อต Boxplot พบสินค้าที่ `price > 600`:
+```python
+# ตรวจสอบสินค้าที่ราคาสูงเกิน 600 ปอนด์
+dt_clean_v4.where(dt_clean_v4.price > 600).select("product_id", "product_name", "price").distinct().show(truncate=False)
+```
+> 🔍 **การตัดสินใจทางธุรกิจ (Business Decision):**
+> สินค้าดังกล่าวคือ "ตู้เก็บของโบราณสไตล์วินเทจ (Vintage Storage Cabinet)" ซึ่งเป็นเฟอร์นิเจอร์ชิ้นใหญ่และมีมูลค่าสูงตามธรรมชาติ **จึงเป็น Outlier แท้จริงที่ไม่ใช่ข้อมูลผิดพลาด และไม่ต้องลบหรือแก้ไขใดๆ**
+
+---
+
+#### 2.6.5 ทางเลือกเสริม: การทำ Data Cleansing ด้วย Spark SQL
+
+สามารถสร้าง `TempView` แล้วเขียน SQL ที่คุ้นเคยเพื่อ Clean ข้อมูลได้เช่นกัน:
+```python
+# สร้าง View ในหน่วยความจำ Spark
+dt.createOrReplaceTempView("data")
+
+# แก้ไขคำสะกดผิดและตัดรหัสสินค้าด้วย Spark SQL
+dt_sql_cleaned = spark.sql("""
+SELECT
+    transaction_id,
+    to_timestamp(date, 'yyyy-MM-dd') AS date,
+    CASE
+        WHEN length(product_id) > 5 THEN substr(product_id, 1, 5)
+        ELSE product_id
+    END AS product_id,
+    price,
+    quantity,
+    COALESCE(customer_id, '00000') AS customer_id,
+    product_name,
+    CASE WHEN customer_country = 'Japane' THEN 'Japan' ELSE customer_country END AS customer_country,
+    customer_name,
+    total_amount,
+    thb_amount
+FROM data
+""")
+
+# ตรวจสอบว่าไม่มี product_id ผิดรูปแบบหลงเหลืออยู่ (Exercise 7)
+dt_sql_cleaned.filter(~dt_sql_cleaned["product_id"].rlike("^.{5}$")).show()
+```
+
+---
+
+#### 2.6.6 การส่งออกข้อมูลที่สะอาดแล้ว (Data Export)
+
+```python
+# 1. ส่งออกเป็น Parquet (แนะนำมากที่สุดสำหรับ Data Lake/Warehouse)
+# ตั้ง mode("overwrite") ป้องกัน Error PATH_ALREADY_EXISTS
+dt_clean_v4.write.mode("overwrite").parquet("cleaned_data_output.parquet")
+
+# ทดสอบอ่านไฟล์ Parquet กลับมาเช็คความสมบูรณ์
+dt_verified = spark.read.parquet("cleaned_data_output.parquet")
+print("Verified Rows:", dt_verified.count())
+
+# 2. ส่งออกเป็น CSV (กรณีต้องส่งต่อให้ทีมอื่น)
+dt_clean_v4.write.mode("overwrite").csv('cleaned_data.csv', header=True)
+
+# 3. ส่งออกเป็น Excel (ใช้ toPandas เหมาะสำหรับข้อมูลสรุปขนาดเล็ก)
+# dt_clean_v4.limit(1000).toPandas().to_excel("sample_output.xlsx", index=False)
+```
 
 ---
 
