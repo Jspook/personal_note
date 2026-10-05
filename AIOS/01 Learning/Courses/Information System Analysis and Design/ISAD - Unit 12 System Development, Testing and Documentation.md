@@ -89,10 +89,9 @@ Tasks   Activities  Schedule
 
 **3 Environment Areas สำหรับ Programmer:**
 
-```text
-Code Flow ตาม 3 Environment:
-  [Development Area] -> [Testing Area] -> [Production Area]
-  (กำลังพัฒนา)         (Build Pass แล้ว)  (Deploy แล้ว)
+```mermaid
+flowchart LR
+    Dev["Development Area<br>(กำลังพัฒนา / Local)"] --> Test["Testing Area / Staging<br>(Build & Test Pass)"] --> Prod["Production Area<br>(Live สำหรับผู้ใช้งานจริง)"]
 ```
 
 **Change Control Techniques:**
@@ -121,15 +120,11 @@ Code Flow ตาม 3 Environment:
 
 **ลำดับชั้นของการทดสอบ:**
 
-```text
-Testing Levels (ลำดับจากเล็กไปใหญ่):
-   Unit Testing        -> ทดสอบ Component ย่อย (Function/Class)
-          |
-   Integration Testing -> ทดสอบการเชื่อมต่อระหว่าง Component
-          |
-   System Testing      -> ทดสอบทั้งระบบ vs. Requirements
-          |
-   Acceptance Testing  -> ผู้ใช้งานจริงยืนยันว่ายอมรับระบบ
+```mermaid
+flowchart TD
+    T1["1. Unit Testing<br>(ทดสอบ Component ย่อย / Functions / Classes)"] --> T2["2. Integration Testing<br>(ทดสอบการเชื่อมต่อระหว่าง Modules / APIs)"]
+    T2 --> T3["3. System Testing<br>(ทดสอบระบบทั้งระบบเทียบกับ Requirements)"]
+    T3 --> T4["4. Acceptance Testing (UAT)<br>(Alpha / Beta ทดสอบยืนยันโดยผู้ใช้งานจริง)"]
 ```
 
 #### 2.2.1 Unit Testing

@@ -121,10 +121,11 @@ flowchart TD
 
 เข้าใจโครงสร้างในแต่ละแหล่ง (**Local Schema**) แล้วออกแบบ **Global Schema** กลางที่ทุกแหล่ง map เข้ามาได้
 
-```text
-Local Schema A (full_name)  ─┐
-                              ├──► Global Schema (first_name, last_name) ──► Warehouse
-Local Schema B (first, last) ─┘
+```mermaid
+flowchart LR
+    A["Local Schema A<br>(full_name)"] --> G["Global Schema<br>(first_name, last_name)"]
+    B["Local Schema B<br>(first, last)"] --> G
+    G --> W["Data Warehouse"]
 ```
 
 ปัญหาที่พบ: **Structure Conflict** (โครงสร้างไม่เหมือนกัน เช่นระบบหนึ่งเก็บทุกอย่างในตารางเดียว อีกระบบแยกหลายตาราง)

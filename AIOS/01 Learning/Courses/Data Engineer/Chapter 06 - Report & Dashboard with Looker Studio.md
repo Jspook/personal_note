@@ -10,16 +10,15 @@
 
 ข้อมูลที่ดีที่สุดก็ไร้ค่า ถ้าคนตัดสินใจ "มองไม่เห็น" Chapter 6 คือ **ขั้นสุดท้ายของท่อ**: เปลี่ยนข้อมูลใน BigQuery ให้เป็นกราฟและ Dashboard ที่ฝ่ายธุรกิจเปิดดูเองได้ ด้วย **Looker Studio** (เครื่องมือ Data Visualisation ออนไลน์ฟรีจาก Google) และจบด้วยการทำ Mission แรกให้สำเร็จ
 
-```text
-BigQuery (Table)
-     │  สร้าง View เลือกเฉพาะข้อมูลที่ต้องใช้
-     ▼
-vw_customer_purchase (View)
-     │  Connector
-     ▼
-Looker Studio:  Data Source ──► Charts (Dimension + Metric) ──► Report / Dashboard
-                                                                      │
-                                                         Sales Team / Marketing Team
+```mermaid
+flowchart TD
+    T["BigQuery Table"] -->|สร้าง View เลือกเฉพาะข้อมูล| V["vw_customer_purchase (View)"]
+    V -->|Connector| LS
+    subgraph LS["Looker Studio Workflow"]
+        direction LR
+        DS["Data Source"] --> Ch["Charts<br>(Dimension + Metric)"] --> Rep["Report / Dashboard"]
+    end
+    LS --> Users["Sales Team / Marketing Team"]
 ```
 
 ### ตารางเปรียบเทียบ Report vs Dashboard
@@ -114,8 +113,9 @@ SUM(thb_amount)                       -- ยอดขายรวม
 
 สไลด์แนะนำตัวละคร **Business Analyst (BA)** คือคนที่คุยกับฝั่ง Business ว่าต้องการอะไร ทำไม แล้วถ่ายทอดมายังทีมข้อมูล
 
-```text
-Sales + Marketing ──► BA (สรุป Requirement) ──► Dashboard Wireframe ──► DE/Analyst สร้างจริง
+```mermaid
+flowchart LR
+    Biz["Sales + Marketing"] --> BA["BA<br>(สรุป Requirement)"] --> WF["Dashboard Wireframe"] --> DE["DE / Analyst<br>(สร้างจริง)"]
 ```
 
 **Dashboard Wireframe จาก BA:**

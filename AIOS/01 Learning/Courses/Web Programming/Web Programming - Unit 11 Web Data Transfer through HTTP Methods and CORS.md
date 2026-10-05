@@ -6,14 +6,16 @@
 
 ในการรับส่งข้อมูลสำหรับ RESTful Web APIs การเลือกใช้ **HTTP Methods (Verbs)** ที่ถูกต้องเป็นหัวใจสำคัญในการระบุกรรมวิธีบนทรัพยากร (Resource) รวมถึงความเข้าใจเรื่องคุณสมบัติ **Safe**, **Idempotent**, และกลไกความปลอดภัย **CORS (Cross-Origin Resource Sharing)**
 
-```
- [ Client Browser (Origin A) ]                      [ Web Server (Origin B) ]
-              │                                                │
-              │ ── 1. OPTIONS Preflight (CORS Check) ────────> │
-              │ <── 2. Access-Control-Allow-* Headers ──────── │ (Allowed?)
-              │                                                │
-              │ ── 3. Actual Request (GET/POST/PUT/PATCH) ───> │
-              │ <── 4. Response Payload (JSON/200/201/204) ──── │
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Browser as Client Browser (Origin A)
+    participant Server as Web Server (Origin B)
+    
+    Browser->>Server: OPTIONS /api/data (Preflight Check)
+    Server-->>Browser: 204 No Content (Access-Control-Allow-Origin: Origin A)
+    Browser->>Server: POST /api/data (Actual Request + JSON Payload)
+    Server-->>Browser: 200 OK (Response JSON Data)
 ```
 
 ### ตารางสรุปเปรียบเทียบคุณสมบัติของ HTTP Methods (Master HTTP Methods Matrix)

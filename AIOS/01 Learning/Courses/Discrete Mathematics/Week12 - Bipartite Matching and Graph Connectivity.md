@@ -58,12 +58,30 @@ Bipartite graph ใช้ model โจทย์ที่ต้อง **จับ
 * **Task:** มอบหมายพนักงานให้ทุกงาน โดย **ไม่มีพนักงานคนใดได้มากกว่า 1 งาน**
 * Model: V₁ = งาน, V₂ = พนักงาน, edge {job, employee} ถ้าพนักงานคนนั้นทำงานนั้นได้
 
-```text
-Jobs (V1)      Employees (V2)
- Requirements ── Alvarez, Berkowitz
- Architecture ── Chen, Davis
- Implementation ─ Berkowitz, Chen, Davis
- Testing ─────── Alvarez, Elmo
+```mermaid
+flowchart LR
+    subgraph V1["Jobs (V1)"]
+        Req["Requirements"]
+        Arch["Architecture"]
+        Imp["Implementation"]
+        Test["Testing"]
+    end
+    subgraph V2["Employees (V2)"]
+        Alv["Alvarez"]
+        Berk["Berkowitz"]
+        Chen["Chen"]
+        Dav["Davis"]
+        Elmo["Elmo"]
+    end
+    Req --- Alv
+    Req --- Berk
+    Arch --- Chen
+    Arch --- Dav
+    Imp --- Berk
+    Imp --- Chen
+    Imp --- Dav
+    Test --- Alv
+    Test --- Elmo
 ```
 *(ตัวอย่างสไตล์ Rosen เพื่อประกอบการอธิบาย — สไลด์ต้นฉบับเป็นรูปภาพ)*
 
@@ -154,11 +172,17 @@ A = {J1, J2} → N(A) = {E1} → |N(A)| = 1 < 2 = |A|
 > **Definition 4 — Connected component:** connected subgraph ของ G ที่ **ไม่เป็น proper subgraph ของ connected subgraph อื่น** ของ G (คือ "ก้อนที่เชื่อมกันแบบใหญ่สุด")
 > กราฟที่ไม่ connected มี connected components ตั้งแต่ 2 ก้อนขึ้นไป ซึ่ง **disjoint กัน** และยูเนียนกันได้ G
 
-```text
-G:   a ── b      d ── e
-      \  /       |
-       c         f
-→ disconnected มี 2 connected components: {a,b,c} และ {d,e,f}
+```mermaid
+flowchart LR
+    subgraph C1["Component 1: {a, b, c}"]
+        a --- b
+        b --- c
+        c --- a
+    end
+    subgraph C2["Component 2: {d, e, f}"]
+        d --- e
+        d --- f
+    end
 ```
 
 ---
@@ -171,14 +195,17 @@ G:   a ── b      d ── e
 > * **Cut vertex (articulation point):** จุดยอดที่เมื่อลบออก (พร้อม incident edges) แล้วได้ subgraph ที่มี **connected components มากขึ้น** — ตัวอย่างจริง: **Router**
 > * **Cut edge (bridge):** edge ที่เมื่อลบออกแล้วได้ components มากขึ้น — ตัวอย่างจริง: **Link**
 
-```text
-a ── b ── c ── d
-     |         |
-     e    f ── g
-(สมมติ c–d, d–g, g–f เป็นสาย)
-- b เป็น cut vertex (ลบแล้ว a และ e หลุด)
-- {a,b}, {b,e} เป็น cut edges
+```mermaid
+flowchart LR
+    a --- b
+    b --- e
+    b --- c
+    c --- d
+    d --- g
+    g --- f
 ```
+> **Cut Vertex:** จุด `b` (เมื่อลบจุด `b` จะทำให้กราฟแยกขาดเป็นหลายส่วน)<br>
+> **Cut Edges:** เส้น `{a, b}` และ `{b, e}`
 
 * **Complete graph K<sub>n</sub> (n ≥ 3):** ลบจุดยอดใดก็ได้ K<sub>n−1</sub> ซึ่งยัง connected → **K<sub>n</sub> ไม่มี cut vertex**
 

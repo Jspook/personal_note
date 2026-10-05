@@ -10,20 +10,12 @@
 
 ลองนึกถึง **การล้างผัก** ก่อนทำอาหาร: ถ้าผักมีดินติดอยู่ ต่อให้เชฟเก่งแค่ไหนอาหารก็ไม่อร่อย ข้อมูลก็เช่นกัน ถ้าเข้าไปในระบบทั้งที่ผิดพลาด ผลวิเคราะห์ทุกอย่างจะผิดตาม (**Garbage In, Garbage Out**) Chapter 2 แบ่งเป็น 2 ท่อน: (1) **ทฤษฎีคุณภาพข้อมูลและวิธีหาความผิดปกติ** (2) **เครื่องมือประมวลผลข้อมูลขนาดใหญ่แบบกระจาย: Apache Spark**
 
-```text
-Raw Data
-   │
-   ▼
-Data Profiling / EDA  ── ดูภาพรวม หาปัญหา
-   │
-   ▼
-ตรวจ Data Anomalies:  Syntactical │ Semantic │ Coverage (Missing) │ Outliers
-   │
-   ▼
-แก้ไขข้อมูล ── ข้อมูลเล็ก: Pandas/Polars     ข้อมูลใหญ่: Spark (Distributed)
-   │
-   ▼
-Clean Data → ส่งต่อไป Data Lake / Warehouse
+```mermaid
+flowchart TD
+    D1["1. Raw Data"] --> D2["2. Data Profiling / EDA<br>(ดูภาพรวมและหาปัญหา)"]
+    D2 --> D3["3. ตรวจ Data Anomalies<br>(Syntactical / Semantic / Coverage / Outliers)"]
+    D3 --> D4["4. แก้ไขข้อมูล<br>(เล็ก: Pandas/Polars | ใหญ่: Spark)"]
+    D4 --> D5["5. Clean Data<br>(ส่งต่อไป Data Lake / Warehouse)"]
 ```
 
 ### ตารางเปรียบเทียบเครื่องมือตามขนาดข้อมูล
@@ -154,8 +146,9 @@ $$IQR = Q3 - Q1,\quad \text{Outlier ถ้า } x < Q1 - 1.5\,IQR \ \text{หร
 
 ส่วนหนึ่งของ Hadoop เป็นวิธี Distributed Processing ที่ได้รับความนิยมมากในช่วงก่อนหน้า
 
-```text
-Input ──► Map (แบ่งงานนับ) ──► Shuffle (จัดกลุ่มคำเดียวกัน) ──► Reduce (รวมผล) ──► Output
+```mermaid
+flowchart LR
+    I["Input"] --> M["Map<br>(แบ่งงานนับ)"] --> S["Shuffle<br>(จัดกลุ่มคำเดียวกัน)"] --> R["Reduce<br>(รวมผล)"] --> O["Output"]
 ```
 
 > **ข้อจำกัด `[เสริมนอกสไลด์]`:** MapReduce มักเขียนผลกลางลงดิสก์ระหว่างขั้นตอน จึงช้ากว่าแนวทางประมวลผลในหน่วยความจำอย่าง Spark

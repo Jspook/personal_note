@@ -13,31 +13,14 @@
 
 Software Design เป็น **กระบวนการวนซ้ำ (Iterative Process)** ที่แปลง Requirements ให้เป็น Blueprint สำหรับสร้างซอฟต์แวร์ ในช่วง Design Phase นักวิเคราะห์จะตัดสินใจในรายละเอียดการ Implementation เช่น ภาษาโปรแกรมที่จะใช้ การจัดระเบียบ Process โดยใช้ **Structure Chart** และการสร้าง **Program Specifications** ที่ละเอียด
 
-```text
-Software Design Process: จุดเชื่อมโยงใน Design Phase
-────────────────────────────────────────────────────────────────
-  Functional Model (Use Cases, DFDs)
-  Behavioral Model (State Diagrams)           Other Requirements
-                         |                          |
-                         +──────────+───────────────+
-                                    |
-                      +─────────────────────────+
-                      |   Architectural Design   |
-                      +────────────+────────────+
-                                   |
-                    +──────────────+──────────────+
-                    |              |               |
-              Data Design    Procedural       Interface
-                             Design           Design
-                                   |
-                                   |
-                           Program Modules
-                                   |
-                    +──────────────+──────────────+
-                    |              |               |
-                  Code           Test      Integration &
-                                           Validation
-────────────────────────────────────────────────────────────────
+```mermaid
+flowchart TD
+    Req["Functional & Behavioral Models<br>(Use Cases, State Diagrams, Non-func Req)"] --> Arch["Architectural Design"]
+    Arch --> DD["Data Design"]
+    Arch --> PD["Procedural Design"]
+    Arch --> ID["Interface Design"]
+    DD & PD & ID --> PM["Program Modules & Specifications"]
+    PM --> Code["Implementation<br>(Code, Test, Integration & Validation)"]
 ```
 
 ### ความสัมพันธ์กับ Unit ก่อนหน้า
@@ -302,22 +285,15 @@ for p in people:
 #### Structure Chart (แผนภาพโครงสร้าง)
 **Structure Chart** แสดงการจัดระเบียบและ Interaction ของ Code ในรูปแบบ Hierarchical ที่แสดง Sequence, Selection, Iteration
 
-```text
-ตัวอย่าง Structure Chart:
-
-               +─────────────────+
-               |   Main Program  |
-               +────────+────────+
-       +────────────────+────────────────+
-       |                |                |
-+──────────+    +──────────────+    +──────────+
-| Get Input|    | Process Data |    |  Output  |
-+──────────+    +──────+───────+    +──────────+
-                +──────+──────+
-                |             |
-         +──────────+  +──────────+
-         |Validate  |  |Calculate |
-         +──────────+  +──────────+
+```mermaid
+flowchart TD
+    Main["Main Control Module"]
+    Main --> In["Get Input Module"]
+    Main --> Proc["Process Data Module"]
+    Main --> Out["Output Module"]
+    
+    Proc --> Val["Validate Data Module"]
+    Proc --> Calc["Calculate Module"]
 ```
 
 #### Fan-In และ Fan-Out

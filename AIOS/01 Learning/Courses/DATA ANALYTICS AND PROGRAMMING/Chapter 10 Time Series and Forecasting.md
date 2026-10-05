@@ -12,28 +12,17 @@
 
 **Time Series Forecasting (การพยากรณ์อนุกรมเวลา)** คือการใช้ข้อมูลในอดีตของตัวแปรที่สนใจ มาสร้างโมเดลเพื่อพยากรณ์ค่าในอนาคต โดยมีสมมติฐานว่ารูปแบบ (Pattern) ในอดีตจะยังคงดำเนินต่อไปในอนาคต เทคนิคนี้ใช้กว้างขวางในงานธุรกิจ เช่น การพยากรณ์ยอดขาย ราคาสินค้า อุณหภูมิ และดัชนีเศรษฐกิจ
 
-```text
-กระบวนการ Time Series Forecasting
-══════════════════════════════════════════
-  ข้อมูลอนุกรมเวลาในอดีต (Y₁, Y₂, ..., Yₙ)
-          │
-          ▼
-  ┌─────────────────────────┐
-  │  วิเคราะห์ Pattern      │
-  │  Trend / Seasonal /     │
-  │  Cyclical / Irregular   │
-  └──────────┬──────────────┘
-             │
-     ┌───────┴──────────────┐
-     ▼         ▼            ▼
-  Naïve     Moving      Exponential
-  Method    Average     Smoothing
-             │
-             ▼
-  ┌─────────────────────────┐
-  │  วัดความแม่นยำ          │
-  │  MAD, MSE, MAPE         │
-  └─────────────────────────┘
+```mermaid
+flowchart TD
+    TS["1. ข้อมูลอนุกรมเวลาในอดีต (Y1, Y2, ..., Yn)"] --> Pat["2. วิเคราะห์ Pattern<br>(Trend, Seasonal, Cyclical, Irregular)"]
+    
+    subgraph Models["3. เลือกโมเดลพยากรณ์"]
+        direction LR
+        M1["Naïve Method"] ~~~ M2["Moving Average"] ~~~ M3["Exponential Smoothing"]
+    end
+    Pat --> Models
+    
+    Models --> Eval["4. วัดความแม่นยำ (MAD, MSE, MAPE)"]
 ```
 
 ### ตารางเปรียบเทียบวิธีการพยากรณ์

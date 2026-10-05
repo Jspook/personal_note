@@ -19,6 +19,9 @@ The primary goal is:
 1. **Course Consistency & Backlink Alignment (รักษาความต่อเนื่องทั้งวิชา):** สามารถเปิดดู/อ้างอิงโน้ตบทก่อนหน้าในวิชาเดียวกันได้ เพื่อรักษาโทนการเขียน (Tone of Voice), มาตรฐาน Metadata และนำมาเชื่อมโยง Wiki-Style Backlinks ข้ามบทได้อย่างสมบูรณ์
 2. **Content Enrichment (ขยายความเชิงลึกจากหัวข้อใหญ่):** สไลด์บรรยายมักมีเนื้อหาเป็น Bullet สั้นๆ ให้อธิบายเชิงลึก ยกตัวอย่างสถานการณ์จริง เสริมทฤษฎี/แนวคิดสากลเพิ่มเติมได้ภายใต้ขอบเขตหัวข้อใหญ่ของบทนั้นๆ
 3. **Zero-Loss & Preserved Media:** รักษาคำศัพท์เทคนิค รูปภาพประกอบ ไดอะแกรม และความสัมพันธ์ของเนื้อหาไว้ครบถ้วน
+4. **Two-Phase Diagram Workflow (ASCII-First with Tool Annotation ➔ On-Demand Conversion):**
+   - **Phase 1 (Initial Draft / PDF Summary):** เมื่ออ่านเอกสาร/สไลด์ PDF แล้วสรุปบทเรียน ในรอบแรก **ต้องเขียน Diagram ทั้งหมดเป็น ASCII Text** (````text`) และ **ต้องเขียนกำกับไว้ด้านล่างของทุก Diagram เสมอ** ว่าแนะนำให้ใช้เครื่องมือใดในการแปลง (เช่น `> 💡 **Recommended Tool for Conversion:** Mermaid (Compact 2-row Flowchart)` หรือ `Python (Matplotlib Plot)`) แล้วส่งมอบงานให้ผู้ใช้ตรวจทานก่อน
+   - **Phase 2 (Conversion on Explicit Demand):** **ห้ามแปลง Diagram เองจนกว่าผู้ใช้จะสั่ง** (เช่น "แปลง ASCII Text", "แปลง Diagram") เมื่อผู้ใช้สั่ง จึงค่อยเข้าไปดู ASCII Text และเครื่องมือที่กำกับไว้ แล้วดำเนินการแปลงให้เป็น Mermaid ที่กะทัดรัด หรือรัน Python สร้างรูปภาพลงโฟลเดอร์ `attachments/` ตามที่ระบุ
 
 ---
 
@@ -79,6 +82,7 @@ Every course note MUST follow this section order:
 ```text
 [ASCII architecture diagram]
 ```
+> 💡 **Recommended Tool for Conversion:** [Mermaid / Python (Matplotlib)] - [Details e.g. Compact 2-row Flowchart / Dark-theme Architecture]
 
 ### ตารางเปรียบเทียบ [Technology/Concept] ([Description])
 
@@ -385,6 +389,7 @@ Before saving a note, verify all items:
 ```text
 [ ] Header has source path and page count
 [ ] Part 1 has ASCII diagram AND comparison table
+[ ] All ASCII diagrams have a recommended tool annotation (> 💡 Recommended Tool for Conversion: ...)
 [ ] Every ### sub-section has concrete examples
 [ ] Code blocks have language tag and Thai comments
 [ ] Images and sample output captures preserved and stored in local attachments/

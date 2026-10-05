@@ -15,45 +15,21 @@
 - **System Interfaces (Machine-to-Machine):** การเชื่อมต่อแลกเปลี่ยนข้อมูลระหว่างโปรแกรมหรือระบบ เช่น REST API, Message Queue, EDI จัดการในส่วนของ System Integration และ Architecture Design
 - **User Interfaces (Human-to-Computer):** การสื่อสารระหว่างมนุษย์กับซอฟต์แวร์ ผ่านการมองเห็น การสัมผัส และการได้ยิน **(แกนหลักของ Unit นี้)**
 
-```text
-SDLC: จุดเชื่อมโยงของ UI Design ใน Design Phase
-────────────────────────────────────────────────────────────────────────
-  Analysis Phase: Use Cases, Data Flow Diagrams (DFD), Non-Functional Req.
-                                 │
-                                 ▼
-  ┌──────────────────────────────────────────────────────────────────┐
-  │                 UI Design Process (กระบวนการ 5 ขั้น)              │
-  │                                                                  │
-  │  1. Use Scenario        ──► ดึง Happy Path & Edge Cases จาก     │
-  │     Development              Essential Use Cases                 │
-  │          │                                                       │
-  │          ▼                                                       │
-  │  2. Interface Structure ──► ออกแบบ Interface Structure Diagram   │
-  │     Design (ISD)             (ISD) แสดงความสัมพันธ์ของทุกหน้าจอ  │
-  │          │                                                       │
-  │          ▼                                                       │
-  │  3. Interface Standards ──► กำหนด Metaphors, Templates, Style     │
-  │     Design                   Guide, Object-Action Grammar        │
-  │          │                                                       │
-  │          ▼                                                       │
-  │  4. UI Prototyping      ──► สร้าง Storyboard / HTML / Language   │
-  │     (Fidelity Ladder)        Prototype เพื่อทดสอบ Interaction    │
-  │          │                                                       │
-  │          ▼                                                       │
-  │  5. UI Evaluation       ──► Heuristic, Walkthrough, Interactive, │
-  │                              Formal Usability Testing            │
-  └──────────────────────────────────────────────────────────────────┘
-                                 │
-         ┌───────────────────────┼───────────────────────┐
-         ▼                       ▼                       ▼
-  Navigation Design         Input Design            Output Design
-  (Menus, Shortcuts,     (Form Controls,         (Reports, Bias-Free
-   Status Messages)       Data Validation)        Visualizations)
-                                 │
-                                 ▼
-                         Mobile UI Design
-                   (Thumb Zone, Mobile-First)
-────────────────────────────────────────────────────────────────────────
+```mermaid
+flowchart TD
+    An["Analysis Phase<br>(Use Cases, DFDs, Requirements)"] --> U1
+    
+    subgraph UIDesign["UI Design Process (5 ขั้นตอนหลัก)"]
+        U1["1. Use Scenario Development<br>(Happy Path & Edge Cases)"] --> U2["2. Interface Structure Design<br>(ISD แผนผังโครงสร้างหน้าจอ)"]
+        U2 --> U3["3. Interface Standards Design<br>(Metaphors, Templates, Style Guides)"]
+        U3 --> U4["4. UI Prototyping<br>(Storyboard ➔ HTML Mockup ➔ Code)"]
+        U4 --> U5["5. UI Evaluation<br>(Heuristic / Usability Testing)"]
+        U5 -.->|พบจุดปรับปรุง| U2
+    end
+    
+    UIDesign --> Out1["Navigation Design<br>(Menus, Shortcuts)"]
+    UIDesign --> Out2["Input Design<br>(Forms, Validation)"]
+    UIDesign --> Out3["Output Design<br>(Reports, Charts)"]
 ```
 
 ### ตารางเปรียบเทียบ: ระดับของ UI Prototype (Fidelity Spectrum)
@@ -136,34 +112,13 @@ SDLC: จุดเชื่อมโยงของ UI Design ใน Design Phas
 
 กระบวนการออกแบบ UI เป็นการทำงานแบบ **Iterative (วนซ้ำปรับปรุง)** ไม่ใช่เส้นตรงแบบขั้นตอนเดียวจบ
 
-```text
-               ┌────────────────────────────────────────────────────────┐
-               │ 1. Use Scenario Development (วิเคราะห์เคสการใช้งาน)    │
-               └───────────────────────────┬────────────────────────────┘
-                                           │
-                                           ▼
-               ┌────────────────────────────────────────────────────────┐
-               │ 2. Interface Structure Design (วาดแผนผังหน้าจอ ISD)    │
-               └───────────────────────────┬────────────────────────────┘
-                                           │
-                                           ▼
-               ┌────────────────────────────────────────────────────────┐
-               │ 3. Interface Standards Design (วางมาตรฐาน Metaphor)     │
-               └───────────────────────────┬────────────────────────────┘
-                                           │
-                                           ▼
-               ┌────────────────────────────────────────────────────────┐
-               │ 4. UI Prototyping (ทำต้นแบบ Storyboard/HTML/Code)      │
-               └───────────────────────────┬────────────────────────────┘
-                                           │
-                                           ▼
-               ┌────────────────────────────────────────────────────────┐
-               │ 5. Interface Evaluation (ทดสอบกับผู้เชี่ยวชาญ/ผู้ใช้)  │
-               └───────────────────────────┬────────────────────────────┘
-                                           │
-                                  พบปัญหา / ปรับปรุง
-                                           │
-                                           └──► วนกลับไปขั้นตอน 2, 3 หรือ 4
+```mermaid
+flowchart TD
+    S1["1. Use Scenario Development<br>(วิเคราะห์เคสการใช้งาน)"] --> S2["2. Interface Structure Design<br>(วาดแผนผังหน้าจอ ISD)"]
+    S2 --> S3["3. Interface Standards Design<br>(วางมาตรฐาน Metaphor & Templates)"]
+    S3 --> S4["4. UI Prototyping<br>(ทำต้นแบบ Storyboard / Mockup / Code)"]
+    S4 --> S5["5. Interface Evaluation<br>(ทดสอบกับผู้เชี่ยวชาญ / ผู้ใช้งานจริง)"]
+    S5 -.->|พบปัญหา / ปรับปรุง| S2
 ```
 
 #### Step 1: Use Scenario Development (การพัฒนา Use Scenario)
@@ -249,22 +204,23 @@ SDLC: จุดเชื่อมโยงของ UI Design ใน Design Phas
 
 #### คู่มือการเลือกใช้ Input Controls
 
-```text
-  ต้องการให้ผู้ใช้เลือกตัวเลือกอย่างไร?
-  │
-  ├─► เลือกระหว่าง เปิด/ปิด ค่าเดียว ─────────────► [ Toggle Switch / Single Checkbox ]
-  │
-  ├─► มีตัวเลือกให้เลือก "ข้อเดียวเท่านั้น" (Mutually Exclusive)
-  │    ├─► ตัวเลือกน้อย (1 - 4 ตัวเลือก) ────────► [ Radio Buttons ] (เห็นครบทุกตัวเลือกทันที)
-  │    └─► ตัวเลือกมาก (5 ตัวเลือกขึ้นไป) ───────► [ Drop-down List Box ] (ประหยัดพื้นที่หน้าจอ)
-  │
-  ├─► เลือกได้ "หลายข้อพร้อมกัน" (Multiple Selection)
-  │    ├─► ตัวเลือกน้อย ─────────────────────────► [ Checkboxes Group ]
-  │    └─► ตัวเลือกมาก / มีการค้นหา ─────────────► [ Multi-select List Box with Chips ]
-  │
-  └─► กรอกข้อความอิสระ
-       ├─► ข้อความบรรทัดเดียว (ชื่อ, อีเมล) ─────► [ Single-line Text Box ]
-       └─► ข้อความหลายบรรทัด (ที่อยู่, ความเห็น) ─► [ Text Area / Multi-line Box ]
+```mermaid
+flowchart TD
+    Q{"ต้องการให้ผู้ใช้เลือกข้อมูลแบบไหน?"}
+    
+    Q -->|เปิด / ปิด ค่าเดียว| C1["Toggle Switch / Single Checkbox"]
+    
+    Q -->|เลือกได้ข้อเดียว Mutually Exclusive| Q_Single{"จำนวนตัวเลือก"}
+    Q_Single -->|น้อย: 1-4 ตัวเลือก| C2["Radio Buttons (เห็นครบทุกข้อทันที)"]
+    Q_Single -->|มาก: 5 ตัวเลือกขึ้นไป| C3["Drop-down List Box (ประหยัดเนื้อที่)"]
+    
+    Q -->|เลือกได้หลายข้อ Multiple Selection| Q_Multi{"จำนวนตัวเลือก"}
+    Q_Multi -->|น้อย| C4["Checkboxes Group"]
+    Q_Multi -->|มาก / ค้นหาได้| C5["Multi-select List Box with Chips"]
+    
+    Q -->|กรอกข้อความอิสระ Free Text| Q_Text{"ความยาวข้อความ"}
+    Q_Text -->|บรรทัดเดียว| C6["Single-line Text Box (ชื่อ, อีเมล)"]
+    Q_Text -->|หลายบรรทัด| C7["Text Area / Multi-line Box (ที่อยู่, รีวิว)"]
 ```
 
 #### การตรวจสอบความถูกต้องของข้อมูล (6 Types of Input Validation)

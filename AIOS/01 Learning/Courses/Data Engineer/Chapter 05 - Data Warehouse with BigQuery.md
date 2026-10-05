@@ -10,14 +10,14 @@
 
 ถ้า **Data Lake** คือโกดังที่กองของทุกอย่างไว้ **Data Warehouse** ก็คือ "ห้องสมุดที่จัดชั้นเรียบร้อย" พร้อมให้ค้นหาและวิเคราะห์ได้เร็ว Chapter 5 สอนแนวคิดของ Data Warehouse (Normalization/Denormalization, Columnar Storage, View, Partition) แล้วพาไปใช้ **Google BigQuery** ซึ่งเป็น **Serverless Data Warehouse** และปิดด้วยการต่อ Airflow ให้โหลดข้อมูลจาก GCS เข้า BigQuery อัตโนมัติ
 
-```text
- GCS (Data Lake)  ──► (Airflow DAG: GCSToBigQueryOperator) ──► BigQuery
-                                                                  Project
-                                                                   └─ Dataset
-                                                                       └─ Table / View
-                                                                              │
-                                                                              ▼
-                                                                 SQL / BigQuery ML / Looker Studio (CH6)
+```mermaid
+flowchart TD
+    GCS["Google Cloud Storage<br>(Data Lake)"] -->|Airflow DAG:<br>GCSToBigQueryOperator| BQ
+    subgraph BQ["Google BigQuery Hierarchy"]
+        direction TB
+        Proj["GCP Project"] --> DS["Dataset"] --> Tab["Table / View"]
+    end
+    BQ --> Serve["Analytics & Serving<br>(SQL / BigQuery ML / Looker Studio)"]
 ```
 
 ### ตารางเปรียบเทียบ Normalize vs Denormalize

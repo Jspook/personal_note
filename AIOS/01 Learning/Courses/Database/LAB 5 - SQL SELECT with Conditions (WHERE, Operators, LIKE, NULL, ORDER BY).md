@@ -11,18 +11,12 @@
 
 LAB 5 ต่อยอดจาก LAB 4 (SELECT พื้นฐาน) โดยเพิ่ม **เงื่อนไข (Conditions)** ในการกรองและเรียงลำดับข้อมูล ซึ่งเป็นหัวใจของ SQL ในการดึงข้อมูลเฉพาะที่ต้องการจากตารางขนาดใหญ่
 
-```text
-SELECT pipeline พร้อม Conditions:
-
-FROM table
-    │
-WHERE condition       ← กรองแถว (ใช้ Comparison, Logical, Special Operators)
-    │
-SELECT columns        ← เลือก column
-    │
-ORDER BY column       ← เรียงลำดับผลลัพธ์
-    │
-Result Set
+```mermaid
+flowchart TD
+    S1["1. FROM table<br>(ระบุแหล่งข้อมูลต้นทาง)"] --> S2["2. WHERE condition<br>(กรองแถว Comparison / Logical)"]
+    S2 --> S3["3. SELECT columns<br>(เลือกและคำนวณคอลัมน์)"]
+    S3 --> S4["4. ORDER BY column<br>(เรียงลำดับผลลัพธ์ ASC/DESC)"]
+    S4 --> S5["5. Result Set<br>(แสดงผลลัพธ์สุดท้าย)"]
 ```
 
 ### ตารางเปรียบเทียบ Operator ที่ใช้ใน WHERE

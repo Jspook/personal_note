@@ -183,11 +183,14 @@ $$M_R = \begin{pmatrix} 1 & 1 & 0 \\ 1 & 1 & 1 \\ 0 & 1 & 1 \end{pmatrix}$$
 
 **ตัวอย่างที่ 1:** Vertices $\{a,b,c,d\}$, Edges $\{(a,b),(a,d),(b,b),(b,d),(c,a),(c,b),(d,b)\}$
 
-```
- c ──► a ──► b ◄── c
-       │     │↺
-       ▼     ▼
-       d ◄── b
+```mermaid
+flowchart TD
+    c --> a
+    c --> b
+    a --> b
+    a --> d
+    b --> d
+    b -->|loop| b
 ```
 *(หมายเหตุ: $(b,b)$ คือ loop ที่โหนด $b$)*
 

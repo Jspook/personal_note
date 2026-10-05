@@ -473,6 +473,17 @@ Do not merely say:
 
 > "There is a diagram."
 
+### Two-Phase Diagram Workflow (ASCII-First Draft ➔ Conversion on Demand)
+1. **Initial Draft (PDF Summarization):** เมื่อสรุปเนื้อหาและแผนภาพจาก PDF ในรอบแรก ให้เขียนโครงร่างแผนภาพเป็น **ASCII Text** (` ```text `) และ **ต้องใส่ข้อความกำกับเครื่องมือแนะนำไว้ด้านล่างเสมอ** เช่น:
+   ```markdown
+   ```text
+   [ASCII diagram]
+   ```
+   > 💡 **Recommended Tool for Conversion:** Mermaid (Compact 2-row Flowchart) / Python (Matplotlib Plot)
+   ```
+   ส่งมอบโน้ตฉบับร่างนี้ให้ผู้ใช้ตรวจทานก่อน
+2. **On-Demand Conversion:** **ห้ามแปลง Diagram ล่วงหน้าโดยไม่ได้รับคำสั่ง** เมื่อผู้ใช้สั่งให้ "แปลง ASCII Text" หรือ "แปลง Diagram" จึงค่อยเข้าไปดู ASCII Text และเครื่องมือที่กำกับไว้ แล้วดำเนินการแปลงเป็น Mermaid ที่กะทัดรัด หรือรัน Python สร้างรูปภาพลง `attachments/` ตามคำสั่ง
+
 ---
 
 # 13. Bilingual Documents

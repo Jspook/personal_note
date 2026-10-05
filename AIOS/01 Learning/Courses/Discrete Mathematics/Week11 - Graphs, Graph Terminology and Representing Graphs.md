@@ -46,15 +46,13 @@ Graphs (บทกราฟ)
 
 **ตัวอย่าง:** กราฟที่มี 4 vertices และ 5 edges
 
-```text
-V = {a, b, c, d}
-E = {{a, b}, {a, c}, {b, c}, {b, d}, {c, d}}
-
-    a ───── b
-     \     /|
-      \   / |
-       \ /  |
-        c ── d
+```mermaid
+flowchart TD
+    a --- b
+    a --- c
+    b --- c
+    b --- d
+    c --- d
 ```
 
 | Thai Term | English Term | คำอธิบาย |
@@ -135,19 +133,22 @@ E = {{a, b}, {a, c}, {b, c}, {b, d}, {c, d}}
 | c) | 1 edge จากเมืองต้นทาง → ปลายทาง (ถ้ามีเที่ยวบิน) | **Simple directed graph** |
 | d) | 1 edge **ต่อเที่ยวบิน** จากต้นทาง → ปลายทาง | **Directed multigraph** (BKK→CNX 4 เส้น) |
 
-```text
-(c) Simple directed graph — CNX เป็น hub
-
-              BKK
-               ⇅
-   LOE  ⇄    CNX    ⇄  KBV
-               ⇅      ↗
-              USM ────┘   (USM → KBV ทางเดียว)
-
-(d) Directed multigraph — ใส่จำนวนเส้นตามเที่ยวบิน
-   BKK→CNX ×4, CNX→BKK ×2, CNX→KBV ×3, KBV→CNX ×2,
-   CNX→LOE ×1, LOE→CNX ×2, CNX→USM ×3, USM→CNX ×2, USM→KBV ×1
+```mermaid
+flowchart TD
+    subgraph FlightHub["Simple Directed Graph (CNX Hub)"]
+        CNX((CNX)) <--> BKK((BKK))
+        CNX <--> LOE((LOE))
+        CNX <--> KBV((KBV))
+        CNX <--> USM((USM))
+        USM --> KBV
+    end
 ```
+> **Directed Multigraph (เที่ยวบินไป-กลับ):** BKK $
+ightleftharpoons$ CNX (4/2), CNX $
+ightleftharpoons$ KBV (3/2), CNX $
+ightleftharpoons$ LOE (1/2), CNX $
+ightleftharpoons$ USM (3/2), USM $
+ightarrow$ KBV (1)
 
 **การประยุกต์ใช้กราฟอื่นๆ:** Social networks, Communications networks (Call graphs), Information networks (Web pages & links), Software design (Module/Library dependencies), Transportation networks, Biological networks (Species/Protein interaction), Semantic Networks (NLP), Tournaments
 
@@ -237,12 +238,19 @@ E = {{a, b}, {a, c}, {b, c}, {b, d}, {c, d}}
 
 * **Noncomplete graph:** simple graph ที่มีอย่างน้อย 1 คู่จุดยอดที่ไม่มี edge เชื่อม
 
-```text
-Q1:  0 ── 1
-
-Q2:  00 ── 01        Q3: เพิ่ม bit หน้าให้ Q2 สองชุด (0xx, 1xx)
-      |     |            แล้วเชื่อมจุดที่ตรงกัน → ลูกบาศก์ 8 จุด
-     10 ── 11
+```mermaid
+flowchart TD
+    subgraph Q1["Q1 (1-Cube)"]
+        direction LR
+        n0["0"] --- n1["1"]
+    end
+    subgraph Q2["Q2 (2-Cube)"]
+        direction TB
+        n00["00"] --- n01["01"]
+        n10["10"] --- n11["11"]
+        n00 --- n10
+        n01 --- n11
+    end
 ```
 
 ---

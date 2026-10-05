@@ -4,17 +4,12 @@
 
 สถาปัตยกรรมเซิร์ฟเวอร์แบบดั้งเดิม (เช่น Apache/PHP) ใช้รูปแบบ **Thread-per-Request** ซึ่งจะสร้าง Thread ใหม่ทุกครั้งที่มี Request เข้ามา ทำให้สิ้นเปลืองทรัพยากรเมื่อมีทราฟฟิกสูง ในขณะที่ **Node.js** นำเสนอรูปแบบใหม่ผ่าน **Event-driven, Non-blocking I/O Model** บน **Google Chrome V8 Engine** ช่วยให้เซิร์ฟเวอร์แบบ Single-thread สามารถรองรับ Concurrent Requests จำนวนมากได้อย่างมีประสิทธิภาพ
 
-```
-[ Client Browser ] <--- HTTP Request / Response ---> [ Node.js Server ]
-                                                           │
-                                                  (Single Threaded)
-                                                           │
-                                                  [ V8 Engine & Event Loop ]
-                                                           │
-                                            ┌──────────────┴──────────────┐
-                                            ▼                             ▼
-                                   [ Non-blocking I/O ]           [ Express.js App ]
-                                   (File / DB Access)             (Routing & Middleware)
+```mermaid
+flowchart TD
+    Client["Client Browser"] ---|HTTP Request / Response| Server["Node.js Server"]
+    Server --> Loop["V8 Engine & Event Loop (Single Threaded)"]
+    Loop --> IO["Non-blocking I/O (Thread Pool / DB / FS)"]
+    Loop --> App["Express.js App (Routing & Middleware)"]
 ```
 
 ### ตารางเปรียบเทียบการพัฒนาระบบ Back-End: Pure Node.js (`http`) vs Express.js Framework

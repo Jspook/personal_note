@@ -9,18 +9,9 @@
 
 **Subquery** (หรือ Inner Query / Nested Query) คือ SQL query ที่อยู่ภายใน query อื่น Subquery จะถูก execute ก่อน แล้วผลลัพธ์ถูกส่งต่อให้ Outer Query ใช้งาน เปรียบเหมือนการแบ่งปัญหาซับซ้อนออกเป็น 2 ขั้นตอน — ถามคำถามย่อยก่อน แล้วนำคำตอบมาใช้ถามคำถามหลัก
 
-```text
-Outer Query (คำถามหลัก)
-│
-│   SELECT ...
-│   FROM   ...
-│   WHERE  col IN ( ← Subquery ฝังอยู่ตรงนี้
-│       SELECT col
-│       FROM   other_table
-│       WHERE  condition
-│   )
-│
-└── Subquery execute ก่อน → ส่งผลลัพธ์ให้ Outer Query
+```mermaid
+flowchart TD
+    Sub["1. Inner Query (Subquery ทำงานก่อน)<br>SELECT col FROM other_table WHERE condition"] -->|ส่งผลลัพธ์ Result Set| Main["2. Outer Query (คำถามหลักนำผลไปกรอง)<br>SELECT ... FROM ... WHERE col IN (...)"]
 ```
 
 ### ตารางเปรียบเทียบ Subquery ประเภทต่างๆ
@@ -39,7 +30,7 @@ Outer Query (คำถามหลัก)
 
 ### 2.1 Single-Row Subquery
 
-> > **Single-Row Subquery** คือ Subquery ที่ return ค่า **เพียง 1 ค่า (scalar)** ใช้กับ Comparison Operators ทั่วไป เช่น `=, >, <, !=`
+> > **Single-Row Subquery** คือ Subquery ที่ return ค่า **เพียง 1 ค่า (scalar)** ใช้กับ Comparison Operators ทั่วไป เช่น =, `>`, `<`, `!=`
 
 ```sql
 -- Syntax
@@ -81,7 +72,7 @@ WHERE salary = (
 );
 ```
 
-**ข้อควรระวัง:** ถ้า Subquery return **มากกว่า 1 แถว** แต่ใช้ `=` จะ Error ทันที (`single-row subquery returns more than one row`)
+**ข้อควรระวัง:** ถ้า Subquery return **มากกว่า 1 แถว** แต่ใช้ = จะ Error ทันที (`single-row subquery returns more than one row`)
 
 ---
 
@@ -253,7 +244,7 @@ FROM employees;
 
 ### Checklist สรุปหัวใจสำคัญก่อนสอบ
 
-- [ ] **Single-Row Subquery:** คืน 1 ค่า — ใช้กับ `=`, `>`, `<`, `!=`
+- [ ] **Single-Row Subquery:** คืน 1 ค่า — ใช้กับ =, `>`, `<`, `!=`
 - [ ] **Multi-Row Subquery:** คืนหลายค่า — ใช้กับ `IN`, `NOT IN`, `ANY`, `ALL`
 - [ ] **Correlated Subquery:** อ้างอิง Outer Query — execute ใหม่ทุกแถว
 - [ ] **EXISTS:** ตรวจสอบว่ามีแถวหรือไม่ — ไม่สนค่า แค่สนว่ามีแถวไหม

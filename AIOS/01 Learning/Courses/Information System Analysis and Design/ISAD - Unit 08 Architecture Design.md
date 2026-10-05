@@ -139,18 +139,18 @@ Three-Tier Architecture
 
 แบ่งระบบออกเป็น **หลาย Layer** เพื่อรองรับความซับซ้อน, Scalability, และความปลอดภัย
 
-```text
-N-Tier Architecture
-──────────────────────────────────────────────
-  Client Tier        — Web Browser / Mobile App
-  Presentation Tier  — UI Logic
-  Application Tier   — Business Logic + APIs
-  Data Tier          — Databases + Storage
-  Integration Tier   — External APIs / Services
-  Security & Caching — Authentication + Performance
-  Monitoring & Logging — ติดตาม System Health
-──────────────────────────────────────────────
-เหมาะกับ: Enterprise System ขนาดใหญ่
+```mermaid
+flowchart TD
+    T1["1. Client Tier (Web Browser / Mobile App)"] --> T2["2. Presentation Tier (UI Logic & Rendering)"]
+    T2 --> T3["3. Application Tier (Business Logic & APIs)"]
+    T3 --> T4["4. Data Tier (Databases & Cloud Storage)"]
+    T3 <--> T5["5. Integration Tier (External APIs / Microservices)"]
+    
+    subgraph Cross["Cross-Cutting Concerns"]
+        direction LR
+        Sec["Security & Caching"] ~~~ Mon["Monitoring & Logging"]
+    end
+    Cross -.-> T3
 ```
 
 ---
@@ -180,17 +180,15 @@ N-Tier Architecture
 | **Platform-as-a-Service** | **PaaS** | IaaS + Middleware, DB, OS, Dev Tools — แพลตฟอร์มสำหรับพัฒนา | Developer ที่ต้องการ Platform สำเร็จรูปโดยไม่ต้องจัดการ Infrastructure |
 | **Software-as-a-Service** | **SaaS** | Application สำเร็จรูป เข้าถึงผ่าน Web Browser/App | ผู้ใช้ทั่วไปที่ต้องการแค่ซอฟต์แวร์ ไม่สนใจ Infrastructure |
 
-```text
-Cloud Service Model ความรับผิดชอบ (ยิ่งขึ้นบน ผู้ใช้จัดการน้อยลง)
-─────────────────────────────────────
-  SaaS   Application         ← ผู้ใช้จัดการแค่ Data/Usage
-  ─────────────────────────────
-  PaaS   Runtime + Middleware ← ผู้ใช้จัดการ Application + Data
-  ─────────────────────────────
-  IaaS   Servers + Storage   ← ผู้ใช้จัดการแทบทุกอย่างยกเว้น Physical
-  ─────────────────────────────
-  On-Premise                  ← ผู้ใช้จัดการทุกอย่างเอง
-─────────────────────────────────────
+```mermaid
+flowchart TD
+    subgraph Models["Cloud Shared Responsibility Hierarchy (ความรับผิดชอบผู้ใช้ 🔽)"]
+        SaaS["SaaS: จัดการเฉพาะ Data & User Access"]
+        PaaS["PaaS: จัดการ Application Logic & Data"]
+        IaaS["IaaS: จัดการ OS, Middleware, Runtime, App, Data"]
+        OnPrem["On-Premise: ดูแลจัดการเอง 100% ตั้งแต่ Hardware"]
+        SaaS --> PaaS --> IaaS --> OnPrem
+    end
 ```
 
 ##### Cloud Deployment Models (3 รูปแบบการ Deploy)

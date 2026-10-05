@@ -9,19 +9,20 @@
 
 **OUTER JOIN** คือส่วนขยายของ INNER JOIN ที่รักษาแถวซึ่ง **ไม่มีคู่ match** ไว้ในผลลัพธ์ด้วย แทนที่จะตัดทิ้งเหมือน INNER JOIN ช่องที่ไม่มีข้อมูลจะถูกเติมด้วย `NULL` OUTER JOIN สำคัญมากสำหรับ Reporting และการตรวจสอบข้อมูลที่ขาดหายไป
 
-```text
-LEFT OUTER JOIN
-┌─────────────┐    ┌─────────────┐
-│   Table A   │    │   Table B   │
-│ [ทุก row]    │────│ [match]     │
-│             │    │ (NULL ถ้า    │
-│             │    │  ไม่ match)  │
-└─────────────┘    └─────────────┘
-→ เก็บทุก row ของ A, แม้ไม่มีคู่ใน B
-
-RIGHT OUTER JOIN — สลับกัน (เก็บทุก row ของ B)
-
-FULL OUTER JOIN — เก็บทุก row ของทั้งสองตาราง
+```mermaid
+flowchart TD
+    subgraph LOJ["LEFT OUTER JOIN"]
+        direction LR
+        LA["Table A (เก็บทุกแถว)"] -->|Match หรือ NULL| LB["Table B (เฉพาะที่ตรงกัน)"]
+    end
+    subgraph ROJ["RIGHT OUTER JOIN"]
+        direction LR
+        RB["Table B (เก็บทุกแถว)"] -->|Match หรือ NULL| RA["Table A (เฉพาะที่ตรงกัน)"]
+    end
+    subgraph FOJ["FULL OUTER JOIN"]
+        direction LR
+        FA["Table A (เก็บทุกแถว)"] ---|Match หรือ NULL| FB["Table B (เก็บทุกแถว)"]
+    end
 ```
 
 ### ตารางเปรียบเทียบ OUTER JOIN ทั้ง 3 ชนิด

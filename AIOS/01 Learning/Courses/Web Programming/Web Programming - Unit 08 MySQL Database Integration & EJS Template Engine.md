@@ -7,9 +7,10 @@
 2. **Middle Tier (Application / Logic):** Node.js & Express.js รับส่งคำขอ ประมวลผล Business Logic และเชื่อมต่อฐานข้อมูล
 3. **Database Tier (Data Persistence):** ระบบจัดการฐานข้อมูลเชิงสัมพันธ์ (RDBMS) เช่น MySQL เก็บรักษาข้อมูลถาวร
 
-```
-[ Client Tier ]  <--- HTTP (HTML/JSON) --->  [ Application Tier ]  <--- SQL Queries --->  [ Database Tier ]
-(Web Browser)                               (Node.js + Express)                          (MySQL RDBMS)
+```mermaid
+flowchart LR
+    Client["Client Tier<br>(Web Browser)"] ---|HTTP (HTML / JSON)| App["Application Tier<br>(Node.js + Express)"]
+    App ---|SQL Queries / Connection Pool| DB[("Database Tier<br>(MySQL RDBMS)")]
 ```
 
 เมื่อใช้ร่วมกับ **Server-Side Rendering (SSR)** ผ่าน **Template Engine (EJS)** เซิร์ฟเวอร์จะนำข้อมูลจาก MySQL มารวมกับไฟล์ HTML Template แล้วส่งไฟล์ HTML ที่ประกอบสำเร็จแล้วไปแสดงผลที่หน้าจอของ Client

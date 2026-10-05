@@ -4,15 +4,19 @@
 
 เนื่องจากโปรโตคอล **HTTP มีธรรมชาติเป็น Stateless Protocol** (เซิร์ฟเวอร์ไม่จดจำการเชื่อมต่อหรือตัวตนของไคลเอ็นต์ระหว่างคำขอ) จึงเกิดกลไก **HTTP State Management Mechanism (RFC 6265)** ผ่านการทำงานร่วมกันระหว่าง **Cookies** และ **Sessions** เพื่อสร้างสถานะการเชื่อมต่อแบบต่อเนื่อง (Stateful Connection) สำหรับระบบลงชื่อเข้าใช้ (Authentication) และตะกร้าสินค้า
 
-```
-[ Client Browser ]                                            [ Web Server ]
-       │                                                             │
-       │ ── 1. POST /login (Credentials: user/pass) ───────────────> │ 2. Verify Credentials
-       │                                                             │ 3. Create Session Object in Store
-       │ <── 4. Response Header: Set-Cookie: connect.sid=xyz123 ──── │    (e.g., SID = "xyz123")
-       │                                                             │
-       │ ── 5. GET /dashboard (Cookie: connect.sid=xyz123) ────────> │ 6. Look up SID "xyz123" in Store
-       │ <── 7. Render Personal Dashboard HTML ──────────────────── │ 7. Authenticated! Return User Data
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Browser as Client Browser
+    participant Server as Web Server & Session Store
+    
+    Browser->>Server: POST /login (username, password)
+    Note over Server: ตรวจสอบข้อมูล & สร้าง Session Object (SID = xyz123)
+    Server-->>Browser: 200 OK + Set-Cookie: connect.sid=xyz123; HttpOnly
+    
+    Browser->>Server: GET /dashboard (Cookie: connect.sid=xyz123)
+    Note over Server: ค้นหา SID ใน Session Store ➔ พบข้อมูลผู้ใช้
+    Server-->>Browser: 200 OK (Render Dashboard HTML พร้อมข้อมูลส่วนตัว)
 ```
 
 ### ตารางเปรียบเทียบสถาปัตยกรรม: Cookies vs Sessions (Master Comparison Matrix)

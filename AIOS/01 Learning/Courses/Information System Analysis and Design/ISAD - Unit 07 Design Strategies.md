@@ -10,37 +10,13 @@
 
 Unit 07 ครอบคลุมการเปลี่ยนผ่านจาก **Analysis Phase** ไปสู่ **Design Phase** ในวงจรการพัฒนาระบบ (SDLC) โดยเน้นที่การเลือกกลยุทธ์การจัดหาระบบ (**System Acquisition Strategy**) ซึ่งเป็นจุดตัดสินใจสำคัญว่าองค์กรจะสร้างระบบเองภายใน ซื้อซอฟต์แวร์สำเร็จรูป หรือจ้างภายนอก แต่ละแนวทางมีข้อดีข้อเสียและปัจจัยที่ควรพิจารณาแตกต่างกัน
 
-```text
-SDLC Overview
-─────────────────────────────────────────────────────
-  1. Planning
-       │
-  2. Analysis  ──► System Proposal (Deliverable)
-       │
-  3. Design    ──► System Specification (Deliverable)
-       │    ├── Architecture Design
-       │    ├── UI Design
-       │    └── Program Design
-       │
-  4. Implementation
-─────────────────────────────────────────────────────
-
-Design Phase Input/Output:
-  Requirements (จาก Analysis)
-       │
-       ▼
-  Design Phase
-       │
-       ▼
-  System Specification
-    ├── A. Recommended System Acquisition Strategy  ← Unit 07
-    ├── B. Architecture Design
-    ├── C. Hardware and Software Specification
-    ├── D. Interface Design
-    ├── E. Physical Process Model
-    ├── F. Program Design Specifications
-    ├── G. Physical Data Model
-    └── H. Data Storage Design
+```mermaid
+flowchart TD
+    P1["1. Planning Phase"] --> P2["2. Analysis Phase"]
+    P2 -->|Deliverable| Prop["System Proposal"]
+    P2 --> P3["3. Design Phase"]
+    P3 -->|Deliverable| Spec["System Specification<br>(Architecture, UI, Data & Program Design)"]
+    P3 --> P4["4. Implementation Phase"]
 ```
 
 ### ตารางเปรียบเทียบ System Acquisition Strategy ทั้ง 3 แบบ

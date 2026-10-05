@@ -10,11 +10,17 @@
 
 Chapter 1-6 คือการสร้าง "ท่อแรก" ที่ทำงานได้ Chapter 7 ขยายมุมมองสู่ **โลกจริง**: องค์กรจริงออกแบบ Data Architecture อย่างไร ไฟล์ข้อมูลควรเก็บเป็นรูปแบบไหน ข้อมูลส่วนบุคคลต้องปกป้องอย่างไร Data Warehouse ยุคใหม่เป็นอย่างไร DE ต้องรู้เรื่อง Git/Docker/ML แค่ไหน และสุดท้าย **จะวางเส้นทางอาชีพ ทำ Resume Portfolio และเตรียมสัมภาษณ์อย่างไร**
 
-```text
-       งาน End-to-end ของ Data Engineer
-Data Sources ──► Ingest ──► Lake ──► Process ──► Warehouse/Lakehouse ──► Serve (BI, ML)
-                    ▲ ล้อมรอบด้วย ▲
- File Formats │ Governance │ Security & Privacy │ Networking │ Git/Docker/K8s │ ML
+```mermaid
+flowchart TD
+    subgraph Core["Core Data Pipeline Lifecycle"]
+        direction LR
+        S["Data Sources"] --> I["Ingest"] --> L["Data Lake"] --> P["Process"] --> W["DWH / Lakehouse"] --> V["Serve (BI/ML)"]
+    end
+    subgraph Pillars["Supporting Pillars & Infrastructure"]
+        direction LR
+        F["File Formats"] ~~~ G["Governance"] ~~~ Sec["Security & Privacy"] ~~~ Net["Networking"] ~~~ DevOps["Git / Docker / K8s"]
+    end
+    Core --- Pillars
 ```
 
 ### ตารางเปรียบเทียบ File Format

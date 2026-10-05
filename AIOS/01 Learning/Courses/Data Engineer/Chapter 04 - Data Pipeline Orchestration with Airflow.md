@@ -10,16 +10,18 @@
 
 ลองนึกถึง **ผู้จัดการวงออร์เคสตรา**: นักดนตรีแต่ละคน (Task) เก่งของตัวเอง แต่ต้องมีคนบอกว่าใครเริ่มเมื่อไร ใครรอใคร และถ้าใครเล่นผิดจะทำอย่างไร Chapter 4 คือการสร้าง "ผู้จัดการ" ให้ Pipeline ด้วย **Apache Airflow** (รันบน **Google Cloud Composer**) เพื่อให้ Pipeline ทำงานอัตโนมัติ ตรวจสอบสถานะได้ และจัดการ Dependency ระหว่างงาน
 
-```text
-          ┌────────────── Airflow ──────────────┐
-          │  Web UI ◄──► Metadata DB            │
-          │     ▲             ▲                 │
-          │  Scheduler ──► Workers (รัน Task)   │
-          │     │                               │
-          │   DAG:  [extract] ──► [transform] ──► [load]
-          └────────────────────────────────────┘
-Google Cloud Composer = Airflow ที่ Google ติดตั้งและดูแลให้ (ใช้ GCS เก็บไฟล์ DAG)
+```mermaid
+flowchart TD
+    subgraph Airflow["Apache Airflow Core Components"]
+        UI["Web UI"] <--> Meta[("Metadata DB")]
+        Sched["Scheduler"] --> Meta
+        Sched --> Workers["Workers (รัน Task)"]
+        UI <--> Sched
+        DAG["DAG: [extract] ➔ [transform] ➔ [load]"]
+        Sched -.->|ควบคุมคิวงาน| DAG
+    end
 ```
+> **Google Cloud Composer** = Airflow ที่ Google ติดตั้งและดูแลให้แบบ Fully Managed (ใช้ GCS เก็บไฟล์ DAG)
 
 ### ตารางเปรียบเทียบเครื่องมือ Orchestration
 
@@ -77,11 +79,19 @@ Google Cloud Composer = Airflow ที่ Google ติดตั้งและ�
 
 > **DAG (Directed Acyclic Graph)** = กราฟที่มีทิศทางและ **ไม่วนกลับ** (วิ่งทางเดียว) 1 Data Pipeline ใน Airflow = 1 DAG
 
-```text
-ผิด (มีวงวน — ไม่ใช่ DAG):      ถูก (DAG):
- A ──► B ──► C                    A ──► B ──┬──► D
- ▲           │                          │      ▲
- └───────────┘                          └──► C ┘
+```mermaid
+flowchart TD
+    subgraph Bad["❌ ผิด (มี Loop วนกลับ — ไม่ใช่ DAG)"]
+        direction LR
+        A1["A"] --> B1["B"] --> C1["C"]
+        C1 -.->|"วนกลับ (Loop)"| A1
+    end
+
+    subgraph Good["✅ ถูก (DAG — มีทิศทางและไม่วนกลับ)"]
+        direction LR
+        A2["A"] --> B2["B"] --> D2["D"]
+        B2 --> C2["C"] --> D2
+    end
 ```
 
 * **Task:** หน่วยงานย่อยใน DAG

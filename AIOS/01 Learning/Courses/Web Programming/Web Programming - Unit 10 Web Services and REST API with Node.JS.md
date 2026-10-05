@@ -4,15 +4,12 @@
 
 **Web Service** คือวิธีการมาตรฐานที่ช่วยให้ซอฟต์แวร์หรือแอปพลิเคชันต่างระบบ สามารถสื่อสารและแลกเปลี่ยนข้อมูลระหว่างกันผ่านเครือข่ายอินเทอร์เน็ตโดยไม่ขึ้นกับภาษาโปรแกรมหรือระบบปฏิบัติการ สถาปัตยกรรม Web Services มีโครงสร้างบทบาทหลัก 3 ส่วนตามมาตรฐาน W3C:
 
-```
-                  [ Service Registry ]
-                  (UDDI / Directory)
-                  ▲                ▲
-       1. Publish │                │ 2. Find
-                  │                │
-[ Service Provider ] <──────────> [ Service Requestor ]
-                           3. Bind
-                   (SOAP / REST HTTP)
+```mermaid
+flowchart TD
+    Reg["Service Registry<br>(UDDI / API Gateway / Directory)"]
+    Prov["Service Provider"] -->|1. Publish Service| Reg
+    Req["Service Requestor (Client)"] -->|2. Find / Discover Service| Reg
+    Req ---|3. Bind & Execute (HTTP REST / SOAP)| Prov
 ```
 
 1. **Service Provider:** ผู้ให้บริการที่พัฒนาและเผยแพร่เว็บเซิร์ฟเวอร์
@@ -51,8 +48,9 @@
 
 ### 2.2 แมปปิ้ง HTTP Methods กับการจัดการทรัพยากร (CRUD & Endpoint Matrix)
 
-```
-HTTP Method + URI Endpoint  --->  Action on Resource  --->  Standard HTTP Status Code
+```mermaid
+flowchart LR
+    E["HTTP Method + URI Endpoint"] --> A["Action on Resource"] --> S["Standard HTTP Status Code"]
 ```
 
 | HTTP Method | การทำงานเทียบเท่า CRUD | ผลลัพธ์บน Collection Endpoint (เช่น `/api/v1/products`) | ผลลัพธ์บน Single Resource Endpoint (เช่น `/api/v1/products/101`) |

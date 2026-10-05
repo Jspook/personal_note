@@ -9,34 +9,14 @@
 
 **Discriminant Analysis (การวิเคราะห์จำแนกกลุ่ม)** คือเทคนิคทางสถิติที่ใช้ในกรณีที่ตัวแปรตาม (Y) เป็น **ตัวแปรเชิงกลุ่ม (Categorical)** ซึ่งแตกต่างจาก Regression ที่ Y เป็นตัวแปรเชิงปริมาณ DA มีวัตถุประสงค์ 2 ด้านหลักคือ: (1) ศึกษาว่าตัวแปรใดมีบทบาทสำคัญในการแยกกลุ่ม และ (2) สร้างสมการเพื่อพยากรณ์กลุ่มของ Case ใหม่
 
-```text
-Discriminant Analysis — ภาพรวม
-══════════════════════════════════════════
-  ข้อมูลที่ทราบกลุ่มแล้ว (Training Data)
-  X₁, X₂, ..., Xₚ  +  กลุ่ม (D = 1, 2, ..., k)
-          │
-          ▼
-  ┌─────────────────────────┐
-  │  Discriminant Analysis  │
-  │  D = a + b₁X₁ + ... bₚXₚ │
-  └──────────┬──────────────┘
-             │
-     ┌───────┴──────────┐
-     ▼                  ▼
-  ตรวจสอบเงื่อนไข      Wilks' Lambda Test
-  Box's M Test          (ทดสอบสมการ DA)
-             │
-             ▼
-  ┌─────────────────────────┐
-  │  Classification Function│  ← Fisher's Linear DA
-  │  D₁ = ...,  D₂ = ...   │
-  └──────────┬──────────────┘
-             │
-             ▼
-  พยากรณ์กลุ่มของ Case ใหม่
-             │
-             ▼
-  ตรวจความแม่นยำ (Classification Results)
+```mermaid
+flowchart TD
+    Train["1. Training Data (X1..Xp + กลุ่ม D=1..k)"] --> DA["2. Discriminant Analysis Model<br>(D = a + b1*X1 + ... + bp*Xp)"]
+    DA --> Test1["Box's M Test (ตรวจ Homogeneity Covariance)"]
+    DA --> Test2["Wilks' Lambda (ทดสอบสมการ DA)"]
+    Test1 & Test2 --> CF["3. Classification Functions (Fisher's LDA)"]
+    CF --> Pred["4. พยากรณ์กลุ่มของ Case ใหม่"]
+    Pred --> Eval["5. ตรวจความแม่นยำ (Classification Results / Confusion Matrix)"]
 ```
 
 ### ตารางเปรียบเทียบ Regression vs Discriminant Analysis

@@ -9,19 +9,16 @@
 
 **JOIN** คือการรวมข้อมูลจากตั้งแต่ 2 ตารางขึ้นไปเข้าด้วยกัน โดยอาศัยเงื่อนไขความสัมพันธ์ระหว่างคอลัมน์ ซึ่งเป็นหัวใจสำคัญของ Relational Database เพราะข้อมูลในระบบจริงถูกจัดเก็บแยกตารางตามหลัก Normalization การ JOIN จึงเป็นวิธีนำข้อมูลกลับมาใช้ร่วมกัน
 
-```text
-ตารางที่ 1 (Left Table)         ตารางที่ 2 (Right Table)
-┌──────────────┐                ┌──────────────┐
-│ col_A | col_B│                │ col_B | col_C│
-└──────┬───────┘                └───────┬──────┘
-       │                                │
-       └──────── JOIN Condition ────────┘
-                       │
-                       ▼
-                ┌─────────────────┐
-                │  Result Set     │
-                │col_A|col_B|col_C│
-                └─────────────────┘
+```mermaid
+flowchart TD
+    subgraph Inputs["ตารางต้นทาง"]
+        direction LR
+        T1["Table 1 (Left)<br>[ col_A | col_B ]"]
+        T2["Table 2 (Right)<br>[ col_B | col_C ]"]
+    end
+    
+    T1 & T2 --> Cond{"JOIN Condition<br>(T1.col_B = T2.col_B)"}
+    Cond --> Res["Result Set<br>[ col_A | col_B | col_C ]"]
 ```
 
 ### ตารางเปรียบเทียบ JOIN ประเภทต่างๆ

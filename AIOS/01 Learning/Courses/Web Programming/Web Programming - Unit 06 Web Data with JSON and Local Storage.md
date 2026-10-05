@@ -6,12 +6,10 @@
 1. **JSON (JavaScript Object Notation):** มาตรฐานรูปแบบข้อความ (Text Format) น้ำหนักเบา สำหรับแลกเปลี่ยนข้อมูลระหว่าง Client และ Server ผ่าน Web APIs / RESTful Services
 2. **Local Storage (Web Storage API):** กลไกการจัดเก็บข้อมูลแบบ Key-Value คู่ขนานบน Web Browser ที่ข้อมูลไม่สูญหายแม้ปิดหน้าต่างเบราว์เซอร์หรือรีสตาร์ตระบบ
 
-```
-[ Web Server / API ] <--- JSON (HTTP Request/Response) ---> [ Web Browser ]
-                                                                 │
-                                                       (Local Storage API)
-                                                                 ▼
-                                                        [ Disk Storage ]
+```mermaid
+flowchart LR
+    Server["Web Server / API"] ---|HTTP JSON Request / Response| Browser["Web Browser (Client)"]
+    Browser -->|Web Storage API| Storage[("Browser Local / Session Storage<br>(Client Disk)")]
 ```
 
 ### ตารางเปรียบเทียบกลไกการแลกเปลี่ยนและจัดเก็บข้อมูลเว็บ (Data Formats & Storage)

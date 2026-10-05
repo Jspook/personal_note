@@ -6,12 +6,17 @@
 1. **Client-Server RDBMS (เช่น MySQL, PostgreSQL):** ทำงานเป็นกระบวนการภายนอก (Separate Process) เหมาะกับระบบขนาดใหญ่ รองรับการเขียนพร้อมกันจำนวนมากผ่านเครือข่าย
 2. **Embedded Database (เช่น SQLite):** ทำงานเป็นไลบรารีที่ฝังรวมอยู่ภายในแอปพลิเคชัน (In-Process) อ่านเขียนข้อมูลตรงลงใน **ไฟล์ดิสก์เดี่ยว (Single File)** โดยไม่ต้องติดตั้งเซิร์ฟเวอร์แยก
 
-```
-[ Traditional RDBMS ]
-  [ Express App ]  <--- Network Socket (Port 3306) --->  [ MySQL Daemon Process ]
-
-[ Embedded SQLite ]
-  [ Express App (In-Process SQLite Library) ]  <--- Direct File I/O --->  [ app.db File ]
+```mermaid
+flowchart TD
+    subgraph Traditional["Traditional Client-Server RDBMS (MySQL)"]
+        direction LR
+        App1["Express App"] ---|Network Socket (Port 3306)| Server1[("MySQL Server Daemon")]
+    end
+    
+    subgraph Embedded["Embedded Database (SQLite)"]
+        direction LR
+        App2["Express App (In-Process Library)"] ---|Direct File I/O| File1[("app.db File (On Disk)")]
+    end
 ```
 
 ร่วมกับการใช้ **EJS Partial Templates** ในการสร้างมอดูลส่วนประกอบของหน้าเว็บแบบใช้ซ้ำ (Modular UI Components) เช่น Header, Footer, และ Navigation Bar ตามหลักการ DRY (Don't Repeat Yourself)

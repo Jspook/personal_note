@@ -9,20 +9,12 @@
 
 **Aggregate Functions** คือฟังก์ชันที่ทำการคำนวณบน **กลุ่มข้อมูล (Group)** และ return ค่าเดียว เช่น ผลรวม, ค่าเฉลี่ย, จำนวนนับ **GROUP BY** คือ clause ที่ใช้แบ่งข้อมูลออกเป็นกลุ่มเพื่อให้ Aggregate Functions คำนวณทีละกลุ่ม และ **HAVING** คือ WHERE ของกลุ่มข้อมูล
 
-```text
-ข้อมูลดิบ (raw data)
-        │
-        ▼
-   GROUP BY           ← แบ่งออกเป็นกลุ่ม
-        │
-        ▼
-Aggregate Functions  ← คำนวณในแต่ละกลุ่ม (COUNT, SUM, AVG, MAX, MIN)
-        │
-        ▼
-    HAVING            ← กรองกลุ่ม (optional)
-        │
-        ▼
-   Result Set         ← 1 แถวต่อ 1 กลุ่ม
+```mermaid
+flowchart TD
+    R["1. Raw Data (จาก FROM / WHERE)"] --> G["2. GROUP BY<br>(จัดกลุ่มข้อมูลตามคอลัมน์)"]
+    G --> A["3. Aggregate Functions<br>(คำนวณสรุป COUNT, SUM, AVG, MAX, MIN)"]
+    A --> H["4. HAVING<br>(กรองกลุ่มตามเงื่อนไข Aggregate)"]
+    H --> Res["5. Result Set<br>(1 แถวสรุปต่อ 1 กลุ่ม)"]
 ```
 
 ### ตารางสรุป Aggregate Functions
