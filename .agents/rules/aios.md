@@ -19,6 +19,7 @@ Primary context: `AIOS/me.md`, `AIOS/Skill Map.md`, `AIOS/Vault Map.md`. Use the
 - **`how-to-write-note`**: Academic note structuring, formatting, citations, backlinks.
 - **`Docling MCP` / `PyMuPDF`**: Raw document extraction tool. Delegates to tutor -> write-note.
 - **`note-manager`**: Create, update, restructure notes.
+- **`aios-humanize`**: Rewrite AI-sounding prose (Thai/English) in drafts, README, Resume/Portfolio, posts, note sentences. Prose only; preserves code, LaTeX, links, source labels, template structure.
 - **`mistake-log` / `progress-tracker`**: Track meaningful mistakes and major milestones.
 - **`personal-coach` / `daily-review`**: Fitness, habits, daily tasks.
 
