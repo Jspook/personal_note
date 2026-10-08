@@ -6,6 +6,7 @@
 * **แหล่งที่มา:** [DB Learning KMITL (Submission #108889)](https://dblearning.it.kmitl.ac.th/quiz/submission/108889)
 * **วันที่เริ่ม:** 2026-09-24 | **วันที่ส่ง:** 2026-10-01
 * **สถานที่บันทึก:** `AIOS/01 Learning/Learning Progress/SQL/SQL-Lab-08-SQL AGGREGATE FUNCTION.md`
+* **Source Reference (พร้อมเฉลย):** `Resources/References/Learning SQL 8 with answer.md`
 
 ---
 
@@ -61,6 +62,18 @@ group by customerName
 order by customerName asc
 ```
 
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+SELECT customerName, SUM(quantityOrdered) `Quantity Ordered`
+from customers
+join orders
+using (customerNumber)
+join orderdetails
+using (orderNumber)
+group by customerName
+order by customerName ASC;
+```
+
 > [!TIP] **แนวคิด:** JOIN 3 ตาราง (`customers → orders → orderdetails`) แล้วใช้ `SUM(quantityOrdered)` รวมทุก orderdetails ของลูกค้าแต่ละราย จากนั้น `GROUP BY customerName` และ `ORDER BY customerName ASC`
 
 ---
@@ -78,6 +91,16 @@ order by customerName asc
 select o.city , count(e.employeeNumber) from employees e
 join offices o using (officeCode)
 group by city
+```
+
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+SELECT city, COUNT(employeeNumber)
+from offices
+join employees
+using (officeCode)
+group by city
+having COUNT(employeeNumber) > 2;
 ```
 
 > [!WARNING] **หมายเหตุ:** โจทย์ระบุให้แสดงเฉพาะเมืองที่มีพนักงาน **มากกว่า 2 คน** แต่ Query ที่ส่งขาด `HAVING count(e.employeeNumber) > 2`
@@ -118,6 +141,19 @@ JOIN customers c
     USING (customerNumber);
 ```
 
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+SELECT country, productCode, quantityOrdered, buyPrice, quantityOrdered*buyPrice `Net Sales`
+from customers
+join orders
+using (customerNumber)
+join orderdetails
+using (orderNumber)
+join products
+using (productCode)
+;
+```
+
 > [!TIP] **แนวคิด:** JOIN 4 ตาราง ตามลำดับ `products → orderdetails → orders → customers` แล้วคำนวณ Net Sales ด้วย expression `qty × buyPrice` ใน SELECT
 
 ---
@@ -156,6 +192,20 @@ GROUP BY
     m.lastName;
 ```
 
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+SELECT e.employeeNumber `Employee Number`, concat(e.firstName, ' ',e.lastName) `Employee Name`, o.country, e.reportsTo, concat(report.firstName, ' ',report.lastName) `Report Name`, 
+count(c.customerNumber) `Total customer`
+from employees e
+join offices o
+using (officeCode)
+left outer join employees report
+on (report.employeeNumber = e.reportsTo)
+left outer join customers c
+on (e.employeeNumber = c.salesRepEmployeeNumber)
+group by e.employeeNumber;
+```
+
 > [!TIP] **แนวคิด Key:**
 > - `LEFT JOIN employees m` — Self-join กับตัวเองเพื่อหาชื่อ Manager (manager อาจ NULL สำหรับ CEO)
 > - `LEFT JOIN customers c` — เพื่อรวมพนักงานที่ไม่มีลูกค้า
@@ -187,6 +237,15 @@ GROUP BY
     e.lastName;
 ```
 
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+SELECT salesRepEmployeeNumber `Employee Number`,firstName, LastName, sum(creditLimit)
+from customers c
+join employees e
+on (e.employeeNumber = c.salesRepEmployeeNumber)
+group by salesRepEmployeeNumber;
+```
+
 > [!TIP] **แนวคิด:** JOIN `employees` กับ `customers` โดยใช้ ON `salesRepEmployeeNumber = employeeNumber` จากนั้น `SUM(creditLimit)` และ `GROUP BY` ตาม employeeNumber
 
 ---
@@ -207,6 +266,14 @@ group by country
 order by count(officeCode) desc
 ```
 
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+SELECT country, count(officeCode) `number of offices`
+from offices
+group by country
+order by count(officeCode) DESC;
+```
+
 > [!TIP] **แนวคิด:** Query จากตาราง `offices` เดียว ใช้ `COUNT(officeCode)` + `GROUP BY country` + `ORDER BY count DESC`
 
 ---
@@ -223,6 +290,13 @@ order by count(officeCode) desc
 ```sql
 select concat('In 2004, Average payment is ' , avg(amount)) as 'Average payment description' from payments
 where paymentDate like '2004%'
+```
+
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+SELECT concat('In 2004, Average payment is ' , avg(amount)) `Average payment description`
+from payments
+where paymentDate like '2004%';
 ```
 
 > [!TIP] **แนวคิด:** ใช้ `CONCAT()` รวม string กับผลลัพธ์ `AVG(amount)` และ `WHERE paymentDate LIKE '2004%'` กรองเฉพาะปี 2004
@@ -243,6 +317,12 @@ where paymentDate like '2004%'
 select (max(amount) - min(amount)) as 'Range' , (sum(amount) / count(amount)) as 'Average' from payments
 ```
 
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+SELECT max(amount) - min(amount) `Range`, avg(amount) `Average`
+from payments;
+```
+
 > [!TIP] **แนวคิด:** ใช้ `MAX()-MIN()` สำหรับพิสัย และ `SUM()/COUNT()` แทน `AVG()` เพื่อคำนวณค่าเฉลี่ยด้วยตนเอง
 
 ---
@@ -258,6 +338,12 @@ select (max(amount) - min(amount)) as 'Range' , (sum(amount) / count(amount)) as
 * **SQL Query (คำตอบที่ส่ง):**
 ```sql
 select customerName , country , city , COALESCE(state, 'No Data') AS state from customers
+```
+
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+SELECT customerName, country, city, ifnull(state, 'No Data') `state`
+from customers;
 ```
 
 > [!TIP] **แนวคิด:** `COALESCE(column, 'default_value')` คืนค่า column ถ้าไม่ NULL หรือ `'No Data'` ถ้า NULL — เทียบเท่ากับ `IFNULL(state, 'No Data')`
@@ -283,6 +369,13 @@ GROUP BY
     COALESCE(state, 'No Data');
 ```
 
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+SELECT ifnull(state, 'No Data') `state`, (sum(creditLimit)/count(creditLimit)) `Average Credit`
+from customers
+group by state;
+```
+
 > [!TIP] **แนวคิด:** แทน `AVG()` ด้วย `SUM(col) / COUNT(col)` โดยใช้ `COALESCE()` ทั้งใน SELECT และ GROUP BY เพื่อรวม NULL เป็นกลุ่มเดียวกัน
 
 ---
@@ -303,6 +396,25 @@ join products p using (productCode)
 group by productCode
 having avg(ord.quantityOrdered * ord.priceEach) > (select avg(quantityOrdered * priceEach) 
         from orderdetails )
+```
+
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+SELECT productCode, productName , sum(o.netSales) `Sum Net Sales`, avg(o.netSales) `Average Net Sales`
+from (
+  select (quantityOrdered*priceEach) netSales, productCode 
+  from orderdetails
+) o
+join products
+using (productCode)
+group by productCode
+having avg(o.netSales) > (
+  select avg(o2.netSales)
+  from (
+    select (quantityOrdered*priceEach) netSales, productCode
+    from orderdetails
+  ) o2
+);
 ```
 
 > [!TIP] **แนวคิด Key — Correlated Subquery ใน HAVING:**
@@ -329,6 +441,18 @@ group by orderNumber
 having min(quantityOrdered) >= 24
 ```
 
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+select orderNumber, sum(quantityOrdered) 
+from orders
+join orderdetails
+using (orderNumber)
+where status like 'Ship%'
+group by orderNumber
+having min(quantityOrdered) >= 24
+;
+```
+
 > [!TIP] **แนวคิด:** `WHERE status LIKE 'Ship%'` กรองก่อน GROUP BY แล้ว `HAVING MIN(quantityOrdered) >= 24` กรองกลุ่มที่ผ่านแล้ว
 
 ---
@@ -352,6 +476,20 @@ WHERE o.productCode IN (
 )
 GROUP BY o.orderNumber
 HAVING min(o.quantityOrdered) > 28;
+```
+
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+select orderNumber, count(distinct productCode)
+from orders
+join orderdetails
+using (orderNumber)
+join products
+using (productCode)
+where productLine like 'Planes'
+group by orderNumber
+having min(quantityOrdered) > 28
+;
 ```
 
 > [!TIP] **แนวคิด:** ใช้ Subquery ใน WHERE เพื่อกรองเฉพาะสินค้าในสาย 'Planes' จากนั้น `COUNT(DISTINCT productCode)` นับประเภทสินค้าที่ไม่ซ้ำกัน
@@ -381,6 +519,16 @@ GROUP BY
     c.customerNumber
 HAVING 
     SUM(p.amount) > 35000;
+```
+
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+SELECT customerNumber, sum(amount)
+from payments
+where checkNumber like 'N%' and paymentDate > '2004-01-01'
+group by customerNumber
+having min(amount) > 35000
+;
 ```
 
 > [!WARNING] **หมายเหตุ:** โจทย์ระบุ "จำนวนที่จ่ายต่ำสุด > 35000" แต่ Query ใช้ `HAVING SUM > 35000` ซึ่งเป็น "ผลรวม" ไม่ใช่ "ต่ำสุด"
@@ -418,6 +566,14 @@ HAVING
     ) > 1;
 ```
 
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+SELECT avg(creditLimit)
+from customers
+group by salesRepEmployeeNumber
+having count(salesRepEmployeeNumber) > 1;
+```
+
 > [!TIP] **แนวคิด:** ใช้ Correlated Subquery ใน HAVING เพื่อนับจำนวน orders ของ salesRep คนนั้น ๆ
 
 ---
@@ -440,6 +596,18 @@ group by (c.customerName)
 having sum(ord.quantityOrdered * ord.priceEach) > 15000
 ```
 
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+SELECT customerName, sum(quantityOrdered*priceEach) `Expense`
+FROM orderdetails od
+join orders o
+on (od.orderNumber = o.orderNumber)
+join customers c
+on (c.customerNumber = o.customerNumber)
+GROUP BY customerName
+HAVING `Expense` > 15000;
+```
+
 > [!TIP] **แนวคิด:** โจทย์บังคับใช้ `ON` แทน `USING` — ต้องระบุ condition ตาม `table1.column = table2.column` เสมอ
 
 ---
@@ -459,6 +627,17 @@ from employees e
 left outer join offices o using (officeCode)
 group by country , jobTitle
 having count(e.employeeNumber) > 1
+```
+
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+select country, jobTitle, count(*) `Number of employees`
+from offices
+join employees
+using (officeCode)
+where territory = 'EMEA'
+group by country, jobTitle
+having `Number of employees` = 1;
 ```
 
 > [!WARNING] **หมายเหตุ:** Query นี้ขาดเงื่อนไข `WHERE o.territory = 'EMEA'`
@@ -495,6 +674,14 @@ HAVING
     SUM(amount) > 50000;
 ```
 
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+select MONTH(paymentDate) `Month`,sum(amount) `Total amount`
+from payments
+group by MONTH(paymentDate)
+HAVING sum(amount) > 50000
+```
+
 > [!TIP] **แนวคิด:** `MONTH(date_column)` ดึงเลขเดือนจาก date — ใช้ใน GROUP BY และ SELECT พร้อมกันได้
 
 ---
@@ -516,6 +703,19 @@ join offices o using (officeCode)
 where o.country <> c.country
 group by e.employeeNumber,  e.firstName, e.lastName
 HAVING  COUNT(c.customerNumber) > 1;
+```
+
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+select e.firstName, e.lastName, count(*) `Number of customers`
+from employees e
+join customers c
+on (e.employeeNumber = c.salesRepEmployeeNumber)
+join offices o
+on (e.officeCode = o.officeCode)
+where o.country != c.country
+group by e.employeeNumber
+having `Number of customers` > 1
 ```
 
 > [!TIP] **แนวคิด:** `WHERE o.country <> c.country` กรองเฉพาะคู่ที่ประเทศต่างกัน ก่อน GROUP BY
@@ -540,6 +740,16 @@ GROUP BY
     p.productName
 HAVING 
     (MAX(ord.priceEach) - MIN(ord.priceEach)) < 50;
+```
+
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+select productName, min(priceEach), avg(priceEach), max(priceEach)
+from orderdetails
+join products
+using (productCode)
+group by productName
+having max(priceEach) - min(priceEach) < 50
 ```
 
 > [!TIP] **แนวคิด:** `HAVING (MAX-MIN) < 50` ตรวจ "ช่วงราคา" ที่แคบ ทำให้แสดงเฉพาะสินค้าที่ราคา consistent
@@ -573,6 +783,20 @@ ORDER BY
     oc.city ASC;
 ```
 
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+select firstName, lastName, city
+from employees
+join offices
+using (officeCode)
+where country in (
+  select country
+  from customers
+  group by country
+  having count(country) > 1)
+order by city
+```
+
 > [!TIP] **แนวคิด:** Subquery ใน `WHERE IN (...)` คืนรายชื่อประเทศที่มีลูกค้า > 1 คน จากนั้น outer query กรองพนักงานที่ทำงานในประเทศเหล่านั้น
 
 ---
@@ -604,6 +828,18 @@ HAVING
     SUM(ord.quantityOrdered) < 50;
 ```
 
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+select productName, count(orderNumber), sum(quantityOrdered)
+from products
+join orderdetails
+using (productCode)
+where productName like '%America%'
+or productVendor like '%Diecast%'
+group by productName
+having sum(quantityOrdered) < 50;
+```
+
 > [!TIP] **แนวคิด:** `WHERE ... LIKE '%America%' OR ... LIKE '%Diecast%'` กรองด้วย OR จาก 2 columns ต่างกัน จากนั้น HAVING กรองผลรวมที่น้อยกว่า 50
 
 ---
@@ -627,6 +863,19 @@ HAVING SUM(od.quantityOrdered) > 50
 ORDER BY Quantity DESC;
 ```
 
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+select customerName, productCode, sum(quantityOrdered) Quantity
+from orders
+join customers
+using (customerNumber)
+join orderdetails
+using (orderNumber)
+group by customerName, productCode
+having Quantity > 50
+order by Quantity desc;
+```
+
 > [!TIP] **แนวคิด:** GROUP BY ต้องระบุทุก non-aggregate column ใน SELECT — ที่นี่ต้อง GROUP BY `customerName, productCode`
 
 ---
@@ -646,6 +895,17 @@ from customers
 where customerNumber not in (select customerNumber from orders) 
 group by country
 having avg(creditLimit) > 0
+```
+
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+select country, count(c.customerNumber), avg(creditLimit)
+from customers c
+left outer join orders o
+using (customerNumber)
+where o.customerNumber is null
+group by country
+having avg(creditLimit) > 0;
 ```
 
 > [!TIP] **แนวคิด:** `WHERE customerNumber NOT IN (SELECT customerNumber FROM orders)` กรองเฉพาะลูกค้าที่ไม่มีออเดอร์ใดๆ เลย (Anti-join แบบ Subquery)
@@ -676,6 +936,20 @@ WHERE p.productCode IN (
     HAVING SUM(od.quantityOrdered) > 50
 )
 GROUP BY p.productLine;
+```
+
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+select productLine 'Product line', sum(quantityInStock + sumQuantity) 'Quantity'
+from products
+join (
+  select productCode, sum(quantityOrdered) sumQuantity
+  from orderdetails
+  group by productCode
+  having sumQuantity > 50
+) totalorders
+using (productCode)
+group by productLine
 ```
 
 > [!TIP] **แนวคิด ขั้นสูง — Nested Correlated Subquery:**

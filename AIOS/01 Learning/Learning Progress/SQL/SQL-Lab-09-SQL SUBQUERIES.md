@@ -6,7 +6,7 @@
 * **แหล่งที่มา:** [DB Learning KMITL (Submission #108890)](https://dblearning.it.kmitl.ac.th/quiz/submission/108890)
 * **วันที่เริ่ม:** 2026-09-24 09:52:14 | **วันที่ส่ง:** 2026-10-02 21:40:41
 * **สถานที่บันทึก:** `AIOS/01 Learning/Learning Progress/SQL/SQL-Lab-09-SQL SUBQUERIES.md`
-* **Source Reference:** `Resources/References/Learning SQL 9.md`
+* **Source Reference:** `Resources/References/Learning SQL 9.md` | `Resources/References/Learning SQL 9 with answer.md`
 
 ---
 
@@ -70,6 +70,18 @@ select first_name , last_name , hire_date from employees
 where hire_Date = (select hire_date from employees where last_name = 'Baer') and last_name != 'Baer'
 ```
 
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+SELECT first_name,last_name,hire_date
+FROM employees
+WHERE hire_date = (
+    SELECT hire_date
+      FROM employees
+      WHERE last_name = 'Baer'
+)
+AND last_name != 'Baer';
+```
+
 * **คำตอบแบบ Standardized Formatting:**
 ```sql
 SELECT first_name, last_name, hire_date
@@ -106,6 +118,17 @@ where salary > (select avg(salary) from employees)
 order by salary desc
 ```
 
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+SELECT employee_id,first_name,last_name,salary
+FROM employees
+WHERE salary > (
+    SELECT AVG(salary)
+      FROM employees
+)
+ORDER BY salary DESC;
+```
+
 * **คำตอบแบบ Standardized Formatting:**
 ```sql
 SELECT employee_id, first_name, last_name, salary
@@ -135,6 +158,17 @@ ORDER BY salary DESC;
 select department_id , first_name , last_name , job_id
 from employees
 where department_id = (select department_id from departments where department_name = 'Executive' )
+```
+
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+SELECT department_id,first_name,last_name,job_id
+FROM employees
+WHERE department_id = (
+    SELECT department_id
+      FROM departments
+      WHERE department_name = 'Executive'
+);
 ```
 
 * **คำตอบแบบ Standardized Formatting:**
@@ -167,6 +201,18 @@ select * from employees
 where 
 salary > all(select salary from employees where job_id = 'IT_PROG') 
 and job_id != "IT_PROG"
+```
+
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+SELECT *
+FROM employees
+WHERE salary > ALL(
+    SELECT salary
+      FROM employees
+      WHERE job_id = 'IT_PROG'
+)
+AND job_id != 'IT_PROG';
 ```
 
 * **คำตอบที่ถูกต้องและปลอดภัยตามมาตรฐาน SQL (ANSI Standards):**
@@ -202,6 +248,21 @@ join locations using (location_id)
 where city like 'T%')
 ```
 
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+SELECT employee_id,first_name,last_name,department_id
+FROM employees
+WHERE department_id IN (
+      SELECT department_id
+      FROM departments
+      WHERE location_id IN (
+          SELECT location_id
+          FROM locations
+          WHERE city LIKE 'T%'
+    )
+);
+```
+
 * **คำตอบแบบ Standardized Formatting:**
 ```sql
 SELECT employee_id, first_name, last_name, department_id
@@ -228,6 +289,18 @@ WHERE department_id IN (
 select first_name , last_name , department_id from employees
 where salary < (select avg(salary) from employees where department_id = 60)
 order by department_id asc
+```
+
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+SELECT first_name,last_name,department_id
+FROM employees
+WHERE salary < (
+    SELECT AVG(salary)
+      FROM employees
+      WHERE department_id = 60
+)
+ORDER BY department_id ASC;
 ```
 
 * **คำตอบแบบ Standardized Formatting:**
@@ -259,6 +332,19 @@ and department_id != 50
 order by first_name asc
 ```
 
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+SELECT first_name,last_name,department_id
+FROM employees
+WHERE salary = (
+    SELECT MAX(salary)
+      FROM employees
+      WHERE department_id = 50
+)
+AND department_id != 50
+ORDER BY first_name ASC;
+```
+
 * **จุดแก้ไขที่ถูกต้องตามโจทย์:**
 ```sql
 SELECT first_name, last_name, department_id
@@ -285,6 +371,17 @@ ORDER BY first_name ASC;
 ```sql
 select employee_id , first_name , last_name , manager_id from employees
 where employee_id not in (select manager_id from employees where manager_id is not null )
+```
+
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+SELECT employee_id,first_name,last_name,manager_id
+FROM employees
+WHERE employee_id NOT IN (
+    SELECT DISTINCT manager_id
+      FROM employees
+      WHERE manager_id IS NOT NULL
+);
 ```
 
 * **คำตอบแบบ Standardized Formatting:**
@@ -319,6 +416,19 @@ and department_id != 30
 order by hire_date asc
 ```
 
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+SELECT first_name,last_name,salary,hire_date,department_id
+FROM employees
+WHERE hire_date > ALL(
+    SELECT hire_date
+      FROM employees
+      WHERE department_id = 30
+)
+AND department_id != 30
+ORDER BY hire_date ASC;
+```
+
 * **คำตอบแบบ Standardized Formatting:**
 ```sql
 SELECT first_name, last_name, salary, hire_date, department_id
@@ -346,6 +456,18 @@ ORDER BY hire_date ASC;
 select employee_id , first_name , last_name , job_id , salary from employees
 where salary < any(select salary from employees where job_id = 'FI_ACCOUNT')
 and job_id != 'FI_ACCOUNT'
+```
+
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+SELECT employee_id,first_name,last_name,job_id,salary
+FROM employees
+WHERE salary < ANY(
+    SELECT salary
+      FROM employees
+      WHERE job_id = 'FI_ACCOUNT'
+)
+AND job_id != 'FI_ACCOUNT';
 ```
 
 * **คำตอบแบบ Standardized Formatting:**
@@ -390,6 +512,18 @@ HAVING
     );
 ```
 
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+SELECT department_id,count(employee_id) `number of employees`
+FROM employees
+GROUP BY department_id
+HAVING count(employee_id) > (
+    SELECT count(employee_id)
+      FROM employees
+      WHERE department_id = 60
+);
+```
+
 > [!TIP] **แนวคิดการใช้ Subquery ใน HAVING:**
 > เมื่อต้องการเปรียบเทียบผลลัพธ์ของการจัดกลุ่ม (`COUNT(department_id)`) กับค่าสถิติของกลุ่มอ้างอิงอื่น เราจะต้องนำ Subquery ไปวางไว้ใน **`HAVING`** clause ไม่ใช่ใน `WHERE` clause เพราะการนับจำนวนคนเป็น Aggregate Operation ที่เกิดขึ้นหลังการจัดกลุ่มแล้ว
 
@@ -404,6 +538,18 @@ HAVING
 select job_id , max(salary) from employees
 group by job_id 
 having max(salary) < (select max(salary) from employees where job_id = 'HR_REP')
+```
+
+* **Teacher Answer (เฉลยจากระบบ):**
+```sql
+SELECT job_id,MAX(salary)
+FROM employees
+GROUP BY job_id
+HAVING MAX(salary) < (
+    SELECT MAX(salary)
+      FROM employees
+      WHERE job_id = 'HR_REP'
+);
 ```
 
 * **คำตอบแบบ Standardized Formatting:**
