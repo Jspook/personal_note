@@ -1,3 +1,4 @@
 # 03 Projects — exclude standalone/independent project repos from the vault git
 # (each project keeps its own .git / remote; never track them from the vault)
 crwn.st/
+inUni project/
