@@ -19,9 +19,14 @@ The primary goal is:
 1. **Course Consistency & Backlink Alignment (รักษาความต่อเนื่องทั้งวิชา):** สามารถเปิดดู/อ้างอิงโน้ตบทก่อนหน้าในวิชาเดียวกันได้ เพื่อรักษาโทนการเขียน (Tone of Voice), มาตรฐาน Metadata และนำมาเชื่อมโยง Wiki-Style Backlinks ข้ามบทได้อย่างสมบูรณ์
 2. **Content Enrichment (ขยายความเชิงลึกจากหัวข้อใหญ่):** สไลด์บรรยายมักมีเนื้อหาเป็น Bullet สั้นๆ ให้อธิบายเชิงลึก ยกตัวอย่างสถานการณ์จริง เสริมทฤษฎี/แนวคิดสากลเพิ่มเติมได้ภายใต้ขอบเขตหัวข้อใหญ่ของบทนั้นๆ
 3. **Zero-Loss & Preserved Media:** รักษาคำศัพท์เทคนิค รูปภาพประกอบ ไดอะแกรม และความสัมพันธ์ของเนื้อหาไว้ครบถ้วน
-4. **Two-Phase Diagram Workflow (ASCII-First with Tool Annotation ➔ On-Demand Conversion):**
-   - **Phase 1 (Initial Draft / PDF Summary):** เมื่ออ่านเอกสาร/สไลด์ PDF แล้วสรุปบทเรียน ในรอบแรก **ต้องเขียน Diagram ทั้งหมดเป็น ASCII Text** (````text`) และ **ต้องเขียนกำกับไว้ด้านล่างของทุก Diagram เสมอ** ว่าแนะนำให้ใช้เครื่องมือใดในการแปลง (เช่น `> 💡 **Recommended Tool for Conversion:** Mermaid (Compact 2-row Flowchart)` หรือ `Python (Matplotlib Plot)`) แล้วส่งมอบงานให้ผู้ใช้ตรวจทานก่อน
-   - **Phase 2 (Conversion on Explicit Demand):** **ห้ามแปลง Diagram เองจนกว่าผู้ใช้จะสั่ง** (เช่น "แปลง ASCII Text", "แปลง Diagram") เมื่อผู้ใช้สั่ง จึงค่อยเข้าไปดู ASCII Text และเครื่องมือที่กำกับไว้ แล้วดำเนินการแปลงให้เป็น Mermaid ที่กะทัดรัด หรือรัน Python สร้างรูปภาพลงโฟลเดอร์ `attachments/` ตามที่ระบุ
+4. **Mermaid-First Diagrams (ใช้ Mermaid แทน ASCII):** เขียน Diagram ทุกอันเป็น code block ````mermaid` เพราะ ASCII/รูปภาพจะเพี้ยนเมื่อเปิดต่างอุปกรณ์ (ผู้ใช้ยืนยัน 2026-10-15)
+   - ห้ามใช้ ASCII art และไม่ต้องเขียนบรรทัด `Recommended Tool for Conversion`
+   - ใส่ label ใน node ด้วยเครื่องหมายคำพูดเสมอ (`A["ข้อความ (วงเล็บได้)"]`) และใช้ `<br/>` ขึ้นบรรทัดใหม่ เพื่อให้ Obsidian และมือถือ render ได้ตรงกัน
+   - เลือกชนิดให้เหมาะ: `flowchart` (ลำดับ/สถาปัตยกรรม/ต้นไม้หัวข้อ), `sequenceDiagram` (การโต้ตอบ), `erDiagram` (ER), `classDiagram` ฯลฯ ใช้ `subgraph` สำหรับกลุ่ม/ชั้น
+   - ตรวจ syntax ด้วย mermaid parser ก่อนส่งมอบเมื่อทำได้; ใต้ diagram ที่แปลงจากสไลด์ให้ใส่บรรทัด `_ต้นฉบับ: รูป ... [p.N]_`
+   - รูปภาพที่เป็นข้อมูลต้นฉบับ (ภาพหน้าจอ, ผลลัพธ์, รูปถ่าย) เก็บใน `attachments/` ข้างโน้ตตามเดิม
+   - ถ้าเนื้อหาไม่ใช่ diagram ที่ Mermaid วาดได้ (กราฟฟังก์ชัน, plot) ให้ใช้ Python (Matplotlib) บันทึกเป็นรูปใน `attachments/` แล้วบอกผู้ใช้
+5. **Source Labels & Page References:** อ้างเลขสไลด์/หน้า `[p.N]` ในเนื้อหาที่มาจากต้นฉบับ; เนื้อหาที่เพิ่มเองให้อยู่ใน blockquote ขึ้นต้น 💡 พร้อมป้าย `[Source: generated — not verified against original document]`; ข้อความต้นฉบับที่ขาด/พิมพ์ผิด/ขัดกันเอง ห้ามแก้เงียบ ๆ ให้คงไว้พร้อมหมายเหตุ (typo ชัดเจนแก้ได้แต่ต้องสรุปไว้ในส่วน Pitfalls)
 
 ---
 
@@ -71,7 +76,7 @@ Every course note MUST follow this section order:
 
 **Required elements:**
 1. A 2–5 sentence paragraph describing the overall system/concept
-2. An ASCII Architecture Diagram (flow or tree)
+2. A Mermaid Architecture Diagram (flow or tree)
 3. A Comparison Table (if topic involves ≥2 related technologies)
 
 ```markdown
@@ -79,10 +84,12 @@ Every course note MUST follow this section order:
 
 [2–5 sentence overview paragraph]
 
-```text
-[ASCII architecture diagram]
+```mermaid
+flowchart TB
+  A["[Root Concept]"] --> B["[Component 1]"]
+  A --> C["[Component 2]"]
 ```
-> 💡 **Recommended Tool for Conversion:** [Mermaid / Python (Matplotlib)] - [Details e.g. Compact 2-row Flowchart / Dark-theme Architecture]
+_ต้นฉบับ: รูป ... [p.N]_
 
 ### ตารางเปรียบเทียบ [Technology/Concept] ([Description])
 
@@ -143,7 +150,7 @@ Every course note MUST follow this section order:
 **Required elements:**
 1. A checkbox checklist of critical concepts (`- [ ] **Concept:** explanation`)
 2. A Notation/Formula table (if subject has formal notation)
-3. A Concept Map (ASCII tree showing relationships)
+3. A Concept Map (Mermaid flowchart showing relationships)
 
 ```markdown
 ## Part 3: Quick Reference & Exam Cheat Sheet
@@ -159,10 +166,10 @@ Every course note MUST follow this section order:
 
 ### Concept Map
 
-```text
-[Root Concept]
-├── [Branch 1]
-└── [Branch 2]
+```mermaid
+flowchart TB
+  R["[Root Concept]"] --> B1["[Branch 1]"]
+  R --> B2["[Branch 2]"]
 ```
 ```
 
@@ -388,8 +395,9 @@ Before saving a note, verify all items:
 
 ```text
 [ ] Header has source path and page count
-[ ] Part 1 has ASCII diagram AND comparison table
-[ ] All ASCII diagrams have a recommended tool annotation (> 💡 Recommended Tool for Conversion: ...)
+[ ] Part 1 has Mermaid diagram AND comparison table
+[ ] No ASCII-art diagrams remain; every diagram is a mermaid block (labels quoted) and parses
+[ ] Source labels and [p.N] references present; generated content labeled
 [ ] Every ### sub-section has concrete examples
 [ ] Code blocks have language tag and Thai comments
 [ ] Images and sample output captures preserved and stored in local attachments/

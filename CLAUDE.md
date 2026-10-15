@@ -10,7 +10,7 @@ Context files (read when relevant, do not invent beyond them):
 ## Vault layout
 - `AIOS/` — processed knowledge: `00 Dashboard`, `01 Learning`, `02 Personal Development`, `03 Projects`, `04 Career & Income`, `Scripts`
 - `Resources/` — source material (Books, References, Attachments). Sources for questions about documents; AIOS notes for questions about the user's existing knowledge.
-- `.claude/skills/` — skills (learning-tutor, how-to-write-note, aios-humanize, personal-coach, project-builder, career-builder)
+- `.claude/skills/` — skills (course-pipeline, learning-tutor, how-to-write-note, aios-humanize, personal-coach, project-builder, career-builder); `.claude/agents/course-verifier.md` = read-only verifier for course-pipeline
 - `.agents/` — legacy pre-Claude setup, kept as backup. Do not edit.
 
 ## Working rules
@@ -34,6 +34,8 @@ Context files (read when relevant, do not invent beyond them):
 - Web clipping / batch processing: inspect nested tables, image tags, code blocks and error text in one pass; never strip tags with a crude regex; plan and confirm first; no silent background loops; nothing may be lost, and images must render on PC and iPad.
 - `Resources/` is gitignored. Images that an `AIOS/` note needs go in an `attachments/` folder beside that note.
 - Use external research only when asked, when current info is required, or to verify external facts; label `AIOS Source` vs `External Research`.
+- Diagrams: Mermaid only (code block ```mermaid, node labels in quotes), never ASCII art, because ASCII/images distort across devices (user-confirmed 2026-10-15).
+- New course PDF → use `course-pipeline`: Extractor → Editor → Verifier → Plan → user confirms → write. Run files go in `.pipeline/` (gitignored).
 - Windows paths: when giving clickable links use forward slashes (`file:///C:/path/to/file`).
 
 ## Coding

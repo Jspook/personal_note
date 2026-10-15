@@ -12,4 +12,5 @@ Maps user intents to specific AIOS agent skills.
 | Project Builder | "ทำโปรเจกต์", "เขียนโค้ด", "ออกแบบระบบ" | `AIOS/03 Projects/` | Scaffolds architecture and development workflows |
 | Career Builder | "หางาน", "Resume", "Portfolio" | `AIOS/04 Career & Income/` | Tracks skills and internship opportunities |
 | How to Write Note | "สรุปไฟล์", "เขียนโน้ต", "สร้าง note จาก PDF" | `AIOS/01 Learning/Courses/` | Defines canonical note structure & PDF extraction workflow |
+| Course Pipeline | "สรุปไฟล์", "สร้าง note จาก PDF", "โยนไฟล์เรียนให้จัดการ" | `.claude/skills/course-pipeline/` | Extractor → Editor → Verifier → Plan → Write; สร้างโน้ตบทเรียน + HW จาก PDF (Researcher เปิดเมื่อจำเป็น) |
 | AIOS Humanize | "ทำให้เป็นธรรมชาติ", "ลบกลิ่น AI", "humanize", "ขัดสำนวน" | `.claude/skills/aios-humanize/` | Rewrites AI-sounding Thai/English prose without changing facts; preserves code, LaTeX, links, source labels |
