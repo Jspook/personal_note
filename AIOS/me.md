@@ -27,10 +27,6 @@ This is your briefing on who I am, how I think, and how to interact with me.
 
 ## The Summary Statement
 
-### Core Identity & Mission
-- **Role & Core:** A growth-minded student driven by high productivity and continuous learning, prioritizing hands-on execution and pragmatic building over prolonged theoretical speculation.
-- **Mission:** Master data engineering principles through practical projects while continuously evolving and modernizing this AIOS ecosystem to stay at the cutting edge.
-
 I believe that structure must be earned, that data without narrative is noise, and that where attention goes, mastery grows. I bridge the gap between engineering rigor and creative pragmatism — combining clean relational database schemas, disciplined data pipelines, and architectural logic with sharp product intuition, design aesthetics, and clear public communication.
 
   

@@ -1,0 +1,1045 @@
+[
+ {
+  "page": 1,
+  "chars": 138,
+  "words": 14,
+  "unique_images": [
+   {
+    "xref": 4728,
+    "w": 672,
+    "h": 379
+   }
+  ],
+  "drawings": 4,
+  "flags": [
+   "1 unique image(s)"
+  ],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 2,
+  "chars": 322,
+  "words": 20,
+  "unique_images": [
+   {
+    "xref": 3,
+    "w": 657,
+    "h": 872
+   }
+  ],
+  "drawings": 8,
+  "flags": [
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 3,
+  "chars": 396,
+  "words": 35,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 4,
+  "chars": 628,
+  "words": 46,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 5,
+  "chars": 84,
+  "words": 11,
+  "unique_images": [
+   {
+    "xref": 16,
+    "w": 1019,
+    "h": 845
+   }
+  ],
+  "drawings": 4,
+  "flags": [
+   "sparse-text: likely diagram/title page, verify visually",
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 6,
+  "chars": 84,
+  "words": 11,
+  "unique_images": [
+   {
+    "xref": 20,
+    "w": 1226,
+    "h": 823
+   }
+  ],
+  "drawings": 4,
+  "flags": [
+   "sparse-text: likely diagram/title page, verify visually",
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 7,
+  "chars": 475,
+  "words": 34,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 8,
+  "chars": 614,
+  "words": 57,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 9,
+  "chars": 84,
+  "words": 11,
+  "unique_images": [
+   {
+    "xref": 28,
+    "w": 798,
+    "h": 821
+   }
+  ],
+  "drawings": 4,
+  "flags": [
+   "sparse-text: likely diagram/title page, verify visually",
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 10,
+  "chars": 534,
+  "words": 48,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 11,
+  "chars": 71,
+  "words": 10,
+  "unique_images": [
+   {
+    "xref": 34,
+    "w": 578,
+    "h": 829
+   }
+  ],
+  "drawings": 4,
+  "flags": [
+   "sparse-text: likely diagram/title page, verify visually",
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 12,
+  "chars": 191,
+  "words": 24,
+  "unique_images": [],
+  "drawings": 20,
+  "flags": [
+   "20 vector drawings (diagram)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 13,
+  "chars": 92,
+  "words": 13,
+  "unique_images": [
+   {
+    "xref": 43,
+    "w": 1012,
+    "h": 613
+   }
+  ],
+  "drawings": 5,
+  "flags": [
+   "sparse-text: likely diagram/title page, verify visually",
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 14,
+  "chars": 401,
+  "words": 39,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 15,
+  "chars": 179,
+  "words": 21,
+  "unique_images": [],
+  "drawings": 15,
+  "flags": [
+   "15 vector drawings (diagram)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 16,
+  "chars": 729,
+  "words": 38,
+  "unique_images": [],
+  "drawings": 11,
+  "flags": [
+   "11 vector drawings (diagram)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 17,
+  "chars": 840,
+  "words": 60,
+  "unique_images": [],
+  "drawings": 9,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 18,
+  "chars": 765,
+  "words": 50,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 19,
+  "chars": 649,
+  "words": 52,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 20,
+  "chars": 583,
+  "words": 41,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 21,
+  "chars": 42,
+  "words": 4,
+  "unique_images": [
+   {
+    "xref": 61,
+    "w": 150,
+    "h": 150
+   }
+  ],
+  "drawings": 4,
+  "flags": [
+   "sparse-text: likely diagram/title page, verify visually",
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 22,
+  "chars": 738,
+  "words": 99,
+  "unique_images": [],
+  "drawings": 33,
+  "flags": [
+   "33 vector drawings (diagram)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 23,
+  "chars": 639,
+  "words": 39,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 24,
+  "chars": 347,
+  "words": 44,
+  "unique_images": [],
+  "drawings": 50,
+  "flags": [
+   "50 vector drawings (diagram)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 25,
+  "chars": 586,
+  "words": 77,
+  "unique_images": [],
+  "drawings": 38,
+  "flags": [
+   "38 vector drawings (diagram)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 26,
+  "chars": 532,
+  "words": 71,
+  "unique_images": [],
+  "drawings": 36,
+  "flags": [
+   "36 vector drawings (diagram)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 27,
+  "chars": 298,
+  "words": 45,
+  "unique_images": [],
+  "drawings": 35,
+  "flags": [
+   "35 vector drawings (diagram)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 28,
+  "chars": 553,
+  "words": 69,
+  "unique_images": [],
+  "drawings": 5,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 29,
+  "chars": 812,
+  "words": 98,
+  "unique_images": [],
+  "drawings": 41,
+  "flags": [
+   "41 vector drawings (diagram)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 30,
+  "chars": 523,
+  "words": 56,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 31,
+  "chars": 711,
+  "words": 86,
+  "unique_images": [],
+  "drawings": 48,
+  "flags": [
+   "48 vector drawings (diagram)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 32,
+  "chars": 452,
+  "words": 50,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 33,
+  "chars": 674,
+  "words": 36,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 34,
+  "chars": 269,
+  "words": 32,
+  "unique_images": [
+   {
+    "xref": 90,
+    "w": 1124,
+    "h": 635
+   }
+  ],
+  "drawings": 5,
+  "flags": [
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 35,
+  "chars": 551,
+  "words": 42,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 36,
+  "chars": 563,
+  "words": 75,
+  "unique_images": [],
+  "drawings": 50,
+  "flags": [
+   "50 vector drawings (diagram)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 37,
+  "chars": 250,
+  "words": 37,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 38,
+  "chars": 659,
+  "words": 35,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 39,
+  "chars": 355,
+  "words": 49,
+  "unique_images": [],
+  "drawings": 19,
+  "flags": [
+   "19 vector drawings (diagram)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 40,
+  "chars": 159,
+  "words": 29,
+  "unique_images": [],
+  "drawings": 56,
+  "flags": [
+   "56 vector drawings (diagram)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 41,
+  "chars": 672,
+  "words": 80,
+  "unique_images": [],
+  "drawings": 5,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 42,
+  "chars": 286,
+  "words": 33,
+  "unique_images": [],
+  "drawings": 5,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 43,
+  "chars": 32,
+  "words": 3,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [
+   "sparse-text: likely diagram/title page, verify visually"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 44,
+  "chars": 44,
+  "words": 6,
+  "unique_images": [
+   {
+    "xref": 112,
+    "w": 709,
+    "h": 504
+   }
+  ],
+  "drawings": 3,
+  "flags": [
+   "sparse-text: likely diagram/title page, verify visually",
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 45,
+  "chars": 178,
+  "words": 15,
+  "unique_images": [
+   {
+    "xref": 115,
+    "w": 280,
+    "h": 366
+   }
+  ],
+  "drawings": 4,
+  "flags": [
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 46,
+  "chars": 226,
+  "words": 21,
+  "unique_images": [
+   {
+    "xref": 119,
+    "w": 404,
+    "h": 154
+   }
+  ],
+  "drawings": 4,
+  "flags": [
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 47,
+  "chars": 476,
+  "words": 29,
+  "unique_images": [
+   {
+    "xref": 123,
+    "w": 382,
+    "h": 180
+   }
+  ],
+  "drawings": 4,
+  "flags": [
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 48,
+  "chars": 333,
+  "words": 27,
+  "unique_images": [
+   {
+    "xref": 127,
+    "w": 392,
+    "h": 145
+   }
+  ],
+  "drawings": 4,
+  "flags": [
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 49,
+  "chars": 186,
+  "words": 26,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 50,
+  "chars": 414,
+  "words": 47,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 51,
+  "chars": 460,
+  "words": 58,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 52,
+  "chars": 555,
+  "words": 46,
+  "unique_images": [
+   {
+    "xref": 137,
+    "w": 286,
+    "h": 188
+   }
+  ],
+  "drawings": 4,
+  "flags": [
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 53,
+  "chars": 377,
+  "words": 33,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 54,
+  "chars": 394,
+  "words": 47,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 55,
+  "chars": 369,
+  "words": 37,
+  "unique_images": [],
+  "drawings": 5,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 56,
+  "chars": 256,
+  "words": 24,
+  "unique_images": [
+   {
+    "xref": 149,
+    "w": 418,
+    "h": 203
+   },
+   {
+    "xref": 150,
+    "w": 348,
+    "h": 70
+   }
+  ],
+  "drawings": 4,
+  "flags": [
+   "2 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 57,
+  "chars": 477,
+  "words": 47,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 58,
+  "chars": 508,
+  "words": 48,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 59,
+  "chars": 241,
+  "words": 25,
+  "unique_images": [
+   {
+    "xref": 159,
+    "w": 534,
+    "h": 226
+   }
+  ],
+  "drawings": 4,
+  "flags": [
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 60,
+  "chars": 612,
+  "words": 47,
+  "unique_images": [],
+  "drawings": 5,
+  "flags": [],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 61,
+  "chars": 480,
+  "words": 28,
+  "unique_images": [],
+  "drawings": 5,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 62,
+  "chars": 361,
+  "words": 38,
+  "unique_images": [
+   {
+    "xref": 170,
+    "w": 476,
+    "h": 222
+   }
+  ],
+  "drawings": 5,
+  "flags": [
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 63,
+  "chars": 520,
+  "words": 65,
+  "unique_images": [],
+  "drawings": 5,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 64,
+  "chars": 236,
+  "words": 24,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 65,
+  "chars": 336,
+  "words": 45,
+  "unique_images": [
+   {
+    "xref": 180,
+    "w": 222,
+    "h": 311
+   }
+  ],
+  "drawings": 4,
+  "flags": [
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 66,
+  "chars": 325,
+  "words": 33,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 67,
+  "chars": 223,
+  "words": 24,
+  "unique_images": [
+   {
+    "xref": 186,
+    "w": 412,
+    "h": 215
+   }
+  ],
+  "drawings": 4,
+  "flags": [
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 68,
+  "chars": 244,
+  "words": 29,
+  "unique_images": [
+   {
+    "xref": 190,
+    "w": 751,
+    "h": 353
+   }
+  ],
+  "drawings": 4,
+  "flags": [
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 69,
+  "chars": 317,
+  "words": 33,
+  "unique_images": [],
+  "drawings": 4,
+  "flags": [],
+  "status": "extracted",
+  "resolution": "text layer only; no unique figures"
+ },
+ {
+  "page": 70,
+  "chars": 448,
+  "words": 49,
+  "unique_images": [
+   {
+    "xref": 197,
+    "w": 551,
+    "h": 546
+   }
+  ],
+  "drawings": 4,
+  "flags": [
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 71,
+  "chars": 221,
+  "words": 28,
+  "unique_images": [
+   {
+    "xref": 202,
+    "w": 562,
+    "h": 546
+   }
+  ],
+  "drawings": 4,
+  "flags": [
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 72,
+  "chars": 215,
+  "words": 24,
+  "unique_images": [
+   {
+    "xref": 207,
+    "w": 549,
+    "h": 548
+   }
+  ],
+  "drawings": 8,
+  "flags": [
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 73,
+  "chars": 354,
+  "words": 40,
+  "unique_images": [
+   {
+    "xref": 212,
+    "w": 535,
+    "h": 518
+   }
+  ],
+  "drawings": 4,
+  "flags": [
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 74,
+  "chars": 219,
+  "words": 23,
+  "unique_images": [
+   {
+    "xref": 217,
+    "w": 534,
+    "h": 476
+   }
+  ],
+  "drawings": 4,
+  "flags": [
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 75,
+  "chars": 219,
+  "words": 17,
+  "unique_images": [
+   {
+    "xref": 222,
+    "w": 679,
+    "h": 207
+   }
+  ],
+  "drawings": 4,
+  "flags": [
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 76,
+  "chars": 322,
+  "words": 42,
+  "unique_images": [
+   {
+    "xref": 226,
+    "w": 611,
+    "h": 318
+   }
+  ],
+  "drawings": 4,
+  "flags": [
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ },
+ {
+  "page": 77,
+  "chars": 44,
+  "words": 6,
+  "unique_images": [
+   {
+    "xref": 230,
+    "w": 1250,
+    "h": 650
+   }
+  ],
+  "drawings": 3,
+  "flags": [
+   "sparse-text: likely diagram/title page, verify visually",
+   "1 unique image(s)"
+  ],
+  "status": "extracted+visually-checked",
+  "resolution": "page render inspected; image/diagram text transcribed into note"
+ }
+]

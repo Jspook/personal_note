@@ -1,0 +1,866 @@
+[
+ {
+  "page": 1,
+  "chars": 80,
+  "words": 10,
+  "unique_images": [
+   {
+    "xref": 385,
+    "w": 2420,
+    "h": 107
+   }
+  ],
+  "drawings": 2,
+  "flags": [
+   "sparse-text: likely diagram/title page, verify visually",
+   "1 unique image(s): text may live inside the image"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 2,
+  "chars": 310,
+  "words": 48,
+  "unique_images": [],
+  "drawings": 2,
+  "flags": [],
+  "status": "extracted"
+ },
+ {
+  "page": 3,
+  "chars": 156,
+  "words": 25,
+  "unique_images": [
+   {
+    "xref": 7,
+    "w": 146,
+    "h": 174
+   },
+   {
+    "xref": 8,
+    "w": 148,
+    "h": 176
+   }
+  ],
+  "drawings": 22,
+  "flags": [
+   "2 unique image(s): text may live inside the image",
+   "22 vector drawings (diagram)"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 4,
+  "chars": 145,
+  "words": 19,
+  "unique_images": [],
+  "drawings": 16,
+  "flags": [
+   "16 vector drawings (diagram)"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 5,
+  "chars": 360,
+  "words": 61,
+  "unique_images": [],
+  "drawings": 6,
+  "flags": [],
+  "status": "extracted"
+ },
+ {
+  "page": 6,
+  "chars": 147,
+  "words": 18,
+  "unique_images": [],
+  "drawings": 19,
+  "flags": [
+   "19 vector drawings (diagram)"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 7,
+  "chars": 237,
+  "words": 29,
+  "unique_images": [],
+  "drawings": 10,
+  "flags": [
+   "10 vector drawings (diagram)"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 8,
+  "chars": 237,
+  "words": 29,
+  "unique_images": [],
+  "drawings": 10,
+  "flags": [
+   "10 vector drawings (diagram)"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 9,
+  "chars": 254,
+  "words": 33,
+  "unique_images": [],
+  "drawings": 10,
+  "flags": [
+   "10 vector drawings (diagram)"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 10,
+  "chars": 386,
+  "words": 47,
+  "unique_images": [
+   {
+    "xref": 31,
+    "w": 1898,
+    "h": 139
+   }
+  ],
+  "drawings": 11,
+  "flags": [
+   "1 unique image(s): text may live inside the image",
+   "11 vector drawings (diagram)"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 11,
+  "chars": 379,
+  "words": 38,
+  "unique_images": [],
+  "drawings": 10,
+  "flags": [
+   "10 vector drawings (diagram)"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 12,
+  "chars": 295,
+  "words": 38,
+  "unique_images": [
+   {
+    "xref": 39,
+    "w": 1898,
+    "h": 310
+   }
+  ],
+  "drawings": 19,
+  "flags": [
+   "1 unique image(s): text may live inside the image",
+   "19 vector drawings (diagram)"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 13,
+  "chars": 272,
+  "words": 40,
+  "unique_images": [],
+  "drawings": 5,
+  "flags": [],
+  "status": "extracted"
+ },
+ {
+  "page": 14,
+  "chars": 256,
+  "words": 40,
+  "unique_images": [
+   {
+    "xref": 47,
+    "w": 1900,
+    "h": 143
+   }
+  ],
+  "drawings": 20,
+  "flags": [
+   "1 unique image(s): text may live inside the image",
+   "20 vector drawings (diagram)"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 15,
+  "chars": 171,
+  "words": 25,
+  "unique_images": [
+   {
+    "xref": 52,
+    "w": 1903,
+    "h": 144
+   }
+  ],
+  "drawings": 20,
+  "flags": [
+   "1 unique image(s): text may live inside the image",
+   "20 vector drawings (diagram)"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 16,
+  "chars": 299,
+  "words": 45,
+  "unique_images": [
+   {
+    "xref": 57,
+    "w": 1903,
+    "h": 251
+   }
+  ],
+  "drawings": 8,
+  "flags": [
+   "1 unique image(s): text may live inside the image"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 17,
+  "chars": 516,
+  "words": 84,
+  "unique_images": [
+   {
+    "xref": 62,
+    "w": 1901,
+    "h": 193
+   }
+  ],
+  "drawings": 7,
+  "flags": [
+   "1 unique image(s): text may live inside the image"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 18,
+  "chars": 134,
+  "words": 22,
+  "unique_images": [],
+  "drawings": 2,
+  "flags": [],
+  "status": "extracted"
+ },
+ {
+  "page": 19,
+  "chars": 292,
+  "words": 55,
+  "unique_images": [],
+  "drawings": 2,
+  "flags": [],
+  "status": "extracted"
+ },
+ {
+  "page": 20,
+  "chars": 195,
+  "words": 25,
+  "unique_images": [
+   {
+    "xref": 73,
+    "w": 1901,
+    "h": 247
+   }
+  ],
+  "drawings": 7,
+  "flags": [
+   "1 unique image(s): text may live inside the image"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 21,
+  "chars": 301,
+  "words": 45,
+  "unique_images": [],
+  "drawings": 12,
+  "flags": [
+   "12 vector drawings (diagram)"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 22,
+  "chars": 263,
+  "words": 27,
+  "unique_images": [],
+  "drawings": 6,
+  "flags": [],
+  "status": "extracted"
+ },
+ {
+  "page": 23,
+  "chars": 288,
+  "words": 31,
+  "unique_images": [],
+  "drawings": 6,
+  "flags": [],
+  "status": "extracted"
+ },
+ {
+  "page": 24,
+  "chars": 345,
+  "words": 54,
+  "unique_images": [],
+  "drawings": 2,
+  "flags": [],
+  "status": "extracted"
+ },
+ {
+  "page": 25,
+  "chars": 166,
+  "words": 22,
+  "unique_images": [],
+  "drawings": 10,
+  "flags": [
+   "10 vector drawings (diagram)"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 26,
+  "chars": 254,
+  "words": 37,
+  "unique_images": [],
+  "drawings": 10,
+  "flags": [
+   "10 vector drawings (diagram)"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 27,
+  "chars": 235,
+  "words": 34,
+  "unique_images": [],
+  "drawings": 8,
+  "flags": [],
+  "status": "extracted"
+ },
+ {
+  "page": 28,
+  "chars": 150,
+  "words": 20,
+  "unique_images": [],
+  "drawings": 10,
+  "flags": [
+   "10 vector drawings (diagram)"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 29,
+  "chars": 150,
+  "words": 20,
+  "unique_images": [],
+  "drawings": 10,
+  "flags": [
+   "10 vector drawings (diagram)"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 30,
+  "chars": 150,
+  "words": 20,
+  "unique_images": [],
+  "drawings": 10,
+  "flags": [
+   "10 vector drawings (diagram)"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 31,
+  "chars": 379,
+  "words": 63,
+  "unique_images": [],
+  "drawings": 6,
+  "flags": [],
+  "status": "extracted"
+ },
+ {
+  "page": 32,
+  "chars": 366,
+  "words": 65,
+  "unique_images": [],
+  "drawings": 13,
+  "flags": [
+   "13 vector drawings (diagram)"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 33,
+  "chars": 64,
+  "words": 9,
+  "unique_images": [],
+  "drawings": 2,
+  "flags": [
+   "sparse-text: likely diagram/title page, verify visually"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 34,
+  "chars": 330,
+  "words": 54,
+  "unique_images": [],
+  "drawings": 14,
+  "flags": [
+   "14 vector drawings (diagram)"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 35,
+  "chars": 64,
+  "words": 9,
+  "unique_images": [],
+  "drawings": 2,
+  "flags": [
+   "sparse-text: likely diagram/title page, verify visually"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 36,
+  "chars": 190,
+  "words": 26,
+  "unique_images": [
+   {
+    "xref": 124,
+    "w": 1898,
+    "h": 468
+   },
+   {
+    "xref": 125,
+    "w": 1906,
+    "h": 57
+   }
+  ],
+  "drawings": 8,
+  "flags": [
+   "2 unique image(s): text may live inside the image"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 37,
+  "chars": 440,
+  "words": 73,
+  "unique_images": [],
+  "drawings": 15,
+  "flags": [
+   "15 vector drawings (diagram)"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 38,
+  "chars": 193,
+  "words": 25,
+  "unique_images": [
+   {
+    "xref": 133,
+    "w": 1897,
+    "h": 146
+   }
+  ],
+  "drawings": 7,
+  "flags": [
+   "1 unique image(s): text may live inside the image"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 39,
+  "chars": 482,
+  "words": 70,
+  "unique_images": [],
+  "drawings": 10,
+  "flags": [
+   "10 vector drawings (diagram)"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 40,
+  "chars": 482,
+  "words": 70,
+  "unique_images": [],
+  "drawings": 10,
+  "flags": [
+   "10 vector drawings (diagram)"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 41,
+  "chars": 530,
+  "words": 92,
+  "unique_images": [],
+  "drawings": 20,
+  "flags": [
+   "20 vector drawings (diagram)"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 42,
+  "chars": 345,
+  "words": 50,
+  "unique_images": [
+   {
+    "xref": 147,
+    "w": 1898,
+    "h": 252
+   }
+  ],
+  "drawings": 6,
+  "flags": [
+   "1 unique image(s): text may live inside the image"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 43,
+  "chars": 296,
+  "words": 49,
+  "unique_images": [],
+  "drawings": 7,
+  "flags": [],
+  "status": "extracted"
+ },
+ {
+  "page": 44,
+  "chars": 183,
+  "words": 22,
+  "unique_images": [
+   {
+    "xref": 155,
+    "w": 1898,
+    "h": 143
+   }
+  ],
+  "drawings": 8,
+  "flags": [
+   "1 unique image(s): text may live inside the image"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 45,
+  "chars": 262,
+  "words": 42,
+  "unique_images": [],
+  "drawings": 2,
+  "flags": [],
+  "status": "extracted"
+ },
+ {
+  "page": 46,
+  "chars": 282,
+  "words": 43,
+  "unique_images": [],
+  "drawings": 2,
+  "flags": [],
+  "status": "extracted"
+ },
+ {
+  "page": 47,
+  "chars": 219,
+  "words": 30,
+  "unique_images": [
+   {
+    "xref": 167,
+    "w": 1901,
+    "h": 524
+   },
+   {
+    "xref": 168,
+    "w": 1906,
+    "h": 48
+   }
+  ],
+  "drawings": 17,
+  "flags": [
+   "2 unique image(s): text may live inside the image",
+   "17 vector drawings (diagram)"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 48,
+  "chars": 237,
+  "words": 32,
+  "unique_images": [
+   {
+    "xref": 174,
+    "w": 1906,
+    "h": 292
+   },
+   {
+    "xref": 175,
+    "w": 1906,
+    "h": 292
+   }
+  ],
+  "drawings": 16,
+  "flags": [
+   "2 unique image(s): text may live inside the image",
+   "16 vector drawings (diagram)"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 49,
+  "chars": 263,
+  "words": 32,
+  "unique_images": [
+   {
+    "xref": 182,
+    "w": 1890,
+    "h": 288
+   },
+   {
+    "xref": 183,
+    "w": 1890,
+    "h": 287
+   },
+   {
+    "xref": 184,
+    "w": 1878,
+    "h": 58
+   }
+  ],
+  "drawings": 21,
+  "flags": [
+   "3 unique image(s): text may live inside the image",
+   "21 vector drawings (diagram)"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 50,
+  "chars": 353,
+  "words": 55,
+  "unique_images": [],
+  "drawings": 2,
+  "flags": [],
+  "status": "extracted"
+ },
+ {
+  "page": 51,
+  "chars": 200,
+  "words": 25,
+  "unique_images": [
+   {
+    "xref": 193,
+    "w": 1888,
+    "h": 526
+   },
+   {
+    "xref": 194,
+    "w": 1877,
+    "h": 58
+   }
+  ],
+  "drawings": 8,
+  "flags": [
+   "2 unique image(s): text may live inside the image"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 52,
+  "chars": 207,
+  "words": 32,
+  "unique_images": [],
+  "drawings": 2,
+  "flags": [],
+  "status": "extracted"
+ },
+ {
+  "page": 53,
+  "chars": 318,
+  "words": 40,
+  "unique_images": [],
+  "drawings": 6,
+  "flags": [],
+  "status": "extracted"
+ },
+ {
+  "page": 54,
+  "chars": 385,
+  "words": 50,
+  "unique_images": [
+   {
+    "xref": 207,
+    "w": 1873,
+    "h": 174
+   },
+   {
+    "xref": 208,
+    "w": 1883,
+    "h": 122
+   },
+   {
+    "xref": 209,
+    "w": 1883,
+    "h": 78
+   }
+  ],
+  "drawings": 9,
+  "flags": [
+   "3 unique image(s): text may live inside the image"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 55,
+  "chars": 254,
+  "words": 33,
+  "unique_images": [],
+  "drawings": 6,
+  "flags": [],
+  "status": "extracted"
+ },
+ {
+  "page": 56,
+  "chars": 259,
+  "words": 30,
+  "unique_images": [
+   {
+    "xref": 219,
+    "w": 1885,
+    "h": 171
+   },
+   {
+    "xref": 220,
+    "w": 1888,
+    "h": 123
+   },
+   {
+    "xref": 221,
+    "w": 1888,
+    "h": 78
+   }
+  ],
+  "drawings": 8,
+  "flags": [
+   "3 unique image(s): text may live inside the image"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 57,
+  "chars": 338,
+  "words": 52,
+  "unique_images": [],
+  "drawings": 7,
+  "flags": [],
+  "status": "extracted"
+ },
+ {
+  "page": 58,
+  "chars": 409,
+  "words": 65,
+  "unique_images": [],
+  "drawings": 2,
+  "flags": [],
+  "status": "extracted"
+ },
+ {
+  "page": 59,
+  "chars": 460,
+  "words": 69,
+  "unique_images": [],
+  "drawings": 2,
+  "flags": [],
+  "status": "extracted"
+ },
+ {
+  "page": 60,
+  "chars": 64,
+  "words": 9,
+  "unique_images": [],
+  "drawings": 2,
+  "flags": [
+   "sparse-text: likely diagram/title page, verify visually"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 61,
+  "chars": 64,
+  "words": 9,
+  "unique_images": [],
+  "drawings": 2,
+  "flags": [
+   "sparse-text: likely diagram/title page, verify visually"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 62,
+  "chars": 64,
+  "words": 9,
+  "unique_images": [],
+  "drawings": 2,
+  "flags": [
+   "sparse-text: likely diagram/title page, verify visually"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 63,
+  "chars": 64,
+  "words": 9,
+  "unique_images": [],
+  "drawings": 2,
+  "flags": [
+   "sparse-text: likely diagram/title page, verify visually"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 64,
+  "chars": 64,
+  "words": 9,
+  "unique_images": [],
+  "drawings": 2,
+  "flags": [
+   "sparse-text: likely diagram/title page, verify visually"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 65,
+  "chars": 64,
+  "words": 9,
+  "unique_images": [],
+  "drawings": 2,
+  "flags": [
+   "sparse-text: likely diagram/title page, verify visually"
+  ],
+  "status": "needs-visual-check"
+ },
+ {
+  "page": 66,
+  "chars": 64,
+  "words": 9,
+  "unique_images": [],
+  "drawings": 2,
+  "flags": [
+   "sparse-text: likely diagram/title page, verify visually"
+  ],
+  "status": "needs-visual-check"
+ }
+]
