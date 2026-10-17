@@ -12,6 +12,19 @@ Origin: dry run on `Resources/Books/Database/Database_Concept_06.pdf` (2026-10-1
 
 Multiple files in one request: process them **one file at a time**, each through the full cycle including its own Plan gate and user confirmation, in the order the user gave. Do not start the next file until the previous one is written and verified on disk.
 
+## Speed and usage profile (default, adopted 2026-10-17)
+Balance precision against time and token use with a risk-based check level:
+- **Read the text layer first.** Render only pages that have figures, diagrams, or numbers that must be counted. Use about 150 dpi for crops of graphs. Do not render every page at 300 dpi.
+- **Record each figure once** as an edge list (or table) in staging, so no later stage re-reads the image.
+- **Risk levels:**
+  - High (numbers, graphs to count, answers to homework): visual check at ~150 dpi, then one Verifier round.
+  - Medium (definitions and text copied from the slide): automatic text comparison against `raw-content.md`, no image re-read.
+  - Low (structure, links, tables): script checks only (Mermaid parser, table column counts, wikilink resolution).
+- **Verifier runs once per batch** and is told to check only high-risk items: homework answers, edge lists of unanswered figures, and `[p.N]` citations. Round 2 is done by the main session with scripts, and the report must say so.
+- **Write through staging once.** Write each file in `.pipeline/<slug>/`, then copy to the vault with a single command. Do not rewrite a file in full when a targeted edit is enough.
+- **Hook awareness:** if a file-creation hook blocks new files, state the facts it asks for once in the same message, then retry. Do not retry the same call without changes. Staging writes under `.pipeline/` may be exempted with `GATEGUARD_EXEMPT_GLOBS`.
+- Keep the Plan gate and user confirmation unchanged. Speed gains come from the checks above, not from skipping the gate.
+
 ## 0. Setup
 1. Source must be under `Resources/`. Slug = `YYYY-MM-DD <source file name without extension>`.
 2. Staging folder: `.pipeline/<slug>/` at the vault root (gitignored). Scratch files and stage reports live here. Create it without asking; creating anything else needs the Plan gate.
