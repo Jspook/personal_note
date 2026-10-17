@@ -212,13 +212,13 @@ ightarrow$ KBV (1)
 
 **ตัวอย่าง:** ใช้ Directed multigraph ในหัวข้อ 2.2 (a→b ×2, b→c, c→d, d→a, c→a, loop ที่ c)
 
-| Vertex | deg⁻ (in) | deg⁺ (out) |
-| :--- | :--- | :--- |
-| a | 2 (d→a, c→a) | 2 |
-| b | 2 | 1 |
-| c | 2 (b→c, loop) | 3 (c→d, c→a, loop) |
-| d | 1 | 1 |
-| **รวม** | **7** | **7** = \|E\| ✔ |
+| Vertex  | deg⁻ (in)     | deg⁺ (out)         |
+| :------ | :------------ | :----------------- |
+| a       | 2 (d→a, c→a)  | 2                  |
+| b       | 2             | 1                  |
+| c       | 2 (b→c, loop) | 3 (c→d, c→a, loop) |
+| d       | 1             | 1                  |
+| **รวม** | **7**         | **7** = \|E\| ✔    |
 
 > **Theorem 3:** ถ้า G = (V, E) เป็นกราฟมีทิศ แล้ว
 > $$\sum_{v \in V}\deg^-(v) = \sum_{v \in V}\deg^+(v) = |E|$$
