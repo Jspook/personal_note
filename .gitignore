@@ -1,3 +1,6 @@
 Resources/
 .obsidian/
 AIOS/03 Projects/Data Projects/
+
+# course-pipeline staging
+.pipeline/

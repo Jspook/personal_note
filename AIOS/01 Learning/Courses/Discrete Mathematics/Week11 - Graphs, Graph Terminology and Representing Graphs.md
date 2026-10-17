@@ -271,7 +271,7 @@ K2,3:   V1:  a     b
         V2:  x   y   z      |E| = 2 × 3 = 6
 ```
 
-> หมายเหตุ: Example 5–6 และ Exercise 5–6 ในสไลด์เป็นรูปกราฟ — ให้ใช้วิธี 2-Coloring / หา odd cycle ในการตอบ (เนื้อหาต่อเรื่อง Matching อยู่ใน [[Week12 - Bipartite Matching and Graph Connectivity]])
+> หมายเหตุ: Example 5–6 และ Exercise 5–6 ในสไลด์เป็นรูปกราฟ — ให้ใช้วิธี 2-Coloring / หา odd cycle ในการตอบ (เนื้อหาต่อเรื่อง Matching อยู่ใน [[Week12 - Bipartite Graphs and Matchings]] พร้อมเฉลย Example/Exercise ใน [[HW-Discrete-Math-04]])
 
 ---
 
@@ -396,7 +396,10 @@ Graph G = (V, E)
 
 ## เอกสารเชื่อมโยง (Wiki-Style Backlinks)
 * **วิชาและหัวข้อที่เกี่ยวข้อง:**
-  * [[Week12 - Bipartite Matching and Graph Connectivity]] (บทต่อเนื่อง — Matching, Hall's Theorem, Paths, Connectivity)
+  * [[Week12 - Bipartite Graphs and Matchings]] (บทต่อเนื่อง: Matching, Hall's Theorem)
+  * [[Week12 - Paths, Circuits and Connectedness]] (บทต่อเนื่อง: Paths, Connectedness)
+  * [[Week12 - Cut Vertices, Edge Cuts and Connectivity]] (บทต่อเนื่อง: κ(G), λ(G))
+  * [[Week12 - Road Network Connectivity Barcelona vs Bangkok]] (การประยุกต์ใช้ connectivity)
   * [[Week10 - n-ary Relations and Representing Relations]] (Digraph และ zero-one matrix ของ relation คือ directed graph / adjacency matrix)
   * [[Week10 - Properties of Relations]] (Reflexive ↔ loop ทุกจุด, Symmetric ↔ undirected graph / matrix สมมาตร)
   * [[Week10 - Relations and Binary Relations]] (Binary relation บน A ≡ directed graph บน A)
