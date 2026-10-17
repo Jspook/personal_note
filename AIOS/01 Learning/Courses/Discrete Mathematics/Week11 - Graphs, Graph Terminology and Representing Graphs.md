@@ -8,7 +8,7 @@
 
 ## Part 1: Macro Architecture & Overview
 
-**กราฟ (Graph)** คือโครงสร้างที่ใช้แทน "ความเชื่อมโยงระหว่างวัตถุ" เช่น ความรู้จักกันระหว่างคน, การทำงานร่วมกัน, ลิงก์ระหว่างเว็บไซต์, เครือข่ายคอมพิวเตอร์/อินเทอร์เน็ต, เครือข่ายถนนและรถไฟ บทนี้ปูพื้นตั้งแต่นิยามของกราฟ, ประเภทของกราฟ (จำแนกด้วย 3 คำถาม), ศัพท์ (adjacent, degree, neighborhood), ทฤษฎีบท Handshaking, กราฟพิเศษ (K<sub>n</sub>, C<sub>n</sub>, W<sub>n</sub>, Q<sub>n</sub>, Bipartite) และวิธีแทนกราฟในคอมพิวเตอร์ (Adjacency List / Adjacency Matrix / Incidence Matrix)
+**กราฟ (Graph)** คือโครงสร้างที่ใช้แทน "<mark style="background:#affad1">ความเชื่อมโยงระหว่างวัตถุ</mark>" เช่น ความรู้จักกันระหว่างคน, การทำงานร่วมกัน, ลิงก์ระหว่างเว็บไซต์, เครือข่ายคอมพิวเตอร์/อินเทอร์เน็ต, เครือข่ายถนนและรถไฟ บทนี้ปูพื้นตั้งแต่นิยามของกราฟ, ประเภทของกราฟ (จำแนกด้วย 3 คำถาม), ศัพท์ (adjacent, degree, neighborhood), ทฤษฎีบท Handshaking, กราฟพิเศษ (K<sub>n</sub>, C<sub>n</sub>, W<sub>n</sub>, Q<sub>n</sub>, Bipartite) และวิธีแทนกราฟในคอมพิวเตอร์ (Adjacency List / Adjacency Matrix / Incidence Matrix)
 
 ภาพรวมของบท Graphs ทั้งหมด (Chapter Summary):
 
