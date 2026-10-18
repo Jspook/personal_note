@@ -43,7 +43,36 @@ flowchart TB
 
 ### 2.1 Bipartite graph และ complete bipartite graph [p.10, 15-16][R1]
 
+#### Bipartite graph
+
+> 💡 **Intuition:** Bipartite = "แบ่งเป็นสองส่วน" — คิดเป็นคน 2 กลุ่มที่ต่างกัน (เช่น นักเรียนกับห้อง) ทุกเส้นที่เชื่อม (edge) ต้องข้ามระหว่างกลุ่ม ไม่มีเส้นในกลุ่มเดียวกัน คือ "ไม่มีคนในกลุ่มเดียวกันเชื่อมกัน" — เหมาะกับปัญหาที่ต้องจับคู่สมาชิกของสองฝั่ง เช่น งานกับพนักงาน
+> [Source: generated — not verified against original document]
+
 > **Definition 6 (Bipartite):** simple graph เป็น bipartite ถ้าแบ่ง vertex set V เป็น 2 เซตย่อยที่ disjoint คือ V₁ กับ V₂ ได้ โดยทุก edge เชื่อมจุดจากเซตหนึ่งไปอีกเซตหนึ่ง และไม่มี edge เชื่อมจุด 2 จุดใน V₁ หรือ 2 จุดใน V₂ [p.10]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "แบ่ง V เป็น 2 เซตย่อยที่ disjoint V₁ กับ V₂" → V₁ ∩ V₂ = ∅ และ V₁ ∪ V₂ = V
+- "ทุก edge เชื่อมจากเซตหนึ่งไปอีกเซตหนึ่ง" → ไม่มี edge ระหว่างจุดสองจุดในเซตเดียว
+
+**ตัวอย่าง:**
+- ✅ C₆ (วงจร 6 จุด 1-2-3-4-5-6-1) ที่แบ่ง V₁ = {1, 3, 5}, V₂ = {2, 4, 6} → ทุก edge ข้าม → bipartite
+- ❌ K₃ (สามเหลี่ยม) → แบ่ง 3 จุดเป็น 2 เซตเมื่อไร จะมี 2 จุดอยู่เซตเดียวกัน และ 2 จุดนั้น adjacent กันเสมอ → ไม่ bipartite
+- ❌ C₅ (วงจร 5 จุด) → ระบายสีสลับรอบวงที่มี 5 จุด (คี่) แล้วจุดแรกกับจุดสุดท้ายได้สีเดียวกันแต่ adjacent กัน → ไม่ bipartite
+- **ต่างกันตรง:** C₆ เป็น cycle ความยาวคู่ → bipartite, C₃ (= K₃) และ C₅ เป็น cycle ความยาวคี่ → ไม่ bipartite
+
+**อย่าสับสน:** Bipartite graph ไม่จำเป็นต้อง connected และไม่จำเป็นต้องมี edge ครบทุกคู่ข้ามเซต — กรณีที่มี edge ครบทุกคู่ข้ามเซตคือ complete bipartite K<sub>m,n</sub>
+
+**เช็คความเข้าใจ:** ถ้าได้กราฟ 7 จุด (แบบใน Exercise ของสไลด์) จะตรวจอย่างไรว่าเป็น bipartite หรือไม่
+<details><summary>เฉลย</summary>
+
+1. เลือกจุดเริ่ม 1 จุด ระบายสี A
+2. ระบายเพื่อนบ้านทุกจุดของมันเป็นสี B แล้วเพื่อนบ้านของจุดสี B เป็นสี A ไล่ไปเรื่อย ๆ (ถ้ากราฟไม่ connected ให้ทำซ้ำทีละ component)
+3. ถ้าเจอ edge ที่ปลายทั้งสองได้สีเดียวกัน → ไม่ bipartite (แปลว่ามี odd cycle)
+4. ถ้าระบายครบโดยไม่เจอ edge แบบนั้น → bipartite โดย V₁ = จุดสี A, V₂ = จุดสี B
+
+</details>
 
 * คู่ (V₁, V₂) เรียกว่า **bipartition** ของ V [R1]
 * ใน model การจับคู่ edge หมายถึง "คู่นี้ยอมรับได้" [R1]
@@ -135,11 +164,93 @@ _ต้นฉบับ: รูปกราฟ [p.18, 23]_
 
 ### 2.3 Definitions 8-10 และคำเพิ่มจาก [R1] [p.20-22][R1]
 
+#### Matching
+
+> 💡 **Intuition:** Matching = "การจับคู่" — คิดเป็นการจับคู่แต่งงาน (แบบตัวอย่าง Marriages on an Island ในสไลด์ [p.25]) ที่ไม่มีใครแต่งงานกับ 2 คนพร้อมกัน ดังนั้นแต่ละคน (จุดยอด) เป็น endpoint ของ edge ใน M ได้ไม่เกิน 1 เส้น
+> [Source: generated — not verified against original document]
+
 > **Definition 8 (Matching):** matching M ใน simple graph G = (V, E) คือเซตย่อยของ E ที่ไม่มี 2 edges ใดๆ incident กับจุดยอดเดียวกัน [p.20]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "เซตย่อยของ E" → M ⊆ E
+- "ไม่มี 2 edges incident กับจุดยอดเดียวกัน" → จุดยอดแต่ละจุดเป็น endpoint ของ edge ใน M ไม่เกิน 1 เส้น
+
+**ตัวอย่าง:**
+- ✅ M = {a–b, c–d} ในกราฟ 4 จุดที่มี edge a–b และ c–d → ไม่มี edge ใช้จุดเดียวกัน → matching
+- ✅ M = ∅ (เซตว่าง) → matching (ตามนิยาม)
+- ✅ M = {a–b} → edge เดียวก็เป็น matching
+- ❌ M = {a–b, b–c} ในกราฟ a–b–c → ทั้งสอง edge ใช้ b → ไม่เป็น matching
+- **ต่างกันตรง:** Matching คือเซตของ edges (ไม่ใช่ vertices) ที่ไม่ใช้จุดซ้ำ
+
+**อย่าสับสน:** Matching ไม่ต้องครอบคลุมทุกจุดยอด — บางจุดอาจไม่เป็น endpoint ของ edge ใด ๆ เลย (unmatched)
+
+**เช็คความเข้าใจ:** ในกราฟ 4 จุด a,b,c,d ที่มี edges a–b, b–c, c–d, d–a (วงจร) matching ขนาด 2 คืออะไร
+<details><summary>เฉลย</summary>
+
+ต้องเลือก 2 edges ที่ไม่ใช้จุดเดียวกัน (edge ที่อยู่ตรงข้ามกันในวง) → M = {a–b, c–d} หรือ M = {b–c, d–a} ทั้งสองชุดใช้ได้ เพราะแต่ละจุดเป็น endpoint ไม่เกิน 1 edge
+
+</details>
+
+#### Maximum matching
+
+> 💡 **Intuition:** Maximum matching = "จับคู่ให้มากที่สุด" — ในโจทย์งาน หมายถึง "มอบหมายงานให้ได้มากที่สุดเท่าที่ทำได้" คือไม่มี matching ใดในกราฟที่มี edge มากกว่า (ต่างจาก maximal ที่แค่เพิ่ม edge เข้าไปตรง ๆ ไม่ได้)
+> [Source: generated — not verified against original document]
 
 > **Definition 9 (Maximum matching):** matching ที่มีจำนวน edges มากที่สุด ในโจทย์งาน คือการมอบหมายให้ได้งานจำนวนมากที่สุด [p.21]
 
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "มีจำนวน edges มากที่สุด" → |M| ไม่น้อยกว่า matching ใด ๆ อื่นใน G
+
+**ตัวอย่าง:**
+- ✅ วงจร C₄ (a–b–c–d–a): M = {a–b, c–d} ขนาด 2 → maximum (4 จุด match ได้ไม่เกิน 2 edges)
+- ✅ วงจร C₆ (1-2-3-4-5-6-1): M = {1–2, 3–4, 5–6} ขนาด 3 → maximum
+- ❌ M = {a–b} ใน C₄ → ขนาด 1 เล็กกว่า 2 → ไม่ maximum (และยังไม่ maximal ด้วย เพราะเพิ่ม c–d ได้)
+- **ต่างกันตรง:** Maximal matching = เพิ่ม edge ไม่ได้อีก (อาจเล็ก) vs Maximum = ไม่มี matching อื่นใหญ่กว่า
+
+**อย่าสับสน:** Greedy (เลือก edge ทีละเส้นตามที่เห็น) รับประกันได้แค่ maximal ไม่รับประกัน maximum ต้องใช้วิธีที่ดีกว่า (เช่น หา augmenting path)
+
+**เช็คความเข้าใจ:** ตัวอย่างใน [R1] (นักศึกษา 4 คน โปรเจกต์ 4 ตัว) มี maximal ขนาด 2 แต่ maximum ขนาด 4 ทำไมการเลือกแบบ greedy อาจได้แค่ 2
+<details><summary>เฉลย</summary>
+
+1. Greedy เลือก Anan–Web แล้ว Chai–Game
+2. Bua มี edge เดียวคือ Bua–Web แต่ Web ถูกใช้แล้ว, Dao มี edge เดียวคือ Dao–Game แต่ Game ถูกใช้แล้ว → เพิ่ม edge ไม่ได้ → maximal ขนาด 2
+3. แต่ matching {Anan–AI, Bua–Web, Chai–IoT, Dao–Game} มี 4 edges และไม่ใช้จุดซ้ำ → maximum คือ 4
+4. ทางไปถึง 4: augmenting path Bua–Web–Anan–AI ทำให้ได้ {Bua–Web, Anan–AI, Chai–Game} (ขนาด 3) จากนั้น path Dao–Game–Chai–IoT เป็น augmenting path อีกเส้น (Dao, IoT ว่าง) → {Bua–Web, Anan–AI, Dao–Game, Chai–IoT} ขนาด 4
+
+</details>
+
+#### Complete matching จาก V₁ ไป V₂
+
+> 💡 **Intuition:** Complete matching = "จับคู่ครบทุกคน" — ในโจทย์งาน: ทุกงาน (V₁) ได้พนักงาน (V₂) แต่พนักงานอาจเหลือบ้าง
+> [Source: generated — not verified against original document]
+
 > **Definition 10 (Complete matching จาก V₁ ไป V₂):** matching M ที่ทุกจุดใน V₁ เป็น endpoint ของ edge ใน M หรือ |M| = |V₁| ในโจทย์งาน คือมอบหมายพนักงานให้ครบทุกงาน [p.22]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "ทุกจุดใน V₁ เป็น endpoint" → complete คือครอบคลุม V₁ เท่านั้น V₂ อาจเหลือจุดไม่ matched
+- "|M| = |V₁|" → edge ใน matching เท่ากับจำนวนจุดใน V₁
+
+**ตัวอย่าง:**
+- ✅ V₁ = {a, b, c}, V₂ = {x, y, z, w} กับ edges a–x, b–y, c–z → M = {a–x, b–y, c–z} → |M| = 3 = |V₁| → complete จาก V₁ ไป V₂ (w ไม่ถูก match ก็ได้)
+- ✅ ไม่ต้อง |V₁| = |V₂| → V₂ มีได้มากกว่า
+- ❌ M = {a–x, b–y} ใน V₁ = {a, b, c} → |M| = 2 < |V₁| = 3 → ไม่ complete
+- ❌ ถ้ามี edge b–x ด้วย แล้วเลือก {a–x, b–x, c–z} → x ใช้ 2 ครั้ง → ไม่ใช่ matching ตั้งแต่แรก
+- **ต่างกันตรง:** Complete matching จาก V₁ ไป V₂ ⇒ |V₁| ≤ |V₂| เสมอ (ต้องมี endpoint พอ ใน V₂)
+
+**อย่าสับสน:** Complete matching ≠ Perfect matching — complete ครอบคลุม V₁ เท่านั้น perfect ต้องครอบคลุมทั้งสองเซต (|V₁| = |V₂| และ |M| = |V₁|)
+
+**เช็คความเข้าใจ:** ทำไมไม่มี complete matching จากเซตงาน 4 งาน (V₁) ไปเซตพนักงาน 3 คน (V₂) ไม่ว่ากราฟจะมี edge อย่างไร
+<details><summary>เฉลย</summary>
+
+Complete matching ต้องมี |M| = |V₁| = 4 edges และแต่ละ edge ต้องใช้ปลายใน V₂ ไม่ซ้ำกัน แต่ V₂ มีแค่ 3 จุด → edge ที่ 4 ต้องใช้ปลายใน V₂ ซ้ำ → ไม่เป็น matching ดังนั้นเมื่อ |V₁| > |V₂| จะไม่มี complete matching จาก V₁ ไป V₂
+
+</details>
 
 คำศัพท์เสริมจาก [R1]:
 
@@ -188,7 +299,35 @@ _ที่มา: รูป fMaximal / fMaximum ใน [R1]_
 
 ให้ A ⊆ V₁ เซต **N(A)** คือเซตของจุดใน V₂ ที่ adjacent กับจุดใน A อย่างน้อยหนึ่งจุด [R1]
 
+#### Hall's Marriage Theorem
+
+> 💡 **Intuition:** Hall's Theorem บอกว่าเมื่อไรจึงมี complete matching — "ทุกกลุ่มคน A ใน V₁ ต้องมีคู่ที่เป็นไปได้รวมกัน N(A) มากพอ (อย่างน้อย |A| คน)" เช่น กลุ่ม 3 คนต้องมีตัวเลือกรวมกันอย่างน้อย 3 คน ถ้า 3 คนนี้มีตัวเลือกรวมกันแค่ 2 คน → ไม่พอ → จับคู่ครบไม่ได้
+> [Source: generated — not verified against original document]
+
 > **Theorem 4 (Hall):** bipartite graph G = (V, E) ที่มี bipartition (V₁, V₂) มี complete matching จาก V₁ ไป V₂ ก็ต่อเมื่อ $|N(A)| \ge |A|$ สำหรับทุกเซตย่อย A ของ V₁ [p.26]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "N(A) = neighbors ของ A" → เซตจุด V₂ ที่เชื่อมกับอย่างน้อย 1 จุด ใน A
+- "|N(A)| ≥ |A| สำหรับทุกเซต A ⊆ V₁" → ต้องตรวจทุกเซตย่อยที่ไม่ว่างของ V₁ (2^|V₁| − 1 เซต) ถ้ามี subset เดียวที่ไม่ผ่าน → ไม่มี complete matching
+- "ก็ต่อเมื่อ" (iff) → เป็นทั้งเงื่อนไขจำเป็นและเงื่อนไขเพียงพอ
+
+**ตัวอย่าง:**
+- ✅ V₁ = {a, b, c}, V₂ = {x, y, z} edges: a–x, a–y, b–y, b–z, c–z → ตรวจครบ 7 subset: {a}→{x,y}, {b}→{y,z}, {c}→{z}, {a,b}→{x,y,z}, {a,c}→{x,y,z}, {b,c}→{y,z}, {a,b,c}→{x,y,z} ทุกเซตได้ |N(A)| ≥ |A| ✓ → มี complete matching คือ a–x, b–y, c–z
+- ❌ V₁ = {a, b, c}, V₂ = {x, y, z} edges: a–x, b–x, c–y, c–z → subset {a,b} ได้ N({a,b}) = {x} ขนาด 1 < 2 → ไม่ผ่าน → ไม่มี complete matching (ทั้งที่ |V₁| = |V₂|)
+- **ต่างกันตรง:** ต้องตรวจทุก subset ไม่ใช่แค่ A = V₁ (ในตัวอย่าง ❌ ถ้าตรวจแค่ V₁ จะได้ N(V₁) = {x,y,z} ขนาด 3 ผ่าน แต่ {a,b} ไม่ผ่าน)
+
+**อย่าสับสน:** Hall's condition เป็นเงื่อนไขของ **complete matching จาก V₁ ไป V₂** (ตรวจเฉพาะ A ⊆ V₁) ไม่ใช่เงื่อนไขของ maximum matching — ถ้าไม่ผ่าน กราฟยังมี maximum matching เสมอ เพียงแต่ขนาดน้อยกว่า |V₁|
+
+**เช็คความเข้าใจ:** กราฟ [R1] นักศึกษา 5 คน Ploy, Kai, Nok, Ton, Fah กับห้อง 101-105 ตรวจ Hall's condition กับ subset A = {Ploy, Kai, Nok, Ton} ได้ผลอย่างไร
+<details><summary>เฉลย</summary>
+
+1. ห้องที่ 4 คนนี้เชื่อมถึง: Ploy → 101, 102; Kai → 102, 103; Nok → 101, 103; Ton → 101, 102, 103
+2. N(A) = {101, 102, 103} ขนาด 3 < |A| = 4
+3. Hall's condition ไม่ผ่าน → ไม่มี complete matching จากนักศึกษาไปห้อง
+
+</details>
 
 [R1] ลงรายละเอียดเพิ่ม:
 
@@ -202,8 +341,37 @@ _ที่มา: รูป fMaximal / fMaximum ใน [R1]_
 
 ### 2.5 Augmenting path และ Berge's theorem [R1]
 
+#### Augmenting path
+
+> 💡 **Intuition:** Augmenting path = "ทางเพิ่มขนาด" — เป็น path ที่ edge สลับระหว่าง "ไม่อยู่ใน M" กับ "อยู่ใน M" โดยเริ่มและจบที่จุด unmatched ถ้าสลับสถานะทุก edge บน path (เส้นนอก M เอาเข้า, เส้นใน M เอาออก) จะได้ matching ที่ใหญ่ขึ้น 1 edge และ Berge บอกว่าถ้า M ยังไม่ maximum จะมี augmenting path อยู่เสมอ
+> [Source: generated — not verified against original document]
+
 * **Alternating path:** path ที่ edge สลับกันระหว่างไม่อยู่ใน M กับอยู่ใน M
 * **Augmenting path:** alternating path ที่เริ่มและจบที่จุด unmatched
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "สลับกันระหว่าง ∉M กับ ∈M" → ลำดับ edge หนึ่งเส้น ∉M, หนึ่งเส้น ∈M, หนึ่งเส้น ∉M, ...
+- "เริ่มและจบ unmatched" → จุดแรกและจุดสุดท้ายของ path ไม่เป็น endpoint ของ edge ใดใน M
+
+**ตัวอย่าง:** (V₁ = {a, b, c}, V₂ = {x, y, z}, edges a–x, b–x, b–y, c–z, M = {b–x, c–z} → unmatched คือ a กับ y)
+- ✅ Path a–x–b–y: a–x ∉M, x–b ∈M, b–y ∉M และ a, y unmatched → augmenting path → M ⊕ P = {a–x, b–y, c–z} ขนาด 3
+- ❌ Path a–x–b: a–x ∉M, x–b ∈M เป็น alternating path แต่ b เป็น matched (จับคู่กับ x) → ไม่ใช่ augmenting path
+- **ต่างกันตรง:** Alternating path จบที่จุด matched ได้, augmenting path ต้องเริ่มและจบที่จุด unmatched
+
+**อย่าสับสน:** การสลับตาม augmenting path ได้ |M ⊕ P| = |M| + 1 เสมอ เพราะ P มี edge นอก M มากกว่า edge ใน M อยู่ 1 เส้น (ในตัวอย่าง ✅: นอก M 2 เส้น, ใน M 1 เส้น)
+
+**เช็คความเข้าใจ:** ทำไม maximum matching จึงไม่มี augmenting path
+<details><summary>เฉลย</summary>
+
+1. สมมติ M เป็น maximum แต่มี augmenting path P
+2. สลับ edge ตาม P จะได้ M ⊕ P ซึ่งยังเป็น matching และมีขนาด |M| + 1
+3. แปลว่ามี matching ใหญ่กว่า M ขัดกับที่ M เป็น maximum → maximum matching จึงไม่มี augmenting path
+4. นี่คือทิศ ⇒ ของ Berge ส่วนทิศกลับ (ไม่มี augmenting path ⇒ M เป็น maximum) ต้องพิสูจน์แยก
+
+</details>
+
 * augmenting path P ที่มี 2k+1 edges มี k+1 edges นอก M และ k edges ใน M การสลับให้ symmetric difference $M \oplus P = (M - P) \cup (P - M)$ ซึ่งยังเป็น matching และใหญ่ขึ้น 1 edge
 
 > **Theorem (Berge, 1957):** matching M เป็น maximum ก็ต่อเมื่อไม่มี M-augmenting path [R1]
@@ -217,7 +385,58 @@ flowchart TB
 ```
 _ที่มา: ข้อความ "find an augmenting path, swap, repeat" ใน [R1]_
 
-ตัวอย่างใน [R1]: augmenting path Bua, Web, Anan, AI, Chai, IoT (เรียงตามลำดับจุดยอดบน path) จาก greedy matching เมื่อสลับ edges แล้วนักศึกษาครบทั้ง 4 คน (ผู้เขียนอนุมานว่า edge ที่อยู่ใน M บน path นี้คือ Web–Anan และ AI–Chai จากการสลับ edge นอก M กับใน M ตามนิยาม alternating path `[Source: generated — not verified against original document]`)
+ตัวอย่างใน [R1]: จาก greedy matching เริ่มต้น $M = \{\text{Anan–Web}, \text{Chai–Game}\}$ (ขนาด 2) การหานักศึกษาให้ครบทั้ง 4 คนทำได้โดยการหา augmenting path 2 รอบ:
+1. **รอบแรก:** ใช้ augmenting path `Bua – Web – Anan – AI` (Bua และ AI unmatched) เมื่อสลับ edges จะได้ $M' = \{\text{Bua–Web}, \text{Anan–AI}, \text{Chai–Game}\}$ (ขนาด 3)
+2. **รอบที่สอง:** ใช้ augmenting path `Dao – Game – Chai – IoT` (Dao และ IoT unmatched) เมื่อสลับ edges จะได้ $M'' = \{\text{Bua–Web}, \text{Anan–AI}, \text{Dao–Game}, \text{Chai–IoT}\}$ ซึ่งเป็น Maximum Matching ขนาด 4 ครบทั้ง 4 คนพอดี
+
+#### 💡 เสริม: Berge's Theorem (ตรวจ Maximum Matching ด้วย Augmenting Path)
+
+> 💡 **Intuition:** ถ้าจับคู่แบบตามใจไปก่อน มักจับได้ไม่มากที่สุด augmenting path คือเส้นทางที่บอกวิธี "สลับคู่" แล้วได้คู่เพิ่มอีก 1 คู่ ถ้ายังมีเส้นทางแบบนี้แปลว่ายังจับได้มากขึ้น Berge บอกว่าถ้าไม่มีเส้นทางแบบนี้เลย การจับคู่นั้นดีที่สุดแล้ว (analogy ใช้ไม่ได้ตรงที่การสลับคู่ในชีวิตจริงอาจทำให้คนอื่นเดือดร้อน แต่ในการสลับตาม augmenting path ทุกจุดที่เคยถูกจับคู่ยังคงถูกจับคู่อยู่)
+> [Source: generated — not verified against original document]
+
+**แตกวลีสำคัญ:**
+- "maximum matching" → matching ที่มีจำนวน edge มากที่สุดในกราฟนั้น
+- "ก็ต่อเมื่อ (if and only if)" → สองทิศต้องเป็นจริงพร้อมกัน: (1) M เป็น maximum ⇒ ไม่มี M-augmenting path; (2) ไม่มี M-augmenting path ⇒ M เป็น maximum
+- "M-augmenting path" → augmenting path ที่สัมพันธ์กับ matching M ตัวนั้น
+
+**ตัวอย่าง:** ใช้กราฟเดิมจากหัวข้อ Augmenting path (V₁ = {a, b, c}, V₂ = {x, y, z}, edges a–x, b–x, b–y, c–z)
+- ✅ M = {b–x, c–z} ไม่ maximum: มี augmenting path a–x–b–y → สลับได้ M ⊕ P = {a–x, b–y, c–z} ขนาด 3
+- ✅ M' = {a–x, b–y, c–z} (ขนาด 3) เป็น maximum: ทุกจุดถูกจับคู่แล้ว จึงไม่มีจุด unmatched ให้เริ่ม augmenting path
+- ❌ สับสน maximal กับ maximum: M = {b–x, c–z} เพิ่ม edge เข้าไปไม่ได้แล้ว (a กับ y ไม่มี edge ต่อกัน) จึงเป็น **maximal** แต่ยัง **ไม่ใช่ maximum** (ขนาด 2 < 3)
+- **ต่างกันตรง:** maximal = "เพิ่มอีกไม่ได้แล้ว" (ดูเฉพาะที่), maximum = "ใหญ่ที่สุดทั้งกราฟ" (ดูทั้งกราฟ) — Berge ตัดสิน maximum ด้วย augmenting path
+
+**อย่าสับสน:** "maximal" ≠ "maximum" — matching ที่เพิ่มไม่ได้แล้วอาจยังไม่ใหญ่ที่สุด
+
+**เช็คความเข้าใจ:** ในกราฟเดิม M = {a–x} เป็น maximum หรือไม่ ถ้าไม่ ให้ระบุ augmenting path ที่ใช้ได้
+<details><summary>เฉลย</summary>
+
+ไม่ maximum — จุด unmatched ได้แก่ b, c (ฝั่ง V₁) และ y, z (ฝั่ง V₂) เส้นทาง b–y มี edge ∉ M และปลายทั้งสองเป็น unmatched จึงเป็น augmenting path (ไม่มี edge ใน M เลย)
+สลับแล้วได้ M = {a–x, b–y} ขนาด 2 → ยังมี augmenting path c–z ได้อีก → {a–x, b–y, c–z} ขนาด 3 (maximum)
+</details>
+
+#### 💡 เสริม: Complete Bipartite Graph K<sub>m,n</sub>
+
+> 💡 **Intuition:** ลองนึกว่าทุกคนในกลุ่ม A รู้จักทุกคนในกลุ่ม B ครบทุกคู่ — K<sub>m,n</sub> คือ "ทุกคู่ข้ามกลุ่มเชื่อมกันหมด" ทำให้นับ edge ได้ง่ายเป็น m × n (หนึ่งเส้นต่อหนึ่งคู่) และเป็นกราฟ bipartite ที่เชื่อมครบที่สุด (analogy ใช้ไม่ได้ตรงที่ในชีวิตจริงการรู้จักมักไม่ครบทุกคู่ และ K<sub>m,n</sub> ไม่มีความสัมพันธ์ภายในกลุ่มเดียวกันเลยซึ่งต่างจากสังคมจริง)
+> [Source: generated — not verified against original document]
+
+**แตกวลีสำคัญ:**
+- "complete" → มี edge ครบทุกคู่ของจุดที่อยู่คนละฝั่ง ไม่ขาดสักคู่
+- "K<sub>m,n</sub>" → m คือจำนวนจุดในฝั่ง V₁ และ n คือจำนวนจุดในฝั่ง V₂
+- "จำนวน edge = m × n" → นับคู่ข้ามฝั่งทั้งหมด
+
+**ตัวอย่าง:**
+- ✅ K<sub>2,3</sub>: V₁ = {u₁, u₂}, V₂ = {v₁, v₂, v₃} → จำนวน edge = 2 × 3 = 6 เส้น (ตามภาพด้านบน)
+- ✅ K<sub>3,3</sub>: จำนวน edge = 3 × 3 = 9 เส้น
+- ❌ K₃ (สามเหลี่ยม): มี edge ครบทุกคู่ แต่ไม่ใช่ bipartite (จุดทั้งสามต่อกันเป็นวง แบ่งเป็นสองฝั่งที่ไม่มี edge ภายในไม่ได้) → ไม่ใช่ K<sub>m,n</sub>
+- **ต่างกันตรง:** ต้องแบ่งเป็นสองฝั่ง (bipartite) และทุกคู่ข้ามฝั่งต้องมี edge (complete)
+
+**อย่าสับสน:** "bipartite" ≠ "complete bipartite" — bipartite ขอแค่ไม่มี edge ภายในฝั่งเดียวกัน ส่วน complete bipartite ต้องมี edge ครบทุกคู่ข้ามฝั่งด้วย
+
+**เช็คความเข้าใจ:** K<sub>2,4</sub> มีจุดยอดกี่จุด และมี edge กี่เส้น
+<details><summary>เฉลย</summary>
+
+จุดยอด = 2 + 4 = **6** จุด; edge = 2 × 4 = **8** เส้น
+</details>
 
 ---
 

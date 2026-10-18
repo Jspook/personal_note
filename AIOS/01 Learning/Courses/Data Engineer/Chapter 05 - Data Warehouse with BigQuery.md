@@ -52,6 +52,9 @@ flowchart TD
 
 > **Denormalization** = เก็บข้อมูลทุกอย่างไว้ในตารางเดียว
 
+> 💡 **Intuition:** Normalization vs Denormalization เหมือน **"จัดระเบียบห้องนอน vs ห้องพอใจ"** — Normalization = เก็บเสื้อ/กางเกง/ถุงเท้าคนละตู้ (ไม่ซ้ำ ประหยัดที่) แต่แต่งตัวครบชุดต้องเปิดหลายตู้ (JOIN), Denormalization = แขวนชุดสำเร็จรวมไว้ หยิบเร็ว แต่บางชิ้นซ้ำหลายชุด
+> [Source: generated — not verified against original document]
+
 **ตัวอย่าง `[เสริมนอกสไลด์]`:**
 
 ```text
@@ -61,6 +64,36 @@ Normalized:                         Denormalized:
  products(product_id, ...)
 → ต้อง JOIN 3 ตาราง                 → อ่านตารางเดียวจบ
 ```
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- **Normalization** = "แยกตาราง" ไม่เก็บซ้ำ (ลูกค้าอยู่ `customers`, order อยู่ `orders`)
+- **Denormalization** = "รวมตาราง" เก็บ customer info แต่ละ order (ซ้ำแต่ในตารางเดียว)
+- **Redundancy** (ซ้ำ) = ข้อมูลซ้ำหลาย record (ชื่อลูกค้าเดียวกัน 100 ครั้ง)
+- **JOIN** = ความสัมพันธ์หลายตาราง — ยิ่ง JOIN หลายตารางยิ่งช้า
+
+**ตัวอย่าง:**
+- ✅ **Normalized** — ลูกค้า 1 million คน → `customers` table หนึ่งตาราง ไม่เก็บชื่อซ้ำ
+- ✅ **Denormalized** — Orders 1 million แถว → เก็บชื่อลูกค้าแต่ละแถว (ลูกค้าที่สั่ง 10 ครั้ง ชื่อถูกเก็บซ้ำ 10 ครั้ง)
+- **ต่างกันตรง:** Normalization → Query ช้า (JOIN); Denormalization → Query เร็ว (ไม่ต้อง JOIN) แต่ storage เยอะ (จนกว่า Columnar)
+- ❌ 'Denormalize แล้วความสัมพันธ์หายไป' — ไม่ใช่ ความสัมพันธ์ยังอยู่ แค่เก็บซ้ำ
+
+**อย่าสับสน:** "Normalization ดีกว่า Denormalization" — ขึ้นกับโจทย์: OLTP (Insert/Update บ่อย) ใช้ Normalized; OLAP (Query บ่อย) ใช้ Denormalized + Columnar
+
+**เช็คความเข้าใจ:** ถ้า Query `SELECT customer_name, SUM(amount) FROM orders GROUP BY customer_name` Normalized ต้อง JOIN หรือไม่?
+<details><summary>เฉลย</summary>
+
+**ตอบ: ต้อง JOIN ถ้า customer_name อยู่ในตาราง `customers` ไม่ใช่ `orders`**
+
+**เหตุผล:**
+1. **Normalized:** `orders` มี `customer_id`, `customers` มี `customer_id, name` ต้อง JOIN
+2. **Denormalized:** `orders` มี `customer_id, customer_name` ดึงตรงจากตาราง เดียว ไม่ต้อง JOIN
+3. **Performance:** Denormalized เร็วกว่า แต่เสี่ยง update anomaly (อัพเดท customer_name ต้องอัพเดท 100K row)
+
+ในกรณี Data Warehouse (read-heavy) Denormalized ดีกว่า
+
+</details>
 
 **แล้วทำไม Denormalize แล้วยังประหยัดพื้นที่ได้?** คำตอบคือ **Columnar Storage**
 
@@ -81,9 +114,68 @@ Columnar  :  [1 2 3] [A A B] [100 200 300]    ← "A A" บีบอัดได
 
 > **ตัวอย่าง:** คำสั่ง `SELECT SUM(amount) FROM sales` Columnar อ่านเฉพาะคอลัมน์ `amount` ไม่ต้องอ่านคอลัมน์อื่น
 
+> 💡 **Intuition:** Columnar เหมือน **"ห้องเรียนที่จัดแยกตามวิชา"** — Row-based ต้องอ่าน "แฟ้มนักเรียน" ทั้งหมด (ชื่อ + คณิต + วิทยา + ภาษา) แล้วค่อยหาเพียงคะแนนคณิตศาสตร์; Columnar ต้องมา "ชั้นคณิตศาสตร์" ดึงคะแนนคนที่ต้องการได้เลย เร็วกว่า และ "เด็กที่ได้ A เหมือนกันหลายคน" บีบอัดได้ (ไม่ต้องเก็บ A ซ้ำๆ)
+> [Source: generated — not verified against original document]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- **Row-based** = ข้อมูลเก็บตามแถว (record-oriented)
+- **Columnar** = ข้อมูลเก็บตามคอลัมน์ (column-oriented)
+- **Compression** = ค่าซ้ำในคอลัมน์บีบอัดได้ เช่น [A A A B B] → [A×3, B×2]
+- **I/O** = input/output อ่านค่า query ที่ต้องใช้เท่านั้น
+
+**ตัวอย่าง:**
+- ✅ **Columnar ดี** — Query `SELECT SUM(price) FROM 1M rows` → อ่านเฉพาะ price column (เร็ว)
+- ✅ **Row-based ดี** — Insert/Update ทุก column (`INSERT INTO sales VALUES (...)`) → Row-based บันทึก ครั้งเดียวเสร็จ
+- ❌ "Columnar ดีกว่าเสมอ" — ไม่ใช่ Insert/Update ทีละแถว ต้องเขียนกระจายหลายไฟล์คอลัมน์ (ช้า)
+- **ต่างกันตรง:** Row-based = ดี Insert/Update; Columnar = ดี SELECT aggregate
+
+**อย่าสับสน:** "Columnar ใช้พื้นที่น้อยเสมอ" — ไม่ใช่ ขึ้นกับ compression ratio; ถ้าค่าไม่ซ้ำ Row-based อาจเท่าหรือเล็กกว่า
+
+**เช็คความเข้าใจ:** Table `transactions` มี 100M rows, 50 columns; query `SELECT customer_id, SUM(amount) FROM transactions GROUP BY customer_id` (ดึง 2 columns); ต้องอ่านกี่ bytes?
+<details><summary>เฉลย</summary>
+
+**ตอบ: Columnar อ่าน 2 columns เท่านั้น (~2/50 = 4% ของทั้งตาราง)**
+
+**เหตุผล:**
+1. **Row-based** → ต้องอ่าน 50 columns ทั้งหมด = 100% bytes
+2. **Columnar** → ดึง `customer_id` + `amount` เท่านั้น = 2/50 = 4% (ถ้าทุกคอลัมน์ขนาดเท่ากัน; จริงขึ้นกับชนิดข้อมูล)
+3. **Cost ใน BigQuery** = คิดจาก bytes scanned; ค่า query on-demand ลด ~25 เท่าเทียบกับ SELECT *!
+
+นี่คือเหตุผลที่ Data Warehouse ใช้ Columnar
+
+</details>
+
 #### 2.2.3 Data Warehouse vs Data Mart
 
 > **Data Mart** = ส่วนย่อยของ Warehouse ที่จัดให้เหมาะกับฝ่ายใดฝ่ายหนึ่ง เช่น Sales Mart
+
+> 💡 **Intuition:** Data Warehouse เหมือน **"ห้างค้าส่งขนาดใหญ่"** ส่วน Data Mart คือ **"ชั้นวางของที่จัดตามความต้องการของลูกค้ากลุ่มหนึ่ง"** เช่น ชั้นของฝ่ายขาย — ของทั้งหมดยังมาจากคลังเดียวกัน แต่หยิบได้เร็วและตรงกับงานของกลุ่มนั้น (จุดที่ analogy ไม่ตรง: Data Mart ไม่ได้แยกออกไปเป็นระบบใหม่เสมอไป บางทีเป็นเพียงชุดตารางหรือ View ที่สร้างจาก Warehouse เดียวกัน)
+> [Source: generated — not verified against original document]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Data Warehouse" → คลังข้อมูลรวมขององค์กร ครอบคลุมทุกฝ่าย
+- "Data Mart" → ชุดย่อยของ Warehouse ที่ออกแบบให้ตรงกับงานของฝ่ายใดฝ่ายหนึ่ง
+- "Sales Mart" → ตัวอย่างของ Data Mart ที่รวมตารางยอดขาย ลูกค้า และเป้าหมายที่ทีมขายใช้บ่อย
+
+**ตัวอย่าง:**
+- ✅ ทีมขายต้องการยอดขาย ลูกค้า และเป้าหมายที่ใช้บ่อย — สร้าง Sales Mart จาก Warehouse
+- ✅ ผู้บริหารต้องการภาพรวมทุกฝ่ายพร้อมกัน — ดึงจาก Warehouse โดยตรง
+- ❌ "Data Mart ต้องเป็นฐานข้อมูลแยกต่างเซิร์ฟเวอร์เสมอ" — ไม่จริง เป็นชุดข้อมูลที่แยกตามผู้ใช้ จะอยู่ใน Dataset เดียวกันก็ได้
+- **ต่างกันตรง:** Data Warehouse รวมทุกฝ่าย (ภาพรวมองค์กร) ส่วน Data Mart จำกัดขอบเขตเฉพาะฝ่าย
+
+**อย่าสับสน:** "Data Mart = Data Lake" — ไม่ใช่ Data Lake เก็บข้อมูลดิบหลายรูปแบบ ส่วน Data Mart เก็บข้อมูลที่จัดโครงสร้างแล้วสำหรับการวิเคราะห์ของฝ่ายนั้น
+
+**เช็คความเข้าใจ:** ทีมบัญชีต้องการแค่ยอดรายเดือนของฝ่ายตน ส่วนผู้บริหารต้องการภาพรวมทุกฝ่าย ควรเลือกอะไรให้แต่ละกลุ่ม?
+<details><summary>เฉลย</summary>
+
+1. **ทีมบัญชี** → Data Mart (Finance) ที่มีเฉพาะข้อมูลที่ฝ่ายบัญชีใช้
+2. **ผู้บริหาร** → Data Warehouse ที่รวมข้อมูลทุกฝ่ายไว้ภาพรวมเดียว
+
+</details>
 
 #### 2.2.4 Table vs View vs Materialized View
 
@@ -103,6 +195,37 @@ GROUP BY customer_id;
 SELECT * FROM vw_customer_purchase;               -- เรียกใช้เหมือน Table
 ```
 
+> 💡 **Intuition:** Table เหมือน **"สมุดบันทึกที่มีข้อมูลจริงอยู่ในเล่ม"** — ค้นได้ตรงจุดแต่ต้องจดไว้ก่อน ส่วน View เหมือน **"ใบสั่งค้นหาที่จดสูตรไว้"** ทุกครั้งที่เปิดดูระบบค้นจากสมุดให้ใหม่ ข้อมูลจึงสดเสมอแต่คำนวณทุกครั้ง และ Materialized View เหมือน **"สรุปยอดที่จดไว้ล่วงหน้า"** เปิดดูเร็วขึ้นเพราะไม่ต้องคำนวณใหม่ทุกครั้ง (จุดที่ analogy ไม่ตรง: Materialized View ถูกรีเฟรชโดยระบบ ผลที่เก็บไว้จึงอาจไม่สดเท่า View เสมอไป)
+> [Source: generated — not verified against original document]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Table" → ตารางที่เก็บข้อมูลจริง เขียนและเพิ่มข้อมูลได้
+- "View" → การบันทึก SQL ไว้เป็นชื่อ ไม่มีข้อมูลของตัวเอง คำนวณใหม่ทุกครั้งที่ถูกเรียก
+- "Materialized View" → View ที่เก็บผลลัพธ์ที่คำนวณไว้แล้ว และถูกรีเฟรชโดยระบบ
+- "ข้อมูลสด" → ผลลัพธ์ตรงกับข้อมูลต้นทางล่าสุดในทันที
+
+**ตัวอย่าง:**
+- ✅ `vw_customer_purchase` ที่ใช้ดูยอดรวมต่อลูกค้าแบบข้อมูลสด — View
+- ✅ Dashboard ที่โหลดทุกนาทีจากตารางหลายพันล้านแถว — Materialized View ช่วยให้เร็วขึ้น
+- ❌ `INSERT INTO vw_customer_purchase VALUES (...)` — ทำไม่ได้ เพราะ View เขียนข้อมูลเพิ่มไม่ได้ (SELECT อย่างเดียว)
+- **ต่างกันตรง:** Table เก็บข้อมูลจริง / View ไม่เก็บ คำนวณทุกครั้ง / Materialized View เก็บผลที่คำนวณแล้ว
+
+**อย่าสับสน:** "View = ตารางสำรอง" — ไม่ใช่ View ไม่มีข้อมูลของตัวเอง ถ้าตารางต้นทางเปลี่ยน ผลของ View ก็เปลี่ยนตาม
+
+**เช็คความเข้าใจ:** ต้องการยอดรวมต่อลูกค้า ตารางต้นทางมี 5 พันล้านแถว และ Dashboard โหลดทุกนาที ควรเลือก View หรือ Materialized View และ trade-off คืออะไร?
+<details><summary>เฉลย</summary>
+
+**ตอบ: Materialized View** (ถ้ายอมรับความสดของข้อมูลได้เล็กน้อย)
+
+**เหตุผล:**
+1. Dashboard โหลดบ่อย และตารางใหญ่ — View ต้องคำนวณใหม่ทุกครั้ง ทำให้ช้าและเสียค่า query
+2. MV เก็บผลไว้แล้ว ทำให้เร็วและประหยัดกว่า
+3. **Trade-off:** ความเร็วกับความสดของข้อมูล — ถ้าต้องการข้อมูลสดจริงต้องเลือก View แล้วยอมรับต้นทุนการคำนวณ
+
+</details>
+
 #### 2.2.5 Index & Partitioning (Recap)
 
 * **Partition:** แบ่งข้อมูลเป็นกลุ่มย่อย เช่น ตามวันที่ ข้อมูลวันเดียวกันอยู่ด้วยกัน
@@ -112,6 +235,37 @@ SELECT * FROM vw_customer_purchase;               -- เรียกใช้เ
 -- [เสริมนอกสไลด์] Query ที่ใช้ Partition ช่วย: ระบุเงื่อนไขวันที่ให้อ่านเฉพาะ partition ที่จำเป็น
 SELECT * FROM scores WHERE exam_date = '2024-06-01';
 ```
+
+> 💡 **Intuition:** Partition vs Clustering เหมือน **"จัดห้องสมุด"** — Partition = "แยกห้องตามปี" (ปี 2020 ห้องหนึ่ง ปี 2021 ห้องหนึ่ง) ค้นหา "หนังสือปี 2020" ข้ามห้องอื่นได้เลย; Clustering = "จัดเรียงในห้องตามหัวข้อ" (ประวัติศาสตร์ ด้านซ้าย วิทยาศาสตร์ ด้านขวา) ทั้งคู่ช่วยค้นหาเร็ว ทั้งสองช่วยเรื่องนี้ แต่ Partition เหมาะเมื่อ filter ตรงกับการแบ่งห้อง; Clustering ช่วยหาในห้องใหญ่ให้เร็วขึ้น
+> [Source: generated — not verified against original document]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- **Partition** = "แบ่งเป็นไฟล์/กลุ่มคนละที่" (กายภาพแยก)
+- **Clustering** = จัดเรียงข้อมูลภายในแต่ละ partition เป็น block ตามค่าคอลัมน์ (block pruning)
+- **Pruning** = ข้ามส่วนข้อมูลที่ไม่ต้องอ่าน (ช่วยให้ query เร็ว)
+- **Cardinality** = จำนวน value ที่แตกต่างกัน (วันที่ใน 1 ปีมี 365 ค่า, เพศมี 2-3 ค่า)
+
+**ตัวอย่าง:**
+- ✅ **Partition ดี** — `WHERE date = '2024-06-01'` → ข้ามวันอื่น ทั้งหมด (เร็วมาก)
+- ✅ **Clustering ดี** — `WHERE customer_id IN (100, 101, 102)` → ข้อมูลเหล่านี้กระจุก (ประหยัด I/O)
+- ❌ "Partition หลายคอลัมน์" → BigQuery Partition ได้ 1 คอลัมน์เท่านั้น (date/timestamp, ingestion time, integer range) และจำกัด 10,000 partitions/ตาราง; Clustering ได้สูงสุด 4 คอลัมน์
+- **ต่างกันตรง:** Partition = แบ่งข้อมูลแยกไฟล์/ก้อนคนละที่ตามค่าคอลัมน์ (ระดับตาราง), Clustering = จัดเรียงข้อมูลภายในแต่ละ partition เป็น block ย่อย (ระดับบล็อก)
+
+**อย่าสับสน:** "Partition ดีกว่า Clustering เสมอ" — ไม่จริง ผลขึ้นกับ query: WHERE date = X (partition ดี), WHERE customer_id IN (...) (clustering ดี)
+
+**เช็คความเข้าใจ:** BigQuery table `transactions` มี 1 billion rows, column: date ครอบคลุม 1 ปี (365 ค่า), customer_id (100K unique), amount. ควร partition/cluster ตามอะไร?
+<details><summary>เฉลย</summary>
+
+**ตอบ: Partition by date, Cluster by customer_id**
+
+**เหตุผล:**
+1. **Partition by date** = วันที่ common filter → query `WHERE date = CURRENT_DATE()` อ่านแค่ ~1/365 ของตาราง
+2. **Cluster by customer_id** = ข้อมูล customer เดียวกันกระจุก → query `SELECT customer_id, amount FROM transactions WHERE customer_id = X` scan น้อยข้อมูล
+3. **ทำไมไม่ใช้ Partition กับทั้งสองคอลัมน์** = BigQuery กำหนดให้ Partition ได้เพียง 1 คอลัมน์เท่านั้น และ customer_id มี 100K ค่า ซึ่งเกินขีดจำกัด 10,000 partitions ต่อตาราง จึงต้องใช้ Clustering แทน (Clustering กำหนดได้สูงสุด 4 คอลัมน์)
+
+</details>
 
 หนังสือแนะนำเรื่องออกแบบ Data Warehouse ดูสไลด์ P.27
 
@@ -135,12 +289,69 @@ Project  >  Dataset  >  Table
 
 **ชนิดข้อมูลที่ใช้บ่อย:** ตัวเลข ข้อความ วันที่/เวลา ฯลฯ (สไลด์ P.32)
 
+> 💡 **Intuition:** Project > Dataset > Table เหมือน **"บริษัท > แผนก > ตู้เอกสาร"** — Project คือก้อนใหญ่ที่ผูกกับค่าใช้จ่าย (Billing), Dataset คือแผนกที่กำหนดว่าข้อมูลอยู่ตำแหน่งไหน (Location), Table คือตู้เอกสารจริงที่เก็บข้อมูลไว้ (จุดที่ analogy ไม่ตรง: สิทธิ์การเข้าถึงบางอย่างกำหนดได้ที่ระดับ Project หรือ Dataset โดยไม่ต้องไปตั้งทีละตู้)
+> [Source: generated — not verified against original document]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Project" → หน่วยสูงสุดที่ผูกกับ Billing และการตั้งค่าของ Cloud
+- "Dataset" → กลุ่มของตาราง กำหนดตำแหน่งที่เก็บข้อมูล (Data Location)
+- "Table" → ตารางข้อมูลที่เราใช้ query จริง
+- `project.dataset.table` → รูปแบบการอ้างชื่อตารางแบบเต็ม
+
+**ตัวอย่าง:**
+- ✅ `my-proj.workshop.transaction` — อ้างตารางครบทั้งสามระดับ ใช้ได้จากทุกที่
+- ✅ แยกค่าใช้จ่ายของทีมหนึ่งออกไปโดยสร้าง Project ใหม่ — ทำได้เพราะ Project ผูกกับ Billing
+- ❌ "Dataset ไม่มีผลต่อตำแหน่งข้อมูล ตั้งที่ไหนก็เหมือนกัน" — ไม่จริง Dataset กำหนด Location ของข้อมูล
+
+**ต่างกันตรง:** Project = บิลและการจัดการทั้งก้อน, Dataset = กลุ่มตารางและตำแหน่งข้อมูล, Table = ข้อมูลจริง
+
+**อย่าสับสน:** "Dataset = ชุดข้อมูลสำหรับงาน ML" — ไม่ใช่ ในบริบท BigQuery Dataset คือคอนเทนเนอร์ที่ใส่ตารางไว้ ไม่ใช่ไฟล์ชุดข้อมูลเฉพาะงาน
+
+**เช็คความเข้าใจ:** ต้องการอ้างตาราง `transaction` ที่อยู่ใน Dataset `workshop` ของ Project `my-proj` ต้องเขียนชื่อแบบเต็มว่าอย่างไร?
+<details><summary>เฉลย</summary>
+
+**ตอบ:** `my-proj.workshop.transaction`
+
+**เหตุผล:** เรียงจาก Project → Dataset → Table คั่นด้วยจุด
+
+</details>
+
 #### 2.3.2 ที่เก็บข้อมูลของ Table
 
 | ประเภท | คำอธิบาย |
 | :--- | :--- |
 | **Native table** | เก็บข้อมูลภายใน BigQuery ประสิทธิภาพและอ่านเร็วสุด |
 | **External query** | ใช้ `EXTERNAL_QUERY` ไป Query SQL database อื่นใน Google Cloud (เช่น Cloud SQL) โดยไม่ต้องย้ายข้อมูลเข้ามา |
+
+> 💡 **Intuition:** Native table เหมือน **"ของที่ซื้อมาเก็บในตู้ของเราเอง"** — หยิบได้เร็วแต่ต้องขนเข้าตู้ก่อน ส่วน External query เหมือน **"โทรสั่งของจากร้านข้างบ้าน"** — ไม่ต้องขนของเข้าบ้าน แต่ทุกครั้งที่ต้องการต้องรอร้านส่งกลับมา จึงช้ากว่า (จุดที่ analogy ไม่ตรง: `EXTERNAL_QUERY` ไม่ได้ย้ายข้อมูลจริง ความเร็วขึ้นกับระบบต้นทางทุกครั้ง)
+> [Source: generated — not verified against original document]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Native table" → ตารางที่ BigQuery เก็บและจัดการเอง
+- "External query" → ส่งคำสั่ง SQL ไปยังฐานข้อมูลอื่นนอกตาราง BigQuery (เช่น Cloud SQL) แล้วรับผลกลับมา
+- `EXTERNAL_QUERY(...)` → ฟังก์ชันที่ใช้เรียกการ query แบบนี้
+- "ไม่ต้องย้ายข้อมูลเข้ามา" → ข้อมูลยังอยู่ที่ต้นทางเดิม ไม่ได้ถูกคัดลอกมาที่ BigQuery
+
+**ตัวอย่าง:**
+- ✅ ตารางยอดขายที่ query ทุกวัน — Native table
+- ✅ ตารางลูกค้าที่อยู่ใน Cloud SQL และยังไม่ต้องการย้าย — ใช้ `EXTERNAL_QUERY` ดึงมา JOIN กับตารางยอดขายได้
+- ❌ "EXTERNAL_QUERY เร็วเท่า Native เพราะอยู่ใน Google Cloud เหมือนกัน" — ไม่จริง ทุกครั้งต้องวิ่งไปยังระบบต้นทาง
+
+**ต่างกันตรง:** ข้อมูลถูกเก็บใน BigQuery (Native) หรือยังอยู่ที่เดิมแล้วเรียกผ่าน SQL (External)
+
+**อย่าสับสน:** "External = ข้อมูลจากอินเทอร์เน็ต" — ไม่ใช่ ในที่นี้หมายถึงฐานข้อมูลอื่นที่อยู่นอกตาราง BigQuery แม้จะอยู่บน Google Cloud เดียวกัน
+
+**เช็คความเข้าใจ:** ข้อมูลลูกค้าอยู่ใน Cloud SQL และต้อง JOIN กับตารางยอดขายใน BigQuery ที่ query บ่อยทุกวัน จะทำอย่างไร?
+<details><summary>เฉลย</summary>
+
+1. ใช้ `EXTERNAL_QUERY` ดึงข้อมูลลูกค้าจาก Cloud SQL มา JOIN กับตารางยอดขาย ทำให้ไม่ต้องย้ายข้อมูลก่อน
+2. ถ้า query แบบนี้หนักและรันบ่อย ให้พิจารณาย้ายตารางลูกค้าเข้าเป็น Native table เพื่อความเร็วและลดการพึ่งพาระบบต้นทาง
+
+</details>
 
 #### 2.3.3 การคิดเงินของ BigQuery
 
@@ -166,6 +377,35 @@ SELECT * FROM workshop.transaction;
 -- ดีกว่า: อ่านเฉพาะคอลัมน์ที่ต้องใช้
 SELECT date, thb_amount FROM workshop.transaction;
 ```
+
+> 💡 **Intuition:** ค่า Query แบบ On-demand เหมือน **"ค่าน้ำที่คิดตามปริมาณที่ไหลผ่านมิเตอร์"** — คิดตามข้อมูลที่ query อ่านจริง ไม่ใช่ตามเวลาที่รอ ดังนั้น `SELECT *` ที่อ่านทุกคอลัมน์จึงแพงกว่าการเลือกเฉพาะคอลัมน์ที่ใช้ (จุดที่ analogy ไม่ตรง: ค่าใช้จ่ายจริงมีหลายส่วนแยกกัน ทั้ง Query, Storage และ Ingestion และราคาเปลี่ยนได้ ต้องดูหน้า Pricing ทางการเสมอ)
+> [Source: generated — not verified against original document]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "On-demand" → จ่ายตามปริมาณข้อมูลที่ query อ่าน
+- "Storage" → ค่าพื้นที่ที่ใช้เก็บข้อมูล คิดแยกจากค่า query
+- "Ingestion" → ค่าการโหลดข้อมูลเข้า BigQuery ซึ่งขึ้นกับวิธีโหลด
+- "Cache" → ถ้า query เดิมซ้ำและผลยังอยู่ในแคช จะไม่คิดค่า query ซ้ำ (ตามที่โน้ตระบุ ~24 ชั่วโมง แต่ BigQuery ไม่การันตีเรื่องเวลา)
+- "Preview" → ดูข้อมูลตัวอย่างโดยไม่รัน query ตามสไลด์ระบุว่าฟรี
+
+**ตัวอย่าง:**
+- ✅ `SELECT date, thb_amount FROM workshop.transaction` — อ่าน 2 คอลัมน์ ข้อมูลที่ประมวลผลน้อย ค่า query ต่ำ
+- ❌ `SELECT * FROM workshop.transaction` เพื่อดูแค่ยอดรวม — อ่านทุกคอลัมน์โดยไม่จำเป็น ค่า query สูง
+- ✅ เปิด Preview tab เพื่อดูตัวอย่างข้อมูล — ฟรีตามสไลด์
+- ❌ "รัน query เดิมซ้ำ 5 ครั้งใน 1 ชั่วโมง ค่าใช้จ่ายเป็น 5 เท่าเสมอ" — ไม่จริงเสมอไป ถ้าเข้าเงื่อนไข Cache การรันซ้ำจะไม่คิดค่า query
+- **ต่างกันตรง:** ดูตัวอย่าง (Preview) ไม่คิด query, รัน query เต็มคิดตามข้อมูลที่อ่าน
+
+**อย่าสับสน:** "Storage กับ Query คิดเงินรวมกัน" — ไม่ใช่ คิดแยกกัน Storage คิดตามพื้นที่ที่เก็บ ส่วน Query คิดตามข้อมูลที่อ่านตอนรัน
+
+**เช็คความเข้าใจ:** ต้องการดูตัวอย่าง 10 แถวของตาราง 2 TB กับต้องการรายงานยอดรวมรายวัน ควรทำอย่างไรให้ประหยัดที่สุด?
+<details><summary>เฉลย</summary>
+
+1. **ดูตัวอย่าง 10 แถว** → ใช้ **Preview tab** (ฟรี ไม่ต้องรัน query เต็ม)
+2. **รายงานยอดรวมรายวัน** → เลือกเฉพาะคอลัมน์ที่ใช้ (เช่น `date`, `thb_amount`) และกรองด้วยเงื่อนไข Partition ใน `WHERE` เพื่อลดข้อมูลที่อ่าน
+
+</details>
 
 #### 2.3.4 การแชร์และสิทธิ์
 

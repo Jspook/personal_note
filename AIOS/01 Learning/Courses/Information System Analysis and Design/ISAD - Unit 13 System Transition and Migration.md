@@ -42,6 +42,9 @@ flowchart TD
 
 **4 ประเภทของ System Maintenance:**
 
+> 💡 **Intuition:** ลองคิด Car Maintenance: **Preventive** = เปลี่ยนน้ำมันเครื่องตามระยะก่อนเครื่องพัง; **Corrective** = รถเสียแล้วนำไปซ่อม (แก้หลังปัญหา); **Adaptive** = ปรับรถให้ใช้กับน้ำมันชนิดใหม่/ตรงกฎหมายใหม่; **Perfective** = อัปเกรดให้แรงขึ้นหรือติดกล้องถอยหลัง (ปรับปรุง)
+> [Source: generated — not verified against original document]
+
 | ประเภท | จุดประสงค์ | ตัวอย่าง Real-World |
 | :--- | :--- | :--- |
 | **Preventive Maintenance** | ป้องกันปัญหาก่อนเกิด — ค้นหาและแก้ไข latent faults | ติดตั้ง security patches, clean legacy code, defrag disk |
@@ -49,7 +52,41 @@ flowchart TD
 | **Adaptive Maintenance** | ปรับระบบให้รองรับ software/hardware/legal ที่เปลี่ยนไป | อัปเดต app รองรับ iOS ใหม่, ปรับระบบเงินเดือนตามกฎหมายภาษีใหม่ |
 | **Perfective Maintenance** | ปรับปรุง performance, UI, หรือเพิ่มฟีเจอร์ที่ขอ | Optimize DB ให้โหลดเร็วขึ้น 50%, เพิ่ม Dark Mode |
 
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Preventive = ป้องกันก่อนเกิด" → ไม่มีปัญหา แต่ต้องดำเนินการเตรียมพร้อม (เช่น Update Security Patch ก่อนมี Hack)
+- "Corrective = แก้หลังเกิด" → ระบบ Bug หรือ Crash แล้ว ต้องรีบแก้
+- "Adaptive = ปรับให้เข้ากับสิ่งแวดล้อมใหม่" → ไม่ได้ Fix Bug ไม่ได้ Feature ใหม่ แต่ "ต้องใช้ได้กับ Environment ใหม่" (iOS 15 ใหม่, ฐานข้อมูล Migrate)
+- "Perfective = ปรับปรุง" → ไม่ Bug ไม่ Crash แต่ต้องการให้ "ดีขึ้น" (เร็ว, สวย, มี Feature)
+
+**ตัวอย่าง:**
+- ✅ **Preventive:** ติดตั้ง Security Patch ตามรอบ, Clean Legacy Code, Update Dependencies
+- ✅ **Corrective:** ลูกค้าส่ง Bug Report "ปุ่ม Login กดแล้วไม่ทำงาน" → ลงมือแก้
+- ✅ **Adaptive:** iOS 16 Release → ต้อง Update App ให้รองรับ
+- ✅ **Perfective:** ผู้ใช้ขอให้ Report โหลดเร็วขึ้น → Optimize Query
+- **ต่างกันตรง:** Corrective = แก้สิ่งที่ทำงานผิด; Perfective = ทำสิ่งที่ทำงานถูกอยู่แล้วให้ดีขึ้นหรือเพิ่มฟีเจอร์ที่ขอ
+
+**อย่าสับสน:** "Preventive" ≠ "Perfective" — Preventive = ป้องกันปัญหาที่ยังไม่เกิด; Perfective = ทำให้ดีขึ้น
+
+**เช็คความเข้าใจ:** ระบบ Banking พบปัญหาต่อไปนี้ — ควร Classify เป็น Maintenance ประเภทไหน?
+1. Security Breach เกิดขึ้น → แพทช์เข้าไป
+2. ผู้ใช้ขอให้เพิ่ม Dark Mode
+3. Database ต้องเปลี่ยนจาก Oracle เป็น PostgreSQL
+4. Transfer บางครั้งโอนยอดผิด → ต้องแก้ Logic
+<details><summary>เฉลย</summary>
+
+1. **Corrective** — แก้ Bug/Security ที่เกิดแล้ว (ถ้า Patch ก่อนถูกโจมตี = Preventive)
+2. **Perfective** — เพิ่มฟีเจอร์ตามที่ผู้ใช้ขอ ไม่ใช่การแก้ Bug
+3. **Adaptive** — ปรับให้ใช้ Database ใหม่ได้
+4. **Corrective** — Transfer Logic ผิดพลาด = Bug ต้องแก้
+
+</details>
+
 #### Change Request (คำร้องขอเปลี่ยนแปลง)
+
+> 💡 **Intuition:** ลองคิดถึงการขอแก้บ้าน: เจ้าของบ้านเขียนคำขอเป็นลายลักษณ์อักษร ช่างประเมินราคาและเวลาก่อน ถ้าอนุมัติจึงจัดคิวทำ ไม่ใช่เปลี่ยนแบบตามใจในวันนั้น ข้อจำกัดของ analogy: ในองค์กรคำขอมาได้หลายทาง รวมถึงจากผู้บริหารโดยตรง แต่ทุกคำขอต้องผ่านกระบวนการประเมินแบบเดียวกัน
+> [Source: generated — not verified against original document]
 
 > **Change Request** คือข้อเสนออย่างเป็นทางการเพื่อแก้ไขส่วนใดส่วนหนึ่งของระบบ
 
@@ -73,9 +110,34 @@ flowchart TD
     Dep --> Close["7. Close & Update Problem Report"]
 ```
 
+**🧭 ทำความเข้าใจ Change Request** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Change Request" → ข้อเสนออย่างเป็นทางการให้แก้ระบบ มีหลักฐาน ผู้ขอ และเหตุผล
+- "Evaluate" → ประเมินผลกระทบต่อ Cost, Schedule และระบบอื่นก่อนตัดสินใจ
+- "Prioritize / Schedule" → จัดลำดับความสำคัญแล้ววางในรอบ Deploy ที่เหมาะสม
+- "Problem Report vs Change Request" → Problem Report คือการรายงานปัญหาที่พบ อาจนำไปสู่ Change Request ได้ แต่คนละขั้นตอนกัน
+
+**ตัวอย่าง:**
+- ✅ ผู้ใช้รายงานว่า Checkout ค้างเมื่อใส่ Discount Code → Problem Report → เปิด Change Request → ประเมิน → Priority สูง → Schedule ใน Release ถัดไป → Deploy → ปิด Problem Report
+- ❌ Developer แก้ Production โดยตรงโดยไม่มี Change Request และไม่บันทึก — ไม่มีใครรู้ว่าเปลี่ยนอะไร เมื่อเกิดปัญหาใหม่ตามมาก็ตรวจย้อนกลับไม่ได้
+- **ต่างกันตรง:** Problem Report = "มีอะไรผิด"; Change Request = "ควรเปลี่ยนอะไร และจะทำเมื่อไร"
+
+**อย่าสับสน:** "Change Request" ≠ "การแก้ Bug ทันที" — Bug ก็เข้ากระบวนการ Change Request ได้ และทุกคำขอต้องผ่านการประเมินก่อนลงมือ
+
+**เช็คความเข้าใจ:** ผู้จัดการขอเพิ่มฟีเจอร์ใหม่ด่วนภายในเดือนนี้ ต้องทำอะไรก่อนลงมือเขียนโค้ด?
+<details><summary>เฉลย</summary>
+
+ส่งคำขอเป็น **Change Request** แล้วให้ **Evaluate** ผลกระทบ (เวลา, ต้นทุน, ระบบอื่น) และ **Prioritize** เทียบกับงานอื่นก่อน จึงจะ **Schedule** เข้ารอบ Deploy และ Implement ได้
+
+</details>
+
 ---
 
 ### 2.10 Project Assessment (การประเมินผลโครงการ)
+
+> 💡 **Intuition:** ลองคิดถึงการทบทวนหลังแข่งกีฬาจบ: โค้ชดูทั้งการทำงานร่วมกันของทีม และดูอุปกรณ์กับสนามด้วย ไม่ใช่เพื่อหาคนผิด แต่เพื่อให้รอบหน้าทำได้ดีขึ้น ข้อจำกัดของ analogy: การทบทวนที่ไม่นำไปปรับปรุงจริงจะกลายเป็นพิธีกรรม ซึ่ง Project Assessment ที่ดีต้องถูกนำไปใช้ต่อ
+> [Source: generated — not verified against original document]
 
 > **Project Assessment** คือกลไกประเมินโครงการตลอด Lifecycle ตั้งแต่เริ่มต้นถึงสิ้นสุด — เพื่อเข้าใจว่าอะไรสำเร็จ อะไรต้องปรับปรุง
 
@@ -107,6 +169,63 @@ flowchart TD
 | :--- | :--- | :--- |
 | **Project Team Review** | กระบวนการทำงานของทีม, การ collaborate | Project Manager + ทีม |
 | **System Review** | ความสำเร็จของระบบ, ROI จริงเทียบกับที่คาด | Management + Analyst |
+
+**🧭 ทำความเข้าใจ Project Assessment** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Organizational Learning" → องค์กรเรียนรู้จากโครงการหนึ่งเพื่อให้โครงการถัดไปทำได้ดีขึ้น
+- "Project Team Review" → ประเมิน "วิธีทำงาน" ของทีม (การร่วมมือ กระบวนการ) เน้นการปรับปรุง ไม่ลงโทษ
+- "System Review" → ประเมิน "ตัวระบบ" (สถาปัตยกรรม, Infrastructure, ต้นทุนและประโยชน์จริงเทียบกับที่คาด)
+
+**ตัวอย่าง:**
+- ✅ Team Review พบว่า Requirement เปลี่ยนบ่อยทำให้งานรีบ → ปรับกระบวนการรับ Change Request; System Review พบว่า Database ช้ากว่าที่คาด → วางแผนปรับ Infrastructure
+- ❌ ประเมินเพื่อหาคนผิดแล้วเก็บผลไว้เงียบๆ — ทีมจะปิดบังปัญหาในโครงการถัดไป
+- **ต่างกันตรง:** Team Review ดูที่ "คนและวิธีทำงาน"; System Review ดูที่ "ระบบที่ส่งมอบ"
+
+**อย่าสับสน:** Project Assessment ≠ Testing — Testing ตรวจว่าระบบทำงานถูกต้องก่อนส่งมอบ ส่วน Project Assessment ประเมินหลังติดตั้งว่าโครงการคุ้มค่าและทำอะไรได้ดีกว่าเดิมบ้าง
+
+**เช็คความเข้าใจ:** หลังติดตั้งระบบ 6 เดือน ผลตอบแทน (ROI) ต่ำกว่าที่คาดไว้มาก การประเมินนี้เป็น Team Review หรือ System Review และผู้รับผิดชอบหลักคือใคร?
+<details><summary>เฉลย</summary>
+
+เป็น **System Review** — เพราะเป็นการเทียบ ROI จริงกับที่คาดของระบบ ผู้รับผิดชอบหลักคือ **Management + Analyst** (Team Review คือการดูการทำงานของทีม ซึ่งผู้รับผิดชอบคือ Project Manager + ทีม)
+
+</details>
+
+#### 💡 เสริม: Conversion Strategies (Direct, Parallel, Phased, Pilot)
+
+> 💡 **Intuition:** ลองคิดถึงการเปลี่ยนระบบไฟฟ้าของอาคาร: **Direct** = ตัดไฟเก่าแล้วต่อไฟใหม่ทันที (เร็วที่สุด แต่ถ้าใช้ไม่ได้อาคารดับทันที), **Parallel** = เปิดไฟเก่าและใหม่คู่กันจนมั่นใจ (ปลอดภัยที่สุดแต่จ่ายค่าไฟสองเท่า), **Phased** = เปลี่ยนทีละชั้น, **Pilot** = ลองเปลี่ยนห้องเดียวก่อน ข้อจำกัดของ analogy: ระบบซอฟต์แวร์ต้องจัดการข้อมูลที่ซ้ำหรือ Sync กันระหว่างเก่ากับใหม่ และต้องฝึกผู้ใช้ ซึ่งการเปลี่ยนไฟฟ้าไม่มีปัญหาเหล่านี้
+> [Source: generated — not verified against original document]
+
+| Conversion Style | วิธีการ | Risk | Cost | ระยะเวลา | เหมาะกับ |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Direct Cutover** | ปิดระบบเก่า เปิดระบบใหม่ทันที | สูง | ต่ำ | สั้น | ระบบเล็ก ไม่ซับซ้อน |
+| **Parallel** | รันระบบเก่าและใหม่พร้อมกัน เทียบผลลัพธ์ | ต่ำ | สูง | ยาว | ระบบสำคัญที่ยอมรับ Downtime ไม่ได้ |
+| **Phased** | เปลี่ยนทีละส่วน (Module หรือแผนก) | กลาง | กลาง | กลาง | ระบบใหญ่ หลาย Module |
+| **Pilot** | ให้กลุ่มผู้ใช้เล็กลองระบบใหม่ก่อนขยาย | กลาง | กลาง | กลาง | ต้องการ Feedback จากผู้ใช้จริงก่อนเปิดกว้าง |
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Direct Cutover" → ไม่มีระบบเก่าเป็นตัวสำรองหลังเปลี่ยน ถ้าพังจุดเดียว ทั้งระบบพัง
+- "Parallel" → รันคู่กันเพื่อเทียบผลลัพธ์ ถ้าตรงกันจึงปิดระบบเก่า
+- "Phased" → ทยอยเปลี่ยนเป็นส่วนๆ ระหว่างทางต้องมีการเชื่อมระหว่างระบบเก่ากับใหม่
+- "Pilot" → ทดสอบกับกลุ่มผู้ใช้เล็กทั้งระบบก่อน แล้วค่อยขยายไปทุกกลุ่ม
+
+**ตัวอย่าง:**
+- ✅ ระบบบัญชีเล็กของร้านค้า ข้อมูลน้อย เปลี่ยนนอกเวลาทำการ → Direct Cutover เหมาะ เพราะถ้ามีปัญหาก็กู้ได้เร็วและค่าใช้จ่ายต่ำ
+- ✅ ระบบจ่ายเงินเดือนขององค์กรที่ห้ามผิด → Parallel เหมาะ เพราะรันสองระบบจนยอดตรงกันก่อนปิดของเดิม
+- ❌ เลือก Direct Cutover กับ ERP ใหญ่ที่ทุกแผนกเปลี่ยนพร้อมกันโดยยังไม่ทดสอบ → ถ้าพัง ทุกแผนกหยุดทำงานพร้อมกัน
+
+**ต่างกันตรง:** Direct เสี่ยงที่ "จุดเปลี่ยนจุดเดียว" แต่ประหยัด; Parallel ไม่มีจุดเปลี่ยนที่เสี่ยง แต่ต้องจ่ายค่ารันสองระบบ
+
+**อย่าสับสน:** "Pilot" ≠ "Phased" — Pilot ทดสอบ **ระบบทั้งชุด** กับ **ผู้ใช้กลุ่มเล็ก** ก่อนขยาย; Phased **แบ่งระบบเป็นส่วน** แล้วเปลี่ยนทีละส่วน
+
+**เช็คความเข้าใจ:** โรงพยาบาลต้องการให้ผู้ใช้จริงกลุ่มเล็กลองระบบใหม่และให้ Feedback ก่อนเปิดให้ทั้งโรงพยาบาล ควรเลือก Conversion Style แบบใด และเหตุผลคืออะไร?
+<details><summary>เฉลย</summary>
+
+**Pilot** — เพราะเป้าหมายคือให้กลุ่มผู้ใช้เล็กทดลองทั้งระบบและให้ Feedback ก่อนขยาย ระบบเดิมยังใช้งานได้ไปพร้อมกันระหว่างรอ (ถ้า Direct จะไม่มีกลุ่มทดลอง และ Parallel จะไม่ได้ Feedback จากผู้ใช้จริง)
+
+</details>
 
 ---
 

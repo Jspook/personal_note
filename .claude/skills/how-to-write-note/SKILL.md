@@ -27,6 +27,7 @@ The primary goal is:
    - รูปภาพที่เป็นข้อมูลต้นฉบับ (ภาพหน้าจอ, ผลลัพธ์, รูปถ่าย) เก็บใน `attachments/` ข้างโน้ตตามเดิม
    - ถ้าเนื้อหาไม่ใช่ diagram ที่ Mermaid วาดได้ (กราฟฟังก์ชัน, plot) ให้ใช้ Python (Matplotlib) บันทึกเป็นรูปใน `attachments/` แล้วบอกผู้ใช้
 5. **Source Labels & Page References:** อ้างเลขสไลด์/หน้า `[p.N]` ในเนื้อหาที่มาจากต้นฉบับ; เนื้อหาที่เพิ่มเองให้อยู่ใน blockquote ขึ้นต้น 💡 พร้อมป้าย `[Source: generated — not verified against original document]`; ข้อความต้นฉบับที่ขาด/พิมพ์ผิด/ขัดกันเอง ห้ามแก้เงียบ ๆ ให้คงไว้พร้อมหมายเหตุ (typo ชัดเจนแก้ได้แต่ต้องสรุปไว้ในส่วน Pitfalls)
+6. **Teaching Standard (สอนให้เข้าใจ ไม่ใช่แค่ย่อคำ):** ทุก core concept ใน Part 2 ต้องเขียนตาม Section 3.7 คือ Intuition → Formal definition → แตกวลีสำคัญ → ตัวอย่างถูก/ผิด → ตัดความกำกวม → คำถามเช็คความเข้าใจ (ผู้ใช้กำหนด 2026-10-17)
 
 ---
 
@@ -215,6 +216,71 @@ flowchart TB
 
 ---
 
+### 3.7 Teaching Standard (user-defined, 2026-10-17)
+
+Origin: ผู้ใช้ต้องถาม Claude ให้อธิบายนิยาม Graph / Simple graph ซ้ำ เพราะคำอธิบายแรกแค่ย่อคำให้ง่าย แต่ไม่ได้บอกว่าทำไมสำคัญและจะจำแนกอย่างไร
+
+#### Key Principle
+Do not merely simplify the wording; ensure that learners grasp the underlying concepts, understand why these concepts are effective, and learn how to identify them in real-world practice.
+
+#### Teaching Process
+1. **Start with Intuition:** accessible, relatable language; real-world analogies whenever possible; clarify why the concept is significant.
+2. **Build Knowledge Step-by-Step:** one new concept at a time; foundations before later topics; never assume the learner knows technical terminology.
+3. **Bridge Intuition with Technical Definitions:** accurate formal definition; break down key phrases in simple language; keep essential technical terms (original English); never compromise technical accuracy for simplicity.
+4. **Use Concrete Examples:** simple, clear examples; explain processes step-by-step; contrast correct with incorrect examples where appropriate; state clearly what distinguishes the two cases.
+5. **Eliminate Ambiguity:** identify terms or phrases beginners may misread; define them, including what they do *not* mean; no vague explanations, and do not replace an unfamiliar term with another that is just as confusing.
+6. **Check for Understanding:** end with questions or a short exercise; let the learner find the answer before revealing it; if the learner is still confused, revisit the missed points with new examples from a different angle.
+
+#### Language Guidelines
+- Clear, natural, accessible language; concrete terms over abstract explanations.
+- Avoid unnecessary jargon and overly long paragraphs.
+- Use diagrams (Mermaid) or tables when they improve understanding.
+- Do not simply repeat definitions without elaboration.
+- Do not skip reasoning steps: concise, but include everything needed to understand.
+
+#### Contextualizing Content
+When a learner asks about a specific phrase, focus on that phrase first: explain it directly, then give a concise example (with a contrast if needed). Do not reteach the whole topic unless essential.
+
+#### Criteria for Success
+The learner can (1) explain the concept in their own words, (2) distinguish correct from incorrect examples, (3) apply the concept to new examples on their own.
+
+#### วิธีใส่ลงในโน้ต (ต่อ core concept ใน Part 2)
+
+ใช้กับ concept หลักที่ผู้เรียนต้องเข้าใจ (นิยาม ทฤษฎี เงื่อนไข algorithm) ไม่ต้องใส่ครบ 6 ขั้นกับหัวข้อย่อยที่เป็นแค่รายการหรือข้อเท็จจริงสั้น ๆ
+
+```markdown
+#### [Concept]
+
+> 💡 **Intuition:** [analogy ที่ใกล้ตัว + ทำไม concept นี้สำคัญ / แก้ปัญหาอะไร]
+> [Source: generated — not verified against original document]
+
+> **Definition [p.N]:** [นิยามทางการตามต้นฉบับ คงศัพท์อังกฤษ]
+
+**แตกวลีสำคัญ:**
+- "[วลีในนิยาม]" → [ความหมายแบบภาษาง่าย]
+
+**ตัวอย่าง:**
+- ✅ [ตัวอย่างที่เข้าเงื่อนไข] — [เพราะอะไร]
+- ❌ [ตัวอย่างที่ไม่เข้า] — [ผิดเงื่อนไขข้อไหน]
+- **ต่างกันตรง:** [จุดตัดสินหนึ่งประโยค]
+
+**อย่าสับสน:** "[คำที่มักเข้าใจผิด]" หมายถึง [...] ไม่ได้หมายถึง [...]
+
+**เช็คความเข้าใจ:** [คำถามสั้นหรือโจทย์ใหม่หนึ่งข้อ]
+<details><summary>เฉลย</summary>
+
+[คำตอบ + เหตุผลทีละขั้น]
+</details>
+```
+
+**กฎที่ต้องรักษาควบคู่:**
+- Analogy, intuition, ตัวอย่างที่แต่งเอง และคำถามเช็คความเข้าใจ เป็น generated content ต้องอยู่ใน 💡 หรือมีป้าย `[Source: generated ...]` ห้ามปนกับเนื้อหาต้นฉบับ
+- ถ้า analogy ไม่ตรงกับนิยาม 100% ให้บอกว่า analogy ใช้ไม่ได้ตรงไหน (เช่น "เพื่อนรู้จักกัน" ไม่มีเส้นซ้ำ จึงอธิบาย multigraph ไม่ได้)
+- ห้ามตัด ย่อ หรือเขียนทับเนื้อหาต้นฉบับเพื่อให้ง่ายขึ้น ให้เพิ่มคำอธิบายข้าง ๆ แทน
+- Part 3 (Cheat Sheet) ยังกระชับเหมือนเดิม Teaching Standard ใช้กับ Part 2 เป็นหลัก
+
+---
+
 ## 4. Formatting Standards
 
 ### Typography
@@ -399,6 +465,8 @@ Before saving a note, verify all items:
 [ ] No ASCII-art diagrams remain; every diagram is a mermaid block (labels quoted) and parses
 [ ] Source labels and [p.N] references present; generated content labeled
 [ ] Every ### sub-section has concrete examples
+[ ] Each core concept follows the Teaching Standard (3.7): intuition, formal definition, phrase breakdown, ✅/❌ contrast, "อย่าสับสน", check question with <details> answer
+[ ] Generated intuition/analogies/examples are labeled 💡 / [Source: generated ...]
 [ ] Code blocks have language tag and Thai comments
 [ ] Images and sample output captures preserved and stored in local attachments/
 [ ] Part 3 checklist covers all key exam concepts

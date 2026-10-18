@@ -32,9 +32,53 @@ flowchart TD
 ## Part 2: Module-by-Module Deep Dive
 
 ### 2.1 นิยามและหลักการออกแบบ RESTful API (REST Constraints)
+
+#### REST & Resources
+
+> 💡 **Intuition:** นึกถึง REST เหมือน "ร้านของ" ที่มีสินค้าแต่ละชิ้น (Resource) มี "ที่อยู่" (URI) เช่น `/products/101` — เมื่อลูกค้า "ขอดู" (GET) ที่อยู่นั้น ร้านจะส่ง "ใบรายละเอียดสินค้า" (Representation เช่น JSON) ไม่ใช่ตัวสินค้าจริง — "เพิ่มสินค้าใหม่" (POST) "แทนที่ข้อมูลสินค้า" (PUT) "ลบสินค้า" (DELETE) — REST คือ "แบบแผนที่เป็นระเบียบ" สำหรับจัดการ Resource ผ่าน URI + HTTP Method
+> [Source: generated — not verified against original document]
+
 * **Resource (ทรัพยากร):** ข้อมูลหรือเอนทิตีทุกอย่างที่ API สามารถให้บริการได้ เช่น User, Product, Image โดยระบุด้วย **URI (Uniform Resource Identifier)**
 * **State (สถานะ):** ข้อมูลหรือเงื่อนไขปัจจุบันของ Resource ณ เวลาใดเวลาหนึ่ง
 * **Transfer (การส่งโอน):** การส่งมอบตัวแทนของสถานะ (JSON Representation) จากเซิร์ฟเวอร์ไปยังไคลเอ็นต์
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Resource" → "สิ่งของ" ที่แสดงด้วย URI — เช่น User ID 5 = `/users/5`
+- "URI (Uniform Resource Identifier)" → ที่อยู่เฉพาะ — เช่น `/api/v1/products/101`
+- "Representation" → "รูปแบบข้อมูลที่ใช้แทนสิ่งของ" ส่งเป็น JSON, XML, HTML
+
+**ตัวอย่าง:**
+```
+❌ RPC-style (ไม่ใช่ REST):
+GET /api/getProductById?id=101
+POST /api/createNewProduct
+DELETE /api/deleteProductById?id=101
+
+✅ RESTful-style (Resource-oriented):
+GET /api/v1/products/101         ← ดึง Resource "Product 101"
+POST /api/v1/products            ← สร้าง Resource ใหม่ใน Collection "Products"
+DELETE /api/v1/products/101      ← ลบ Resource "Product 101"
+```
+
+- **ต่างกันตรง:** RPC = "กำหนด Action เป็นฟังก์ชัน" (Verb-based) REST = "กำหนด Resource เป็น Object" (Noun-based) + ใช้ HTTP Method เลือก Action
+
+**อย่าสับสน:** "REST" ไม่ใช่ "Protocol" (เช่น HTTP) — คือ "Architectural Style" (รูปแบบการออกแบบ) ที่บอก "วิธีออกแบบ API ให้เป็นระเบียบและขยายได้ (Scalable)" โดยมักทำงานบน HTTP
+
+**เช็คความเข้าใจ:** API `/api/delete_user?id=5` ทำไมไม่ใช่ REST และจะแก้เป็นแบบ RESTful ยังไง?
+<details><summary>เฉลย</summary>
+
+เพราะ:
+1. Verb อยู่ใน URI (`delete_`) — REST ควร Noun (Resource) เช่น `/api/users/5`
+2. ใช้ GET/POST กับ Verb `delete` — REST ควร DELETE HTTP Method: `DELETE /api/v1/users/5`
+
+การแก้:
+```
+DELETE /api/v1/users/5
+```
+ตอนนี้ `users/5` คือ Resource, `DELETE` คือ Action → ชัดเจนและ RESTful
+</details>
 
 #### 6 กฎเหล็กของสถาปัตยกรรม REST (REST Architectural Constraints):
 1. **Client-Server Architecture:** แยกบทบาทการทำงานระหว่าง UI ฝั่งไคลเอ็นต์ และการจัดเก็บข้อมูลฝั่งเซิร์ฟเวอร์ออกจากกันอย่างเด็ดขาด
@@ -224,6 +268,58 @@ app.listen(PORT, () => console.log(`RESTful API Server is running on http://loca
    * อ่านสินค้าทั้งหมด $\rightarrow$ **`GET /api/v1/products`**
    * สร้างสินค้าใหม่ $\rightarrow$ **`POST /api/v1/products`**
    * ลบสินค้า ID 5 $\rightarrow$ **`DELETE /api/v1/products/5`**
+
+#### 💡 เสริม: Statelessness (ไร้สถานะ)
+
+> 💡 **Intuition:** นึกถึงร้านอาหารแบบ Take-away ที่พนักงาน "ไม่จำว่าคุณสั่งอะไรไว้เมื่อวาน" ทุกครั้งที่มาลูกค้าต้องยื่นข้อมูลที่จำเป็นมาครบเอง (Token, ID, Body) ทำให้เครื่องไหนในร้านก็รับออเดอร์ได้ จึงขยายระบบได้ง่าย — จุดที่ Analogy ไม่ตรง: ระบบจริงยังต้องจำข้อมูลได้ เช่น ข้อมูลในฐานข้อมูล Stateless หมายถึง Server ไม่เก็บ "บริบทการใช้งานของ Client" ระหว่าง Request ไม่ได้แปลว่าไม่มีข้อมูลเลย
+> [Source: generated — not verified against original document]
+
+ในทางปฏิบัติ Request แต่ละชุดต้องมีข้อมูลครบ (Method, URI, Headers เช่น `Authorization`, และ Body) และ Server ประมวลผลได้โดยไม่ต้องรู้ว่า Request ก่อนหน้าคืออะไร
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Statelessness" → Request แต่ละครั้งเป็นอิสระต่อกัน Server ไม่ต้องจำ Request ก่อนหน้า
+- "Resource state" (ข้อมูลใน DB) ≠ "Session state" (สถานะการใช้งานของ Client) — REST ให้เก็บ Resource ที่ Server ได้ แต่ไม่ให้เก็บ Session ของ Client ไว้ระหว่าง Request
+
+**ตัวอย่าง:**
+- ✅ `GET /api/users/42` พร้อม Header `Authorization: Bearer <token>` — Request มีข้อมูลครบ Server ตรวจ Token แล้วตอบได้โดยไม่ต้องจำว่า Client เพิ่ง Request อะไรมา
+- ❌ Server เก็บตัวแปร `lastViewedUserId` ไว้ในหน่วยความจำ แล้ว `GET /api/next` ตอบตามตัวแปรนั้น — Request ถัดไปพึ่งความจำของ Server จึงผิด Statelessness และถ้าสลับไปอีก Instance คำตอบจะผิดทันที
+- **ต่างกันตรง:** ✅ Request พาข้อมูลไปครบเอง / ❌ Request ต้องอาศัยความจำของ Server
+
+**อย่าสับสน:** "Stateless" ไม่ได้แปลว่า "ไม่มี Database" — ข้อมูลของ Resource เก็บใน DB ได้ตามปกติ สิ่งที่ห้ามคือการจำ "ใครกำลังทำอะไรอยู่" ข้าม Request
+
+**เช็คความเข้าใจ:** ถ้าต้องการทำ Pagination ควรให้ Server จำว่าผู้ใช้อยู่หน้าไหน หรือให้ Client ส่งเลขหน้าเข้ามาใน Query ทุกครั้ง?
+<details><summary>เฉลย</summary>
+
+ควรส่ง `?page=2` มาใน Query ทุกครั้ง เพราะ Request นั้นมีข้อมูลครบและ Server ไม่ต้องจำสถานะ นอกจากนี้ URL เดิมยังให้ผลลัพธ์เดิมจึง Cacheable ได้ ต่างจากการให้ Server จำหน้าปัจจุบันซึ่งทำให้ Request เดียวกันได้ผลต่างกันตามสถานะ
+</details>
+
+#### 💡 เสริม: Collection vs Single Resource Endpoint
+
+> 💡 **Intuition:** นึกถึง `/products` เหมือน "ตู้ทั้งตู้" — ทำ `POST` เพื่อเพิ่มช่องใหม่ได้ แต่ลบทั้งตู้ด้วยคำสั่งเดียวไม่ได้ ส่วน `/products/101` เหมือน "ช่องเดียวในตู้" ที่ GET/PUT/DELETE ได้ แต่ไม่ใช่จุดที่ใช้สร้างช่องใหม่ — จุดที่ Analogy ไม่ตรง: "ตู้" ในที่นี้คือ URI ที่ Server ใช้เป็นตัวกำหนดว่าจะทำงานกับทั้งชุดหรือชิ้นเดียว ไม่ใช่สถานที่เก็บจริง
+> [Source: generated — not verified against original document]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Collection endpoint" → URI ที่ชี้ไปยังชุดทรัพยากร เช่น `/api/v1/products`
+- "Single resource endpoint" → URI ที่ชี้ไปยังทรัพยากรชิ้นเดียว เช่น `/api/v1/products/101` (มี ID ระบุ)
+- "405 Method Not Allowed" → URI มีอยู่จริง แต่ Method นั้นไม่ได้รับอนุญาตบน URI นี้
+
+**ตัวอย่าง:**
+- ✅ `POST /api/v1/products` พร้อม Body ชื่อสินค้า → `201 Created` (มี `Location` Header ชี้ไปยังทรัพยากรใหม่)
+- ❌ `DELETE /api/v1/products` → ต้องตอบ `405 Method Not Allowed` เพราะการลบทั้งชุดไม่ได้รับอนุญาต
+- ❌ `PUT /api/v1/products` (ไม่มี ID) → `405 Method Not Allowed` ไม่ใช่ `404` เพราะ URI มีอยู่จริง แค่ Method ไม่ถูกต้อง
+- **ต่างกันตรง:** Collection ใช้ `POST` เพื่อสร้าง / Single resource ใช้ `GET`, `PUT`, `DELETE` เพื่อจัดการ ID ที่ระบุ
+
+**อย่าสับสน:** `404` กับ `405` — `404` = ไม่พบ URI หรือ ID ที่ขอ / `405` = พบ URI แต่ Method นี้ใช้กับ URI นั้นไม่ได้
+
+**เช็คความเข้าใจ:** Client ส่ง `GET /api/v1/products/999` และ `GET /api/v1/orders` ไม่ได้ ควรได้ Status Code อะไร และอธิบายต่างกันอย่างไร?
+<details><summary>เฉลย</summary>
+
+`GET /api/v1/products/999` ได้ `404 Not Found` ถ้าไม่มีสินค้า ID 999 (URI รูปแบบถูกต้องแต่ไม่พบทรัพยากร) ส่วน `GET /api/v1/orders` ที่ไม่มี Route นี้เลยจะได้ `404` เช่นกัน ถ้า Route `/orders` มีอยู่แต่ไม่รองรับ GET จะได้ `405` แทน — ในตารางของบทนี้ `GET` บน Collection ได้ `200` เสมอ
+</details>
 
 ---
 

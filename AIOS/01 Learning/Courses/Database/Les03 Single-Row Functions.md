@@ -56,6 +56,9 @@ flowchart TD
 
 ### 2.1 Character Functions [p.7-12]
 
+> 💡 **Intuition:** ลองนึกถึง Character Functions ว่าเป็น "**เครื่องมือตัดต่อข้อความ**" — เช่น UPPER ทำให้ข้อความเป็นตัวใหญ่หมด, SUBSTR ตัดเอาส่วนหนึ่ง (เหมือนกรรไกร), LENGTH วัดความยาว, TRIM ลบช่องว่าง ฟังก์ชันเหล่านี้ทำงาน row-by-row เพื่อจัดการข้อมูลข้อความอย่างละเอียด
+> [Source: generated — not verified against original document]
+
 แบ่งเป็น **Case-manipulation** (LOWER, UPPER, INITCAP) และ **Character-manipulation** (CONCAT, SUBSTR, LENGTH, INSTR, LPAD | RPAD, TRIM, REPLACE) [p.7] (p.8 มีข้อความเหมือน p.7 ทุกอย่าง ตำแหน่งรายการต่างกันเล็กน้อย)
 
 **Case manipulation** — แปลงตัวพิมพ์ของสตริง [p.9]
@@ -102,6 +105,27 @@ FROM   employees
 WHERE  SUBSTR(job_id, 4) = 'REP';
 ```
 
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Case-manipulation" → เปลี่ยนตัวพิมพ์ (ใหญ่/เล็ก)
+- "Character-manipulation" → ตัดต่อ ตรวจหา ปะติด สตริง
+- "ทำงานทีละแถว" → ถ้า column มี 100 แถว UPPER จะปรับ 100 แถวทั้งหมด
+
+**ตัวอย่าง:**
+- ✅ `WHERE LOWER(last_name) = 'higgins'` → หา Higgins, HIGGINS, HiGGins ทั้งหมด (case-insensitive)
+- ✅ `SUBSTR('HelloWorld', 1, 5)` → 'Hello' (เอาตัวที่ 1-5)
+- ❌ คิดแบบ 0-based ว่า `SUBSTR('HelloWorld', 5, 1)` = 'W' → จริง ๆ ได้ 'o' เพราะ SQL นับตำแหน่งเริ่มจาก 1 (ถ้าใส่ start = 0 Oracle ไม่ error แต่ถือเป็น 1)
+- **ต่างกันตรง:** `SUBSTR(string, start [, length])` คืน "ข้อความ" ส่วนหนึ่ง, `INSTR(string, search [, start [, occurrence]])` คืน "ตำแหน่ง" เป็นตัวเลข (ไม่เจอได้ 0)
+
+**อย่าสับสน:** "`LENGTH`" ไม่ได้หมายถึง "ขนาดที่ประกาศของ column" (เช่น VARCHAR2(25)) — มันคือ "จำนวนตัวอักษรในค่าจริงของแต่ละแถว" (row-by-row)
+
+**เช็คความเข้าใจ:** `SUBSTR('HelloWorld', 4, 3)` คืนค่าอะไร?
+<details><summary>เฉลย</summary>
+
+'loW' (ตัวที่ 4 = 'l', ตัวที่ 5 = 'o', ตัวที่ 6 = 'W', เอา 3 ตัว = 'loW')
+</details>
+
 ผลลัพธ์ในภาพ (หัวคอลัมน์ 1-2-3 ในสไลด์ชี้องค์ประกอบของคำสั่ง):
 
 | EMPLOYEE_ID | NAME | JOB_ID | LENGTH(LAST_NAME) | Contains 'a'? |
@@ -114,6 +138,9 @@ WHERE  SUBSTR(job_id, 4) = 'REP';
 > 💡 *[Source: generated — not verified against original document]* `SUBSTR(job_id, 4)` คือเอาตัวอักษรตั้งแต่ตำแหน่งที่ 4 ไปจนจบ จึงตรงกับ `SA_REP` / `MK_REP` (ตำแหน่ง 4 เป็นต้นไปคือ `REP`) และ `INSTR(...)` ได้ 0 เมื่อไม่พบตัวอักษร (Abel ไม่มี `a` ตัวเล็ก) — ตรงกับค่า 0 ในภาพ
 
 ### 2.2 Number Functions [p.13-16]
+
+> 💡 **Intuition:** ลองนึกถึง Number Functions ว่าเป็น "**เครื่องมือคำนวณเลข**" — ROUND ปัดเศษ (เหมือนปัดเศษในชีวิตจริง), TRUNC ตัดทิ้งทศนิยม (ตัดสั้น ไม่ปัด), MOD หาเศษ (เหมือนหารไม่ลงตัวแล้วดูว่าเหลือเท่าไร)
+> [Source: generated — not verified against original document]
 
 | Function | ความหมายตามสไลด์ | ตัวอย่าง |
 | :--- | :--- | :--- |
@@ -132,6 +159,30 @@ WHERE  SUBSTR(job_id, 4) = 'REP';
 | Abel | 11000 | 1000 |
 | Taylor | 8600 | 3600 |
 | Grant | 7000 | 2000 |
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "ROUND — ปัดค่าตามทศนิยม" → ปัดขึ้นหรือลง (standard rounding)
+- "TRUNC — ตัด (ไม่ปัด)" → เอาแค่ส่วนที่ต้องการ ไม่ดู "ตัวถัดไป"
+- "MOD — หาเศษ" → ผลจากการหารที่ไม่ลงตัว
+
+**ตัวอย่าง:**
+- ✅ `ROUND(45.926, 2)` = 45.93 (ปัดขึ้น), `ROUND(45.923, 2)` = 45.92 (ปัดลง)
+- ✅ `TRUNC(45.926, 2)` = 45.92 (ตัดเศษส่วน ไม่ปัด)
+- ❌ คิดว่า `ROUND(45.926)` กับ `TRUNC(45.926)` ได้ค่าเท่ากัน → จริง ๆ ROUND = 46, TRUNC = 45 (ไม่ใส่ n = ทศนิยม 0 ตำแหน่ง)
+- **ต่างกันตรง:** ROUND ดูตัวถัดไป (ปัด), TRUNC ไม่ดู (ตัด)
+
+**อย่าสับสน:** n = -1 ใน `ROUND(x, -1)` ไม่ได้หมายถึง "ปัดให้เป็นค่าลบ" — n ติดลบคือปัดไปทางซ้ายของจุดทศนิยม (-1 = หลักสิบ, -2 = หลักร้อย) ดังนั้น `ROUND(45.923, -1)` = 50 (หลักหน่วยคือ 5 จึงปัดขึ้น) ส่วน `TRUNC(45.923, -1)` = 40
+
+**เช็คความเข้าใจ:** `ROUND(45.5, 0)` vs `TRUNC(45.5, 0)` ได้เท่าไหร่?
+<details><summary>เฉลย</summary>
+
+ROUND(45.5, 0) = 46 (Oracle ปัด .5 ออกจากศูนย์ ค่าบวกจึงปัดขึ้น)
+TRUNC(45.5, 0) = 45 (ตัดทศนิยม ไม่ปัด)
+
+ผลต่างคือ 1
+</details>
 
 ### 2.3 Working with Dates [p.17-24]
 
@@ -317,6 +368,10 @@ WHERE  manager_id IS NULL;
 
 ### 2.6 General Functions (เกี่ยวกับ NULL) [p.45-51]
 
+> 💡 **Intuition:** นึกถึง NULL เหมือน "ช่องว่างในใบเสร็จที่ยังไม่ได้กรอก" — ถ้าเอาช่องว่างนั้นไปคำนวณต่อ ผลลัพธ์จะกลายเป็นว่างไปทั้งบรรทัด `NVL` คือ "เติมค่าสำรองลงช่องว่าง" เช่น ถ้าไม่มี commission ให้ถือว่าเป็น 0 — จุดที่ Analogy ไม่ตรง: `NVL` ไม่ได้แก้ค่าในตาราง แค่แปลงค่าตอนดึงมาแสดงหรือคำนวณเท่านั้น
+> [Source: generated — not verified against original document]
+
+
 ฟังก์ชันเหล่านี้ใช้กับ data type ใดก็ได้ และเกี่ยวกับการจัดการ NULL: `NVL (expr1, expr2)`, `NVL2 (expr1, expr2, expr3)`, `NULLIF (expr1, expr2)`, `COALESCE (expr1, expr2, ..., exprn)` [p.45]
 
 | Function | ความหมาย | ตัวอย่างในสไลด์ |
@@ -381,7 +436,35 @@ WHERE  manager_id IS NULL;
 | De Haan | 17000 |
 | Hunold | 9000 |
 
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "NVL(expr1, expr2)" → ถ้า `expr1` เป็น NULL คืน `expr2` ไม่เช่นนั้นคืน `expr1`
+- "NVL2(expr1, expr2, expr3)" → ถ้า `expr1` ไม่เป็น NULL คืน `expr2` ถ้าเป็น NULL คืน `expr3`
+- "COALESCE(e1, e2, ..., en)" → คืนค่าแรกที่ไม่เป็น NULL เรียงจากซ้ายไปขวา รับได้หลายค่า
+- "NULLIF(e1, e2)" → ถ้า `e1 = e2` คืน NULL ไม่เช่นนั้นคืน `e1` (ทิศทางตรงข้ามกับ NVL)
+
+**ข้อมูลทดสอบ (จำลองเพื่อตรวจด้วยมือ ไม่ใช่ค่าจริงในสไลด์):** King (salary = 24000, commission_pct = NULL)
+
+**ตัวอย่าง:**
+- ✅ `salary*12 + salary*12*NVL(commission_pct, 0)` — King: 288000 + 288000 × 0 = **288000** (ได้ค่าจริง)
+- ❌ `salary*12 + salary*12*commission_pct` — King: 288000 + 288000 × NULL = **NULL** ทั้งแถว เพราะการคูณด้วย NULL ได้ NULL
+- ✅ `NVL2(commission_pct, 'SAL+COMM', 'SAL')` — King ได้ `'SAL'` เพราะ commission เป็น NULL
+- **ต่างกันตรง:** `NVL` เลือก "ค่าสำรองแทน NULL" / `NVL2` เลือก "ข้อความตามว่าเป็น NULL หรือไม่"
+
+**อย่าสับสน:** `NULLIF` กับ `NVL` ทำงานกลับทิศกัน — `NVL` ทำให้ NULL กลายเป็นค่า ส่วน `NULLIF` ทำให้ค่าบางตัวกลายเป็น NULL
+
+**เช็คความเข้าใจ:** `COALESCE(commission_pct, 0.1, 0)` และ `NVL(commission_pct, 0.1, 0)` ให้ผลต่างกันอย่างไรเมื่อ commission เป็น NULL?
+<details><summary>เฉลย</summary>
+
+`COALESCE` คืน `0.1` (ค่าแรกที่ไม่เป็น NULL) ส่วน `NVL` รับอาร์กิวเมนต์ได้เพียง 2 ตัว การใส่ 3 ตัวจะได้ Error `ORA-00909: invalid number of arguments` ถ้าต้องการหลายทางเลือกต้องใช้ `COALESCE`
+</details>
+
 ### 2.7 Conditional Expressions [p.52-57]
+
+> 💡 **Intuition:** นึกถึงการแยกพัสดุตามกฎ — `CASE` คือ "ชุดคำสั่งเช็คทีละข้อตามลำดับ (IF ... ELSE IF ...)" ที่เปรียบเทียบด้วยเงื่อนไขอะไรก็ได้ ส่วน `DECODE` คือ "ตารางจับคู่แบบสั้นๆ" ที่เทียบค่าเท่ากันเท่านั้น — จุดที่ Analogy ไม่ตรง: `DECODE` จับคู่ NULL กับ NULL ได้ (ถือว่าเท่ากัน) ซึ่งเป็นพฤติกรรมที่ไม่เหมือนการเปรียบเทียบปกติของ SQL
+> [Source: generated — not verified against original document]
+
 
 ให้ตรรกะ IF-THEN-ELSE ภายในคำสั่ง SQL ผ่าน 2 วิธี: **CASE expression** และ **DECODE function** [p.52]
 
@@ -456,11 +539,67 @@ WHERE  department_id = 80;
 
 > 💡 *[Source: generated — not verified against original document]* ตัวอย่างการคำนวณ: salary 10500 → 10500/2000 = 5.25 → TRUNC = 5 → TAX_RATE 0.42; salary 8600 → 4.3 → 4 → 0.40 สไลด์ p.57 ไม่มีตารางผลลัพธ์ จึงไม่ได้ยืนยันค่าที่ได้กับผลจริง
 
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Simple CASE" → `CASE expr WHEN value THEN ...` เทียบ `expr` กับค่าแต่ละตัวด้วย `=`
+- "Searched CASE" → `CASE WHEN condition THEN ...` ใช้เงื่อนไขใดก็ได้ เช่น `>`, `BETWEEN`, `IS NULL`
+- "DECODE" → เทียบด้วยความเท่ากันเท่านั้น และ NULL จับคู่กับ NULL ได้
+
+**ข้อมูลทดสอบ (ตรวจด้วยมือ):** Doe (job_id = NULL), King (job_id = 'AD_PRES')
+
+**ตัวอย่าง:**
+- ✅ `DECODE(job_id, 'AD_PRES', 'A', 'ST_MAN', 'B', 'C')` — King ได้ `'A'`, Doe ได้ `'C'` (ไม่มี NULL ในรายการ จึงตกไปค่า default)
+- ❌ `CASE job_id WHEN NULL THEN 'X' ELSE 'Y' END` — Doe ได้ `'Y'` เพราะ Simple CASE ใช้ `=` และ `NULL = NULL` ไม่เป็น TRUE (ต้องเขียน `CASE WHEN job_id IS NULL THEN 'X' ...`)
+- ✅ `DECODE(job_id, NULL, 'X', 'Y')` — Doe ได้ `'X'` เพราะ DECODE ถือว่า NULL เท่ากับ NULL
+- **ต่างกันตรง:** `CASE` เทียบได้หลายรูปแบบ และต้องใช้ `IS NULL` เพื่อจับ NULL / `DECODE` เทียบเฉพาะความเท่ากันแต่จับคู่ NULL ได้
+
+**อย่าสับสน:** `DECODE` ไม่ได้เขียนได้กับทุกเงื่อนไข เช่น `salary > 5000` เขียนด้วย DECODE ตรงๆ ไม่ได้ ต้องใช้ `CASE WHEN salary > 5000 THEN ...`
+
+**เช็คความเข้าใจ:** Doe (job_id = NULL) ได้ผลอะไรจาก `CASE WHEN job_id IS NULL THEN 'X' ELSE 'Y' END` และจาก `CASE job_id WHEN NULL THEN 'X' ELSE 'Y' END`?
+<details><summary>เฉลย</summary>
+
+แบบแรก (Searched CASE + `IS NULL`) ได้ `'X'` เพราะเงื่อนไขเป็น TRUE ตรงไปตรงมา แบบที่สอง (Simple CASE + `= NULL`) ได้ `'Y'` เพราะ `NULL = NULL` เป็น UNKNOWN ไม่ใช่ TRUE นี่คือความต่างหลักระหว่าง CASE กับ DECODE
+</details>
+
 ### 2.8 Summary และ Practice [p.58-59]
 
 สรุปตามสไลด์: ใช้ฟังก์ชันคำนวณกับข้อมูล, แก้ไขข้อมูลรายตัว, **จัดการผลลัพธ์สำหรับกลุ่มของแถว**, เปลี่ยนรูปแบบวันที่เพื่อแสดงผล, แปลงชนิดข้อมูลคอลัมน์, ใช้ฟังก์ชัน NVL, ใช้ตรรกะ IF-THEN-ELSE [p.58]
 
 Practice 3 Part Two (p.59): คิวรีที่ใช้ฟังก์ชัน numeric / character / date, การใช้ concatenation กับฟังก์ชัน, เขียนคิวรีแบบไม่สนตัวพิมพ์เพื่อทดสอบประโยชน์ของ character functions, คำนวณอายุงานเป็นปีและเดือน, และหาวันที่ทบทวน (review date) ของพนักงาน
+
+#### 💡 เสริม: RR กับ YY (การเดาศตวรรษของปี 2 หลัก)
+
+> 💡 **Intuition:** ปี 2 หลักเหมือน "ชื่อเล่นที่กำกวม" — `95` อาจหมายถึง 1995 หรือ 2095 `RR` คือ "เดาให้ใกล้ปีปัจจุบันที่สุด" โดยดูว่าปีที่ให้มาอยู่ฝั่งไหนเมื่อเทียบกับปีปัจจุบัน ส่วน `YY` คือ "เติมศตวรรษปัจจุบันเสมอ" — จุดที่ Analogy ไม่ตรง: ทั้งสองกฎใช้เฉพาะตอนปีเป็น 2 หลัก ถ้าเขียนปี 4 หลักจะไม่ต้องเดา และผลของ `RR` ขึ้นกับปีที่รันคำสั่งจริง
+> [Source: generated — not verified against original document]
+
+กฎของ `RR` (ปีที่ให้มา / ปีปัจจุบัน): 00–49 / 00–49 → ศตวรรษปัจจุบัน, 50–99 / 00–49 → ศตวรรษก่อนหน้า, 00–49 / 50–99 → ศตวรรษถัดไป, 50–99 / 50–99 → ศตวรรษปัจจุบัน ส่วน `YY` ใช้ศตวรรษปัจจุบันเสมอ
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "RR" → Round-year format ที่เลือกศตวรรษให้ใกล้กับปีปัจจุบันที่สุด
+- "YY" → Year format ที่ใช้ศตวรรษปัจจุบันเสมอ (เช่น ปี 2026 → `20xx`)
+- "ปีปัจจุบัน" → สมมติวันนี้เป็นปี 2026 (ซึ่งอยู่ในช่วง 00–49) ตัวอย่างด้านล่างใช้สมมตินี้
+
+**ตัวอย่าง:**
+```sql
+SELECT TO_DATE('15-OCT-95', 'DD-MON-RR') AS rr_95,   -- 1995-10-15
+       TO_DATE('15-OCT-95', 'DD-MON-YY') AS yy_95,   -- 2095-10-15
+       TO_DATE('15-OCT-25', 'DD-MON-RR') AS rr_25    -- 2025-10-15
+FROM dual;
+```
+- ✅ `DD-MON-RR` กับ `95` → 95 อยู่ในช่วง 50–99 และปีปัจจุบันอยู่ในช่วง 00–49 จึงได้ 1995
+- ❌ `DD-MON-YY` กับ `95` → ใช้ศตวรรษปัจจุบัน ได้ 2095 ซึ่งผิดสำหรับข้อมูลวันเกิดคนรุ่นเก่า
+- **ต่างกันตรง:** `RR` เลือกศตวรรษที่ใกล้ปีปัจจุบัน / `YY` ตรึงที่ศตวรรษปัจจุบัน
+
+**อย่าสับสน:** `RR` ไม่ใช่ "ชื่อของปี" แต่เป็น Format Model ที่บอกกฎการเดาศตวรรษ
+
+**เช็คความเข้าใจ:** ปีปัจจุบันคือ 2026 แล้วรัน `TO_DATE('05-MAY-75', 'DD-MON-RR')` กับ `TO_DATE('05-MAY-75', 'DD-MON-YY')` ได้ปีอะไร?
+<details><summary>เฉลย</summary>
+
+`RR` ได้ 1975 (75 อยู่ในช่วง 50–99 ปีปัจจุบันอยู่ในช่วง 00–49 จึงถอยไปศตวรรษก่อนหน้า) ส่วน `YY` ได้ 2075 เพราะใช้ศตวรรษปัจจุบันเสมอ ถ้าเป็นปี `48` ทั้งสองแบบจะได้ 2048 เหมือนกัน
+</details>
 
 ---
 

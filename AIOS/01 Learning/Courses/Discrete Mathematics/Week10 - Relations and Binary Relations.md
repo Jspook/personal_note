@@ -39,6 +39,9 @@ Week 10: Relations (ความสัมพันธ์)
 
 #### Cartesian Product (ผลคูณคาร์ทีเชียน)
 
+> 💡 **Intuition:** Cartesian Product เป็นการ "จับคู่ทุกสมาชิก" ของสองเซต — เหมือนการจับคู่ชาย-หญิงในการเต้นรำ: ถ้ามี 2 ชายและ 3 หญิง จะสามารถจับคู่ได้ 2×3 = 6 คู่ — ลำดับสำคัญ (a,b) ≠ (b,a) คือเหตุว่าเรียกว่า "ordered pair"
+> [Source: generated — not verified against original document]
+
 > **นิยาม:** Cartesian Product ของเซต $A$ และ $B$ เขียนว่า $A \times B$ คือเซตของ ordered pairs $(a, b)$ ที่ $a \in A$ และ $b \in B$
 
 **ตัวอย่าง:** $A = \{a, b\}$, $B = \{1, 2, 3\}$
@@ -47,9 +50,32 @@ $$A \times B = \{(a,1),\ (a,2),\ (a,3),\ (b,1),\ (b,2),\ (b,3)\}$$
 
 **ขนาด:** $|A \times B| = |A| \times |B|$
 
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "ordered pair $(a,b)$" → ลำดับสำคัญ $(a,b)$ ≠ $(b,a)$
+- "$a \in A$ และ $b \in B$" → a ต้องมาจาก A และ b ต้องมาจาก B
+
+**ตัวอย่าง:**
+- ✅ $(a,1) \in A \times B$ เมื่อ $A = \{a,b\}, B = \{1,2,3\}$ และ $a \in A, 1 \in B$ ✅
+- ❌ $(1,a) \notin A \times B$ (ลำดับผิด — 1 ไม่มาจาก A)
+- **ต่างกันตรง:** $A \times B$ มี ordered pairs $(a,b)$ แต่ $B \times A$ มี ordered pairs $(b,a)$ (ต่างกันถ้า $A \neq B$)
+
+**อย่าสับสน:** "$A \times B$" ≠ "$B \times A$" (เมื่อ $A \neq B$ และทั้งคู่ไม่ใช่เซตว่าง) — ลำดับสำคัญ
+
+**เช็คความเข้าใจ:** กำหนด $A = \{1,2\}, B = \{x,y\}$ จงเขียน $A \times B$ ทั้งหมด
+<details><summary>เฉลย</summary>
+
+$A \times B = \{(1,x), (1,y), (2,x), (2,y)\}$  
+|A × B| = 2 × 2 = 4
+</details>
+
 ---
 
 #### Relation (ความสัมพันธ์)
+
+> 💡 **Intuition:** Relation เป็นการ "เลือกบางคู่" จากทุกคู่ที่เป็นไปได้ — $A \times B$ มีทุกคู่ แต่ relation R เลือกเฉพาะคู่ที่เข้าเงื่อนไข — เหมือนใน party ที่บันทึกเฉพาะคู่ที่ "เป็นเพื่อนกัน" ไม่ได้บันทึกทุกคู่ที่จับได้
+> [Source: generated — not verified against original document]
 
 > **นิยาม:** **Binary Relation** $R$ จากเซต $A$ ไปยังเซต $B$ คือ subset ใด ๆ ของผลคูณคาร์ทีเซียน $A \times B$ (เขียนแทนด้วย $R \subseteq A \times B$)
 > ในกรณีที่ $A = B$ จะเรียก $R$ จาก $A$ ไป $A$ ว่า **ความสัมพันธ์บนเซต $A$** (Relation on set $A$)
@@ -66,9 +92,32 @@ $$A \times B = \{(a,1),\ (a,2),\ (a,3),\ (b,1),\ (b,2),\ (b,3)\}$$
 - $T = \{(5,a),(1,c),(3,d)\}$ เป็นความสัมพันธ์จากเซต $\{1,2,3,4,5\}$ ไปยัง $\{a,b,c,d\}$
 - $\alpha = \{(PSCP, A),(ICS, C),(DM, A)\}$ เป็นความสัมพันธ์จากเซตของรายวิชาไปยังเซตของผลการเรียน
 
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "subset ใด ๆ" → ไม่จำเป็นต้องมีกฎหรือเงื่อนไขชัดเจน — เซตใด ๆ ⊆ A×B ก็เป็น relation
+- "$R \subseteq A \times B$" → relation เป็นเซตของ ordered pairs
+
+**ตัวอย่าง:**
+- ✅ $R = \{(1,2), (2,3), (1,1)\}$ เป็น relation บน {1,2,3} ✅
+- ✅ $S = \emptyset$ เป็น relation บน {1,2} ด้วย (empty relation)
+- **ต่างกันตรง:** Relation ได้จากการเลือก subset ใด ๆ ของ A×B ไม่จำเป็นต้องมี "กฎ" ที่ชัดเจน
+
+**อย่าสับสน:** "relation จาก A ไป B" ≠ "relation บน A" — ตัวแรก R ⊆ A×B, ตัวหลัง R ⊆ A×A
+
+**เช็คความเข้าใจ:** ให้ A = {1,2}, B = {a,b}, relation $R = \{(1,a), (2,b)\}$ ขนาด A×B เป็นเท่าใด
+<details><summary>เฉลย</summary>
+
+|A × B| = |A| × |B| = 2 × 2 = 4  
+R ⊆ A × B ที่มี 2 ordered pairs (ไม่เต็ม A × B)
+</details>
+
 ---
 
 #### Functions vs. Relations
+
+> 💡 **Intuition:** Function เป็น relation ที่เข้มงวดกว่า — เหมือนตู้ ATM ที่กดรหัสเลขบัญชีหนึ่งครั้งได้ยอดคงเหลือเพียงค่าเดียว (ต้องมีคำตอบและมีคำตอบเดียว) ส่วน Relation เหมือนแอปหาเพื่อนที่คนหนึ่งอาจมีเพื่อนหลายคนหรือไม่มีเลยก็ได้ — สำคัญเพราะ function คือเครื่องมือที่ "คำนวณได้" ส่วน relation กว้างกว่า (analogy ใช้ไม่ได้ตรงที่ ATM ไม่ได้สร้างผลลัพธ์จาก input ทุกตัวได้เสมอ แต่ใน function ต้องกำหนด output ให้ทุก input ซึ่งเป็นกฎทางคณิตศาสตร์)
+> [Source: generated — not verified against original document]
 
 | | Relation | Function |
 |:---|:---:|:---:|
@@ -77,9 +126,34 @@ $$A \times B = \{(a,1),\ (a,2),\ (a,3),\ (b,1),\ (b,2),\ (b,3)\}$$
 | ทุก function เป็น relation? | — | ✅ ใช่ |
 | ทุก relation เป็น function? | ❌ ไม่ใช่ | — |
 
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "มี output ทุก input" → ทุกสมาชิกของ domain ต้องมีคู่ออกไปอย่างน้อยหนึ่งคู่ (total)
+- "output เดียวต่อ input" → ห้ามมี input เดียวกันจับคู่กับ output สองตัวที่ต่างกัน (single-valued)
+- "input หลายตัวไปหา output เดียวกันได้" → ไม่ผิดเงื่อนไข function
+
+**ตัวอย่าง:** A = {1, 2}, B = {x, y, z}
+- ✅ f = {(1, x), (2, x)} → เป็น function: ทั้งสอง input มี output เดียว (ซ้ำ output กันได้)
+- ❌ R₁ = {(1, x), (1, y)} → เป็น relation แต่ไม่ใช่ function เพราะ input 1 มี output สองตัว
+- ❌ R₂ = {(1, x)} → เป็น relation แต่ไม่ใช่ function เพราะ input 2 ไม่มี output
+- **ต่างกันตรง:** function ต้องผ่านทั้ง "มีคำตอบทุก input" และ "คำตอบเดียวต่อ input"
+
+**อย่าสับสน:** "ทุก function เป็น relation" แต่ "ทุก relation ไม่ใช่ function" — ความสัมพันธ์ที่ไม่ใช่ function ก็ยังเป็น relation ได้
+
+**เช็คความเข้าใจ:** R = {(1, x), (1, y), (2, z)} บน A = {1, 2} → B = {x, y, z} เป็น function หรือไม่
+<details><summary>เฉลย</summary>
+
+ไม่ใช่ function — input 1 มี output สองตัว (x และ y) ละเมิดเงื่อนไข single-valued
+(เป็น relation ได้ เพราะ R ⊆ A × B)
+</details>
+
 ---
 
 #### Binary Relation
+
+> 💡 **Intuition:** ถ้า Cartesian Product คือ "ทุกคู่ที่เป็นไปได้" Binary Relation คือ "ชุดคู่ที่เราเลือกมาใช้" — เหมือนรายชื่อคู่ทำงานกลุ่มในห้อง: ทุกคู่ต้องเป็นคนในห้องเดียวกัน (อยู่ในเซตที่กำหนด) แต่ไม่จำเป็นต้องจับคู่ทุกแบบที่เป็นไปได้ (analogy ใช้ไม่ได้ตรงที่ relation อาจว่างเปล่า (∅) หรือมีคู่ซ้ำกับตัวเองได้ เช่น (a, a) ซึ่งการจับคู่ทำงานกลุ่มมักไม่ทำ)
+> [Source: generated — not verified against original document]
 
 > **นิยาม:** **Binary Relation** $R$ จาก $A$ ไปยัง $B$ คือ subset $R \subseteq A \times B$
 
@@ -101,6 +175,28 @@ $$R = \{(1,1),(1,2),(1,3),(1,4),(2,2),(2,4),(3,3),(4,4)\}$$
 | $R_4$ | $(a,b)$: $a = b$ |
 | $R_5$ | $(a,b)$: $a = b + 1$ |
 | $R_6$ | $(a,b)$: $a + b \leq 3$ |
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "$R \subseteq A \times B$" → R เป็นเซตย่อย: ทุกสมาชิกของ R ต้องเป็นคู่ในผลคูณคาร์ทีเชียน แต่ R ไม่ต้องมีทุกคู่
+- "บน A" → ทั้ง domain และ codomain เป็น A เดียวกัน คือ $R \subseteq A \times A$
+- "ว่าง (∅)" → relation ที่ไม่เลือกคู่ใดเลยก็ยังนับเป็น binary relation
+
+**ตัวอย่าง:** A = {1, 2, 3, 4}, R = {(a,b) | a หาร b ลงตัว} (ตัวอย่าง 2)
+- ✅ (2, 4) ∈ R เพราะ 2 | 4 (4 = 2 × 2) และ 2, 4 ∈ A
+- ❌ (2, 3) ∉ R เพราะ 2 ∤ 3 (3 = 2 × 1 + 1) → คู่นี้อยู่ใน A×A แต่ไม่ผ่านเงื่อนไข
+- ❌ {(a, d)} ไม่ใช่ binary relation บน A = {a, b, c} เพราะ d ∉ A (ไม่อยู่ใน A×A)
+- **ต่างกันตรง:** เงื่อนไขแรกคือ "อยู่ใน A×A" (โครงสร้าง) ส่วนเงื่อนไขที่สองคือ "ผ่านนิยามของ R" (ความหมาย)
+
+**อย่าสับสน:** "relation บน A" ≠ "มีทุกคู่ของ A×A" — ถ้า A มี 2 สมาชิก จะมีคู่ใน A×A ได้ 4 คู่ และ relation บน A เลือกคู่ไหนก็ได้ รวมทั้งไม่เลือกเลย
+
+**เช็คความเข้าใจ:** A = {1, 2} มี binary relation บน A ที่แตกต่างกันทั้งหมดกี่แบบ
+<details><summary>เฉลย</summary>
+
+A × A = {(1,1), (1,2), (2,1), (2,2)} มี 4 คู่ → แต่ละคู่เลือก "อยู่ใน R" หรือ "ไม่อยู่" (2 ทาง)
+จำนวน relation = 2⁴ = **16** แบบ (รวม ∅ และ A×A)
+</details>
 
 ---
 

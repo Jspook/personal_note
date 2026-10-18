@@ -43,6 +43,9 @@ flowchart LR
 
 ### 2.1 แนวคิดรายการเปลี่ยนแปลง (Transaction Concept) — `[Source: extracted]` p.3-9
 
+> 💡 **Intuition:** ลองเหมือนตู้ ATM — เมื่อโอนเงินจาก "บัญชี A" ไป "บัญชี B" จะต้องเกิด 2 ขั้นตอน (ถอนจาก A + ฝากเข้า B) ถ้าเกิดเพียงขั้นตอนเดียว (ถอนแล้วไม่ฝาก) เงินหายไป ดังนั้น Transaction ต้องเป็น "หน่วยเดียว" — สำเร็จทั้งหมดหรือไม่เกิดผลเลย ไม่มีกรณี "สำเร็จบางส่วน"
+> [Source: generated — not verified against original document]
+
 #### ตำแหน่งของ Transaction Manager ใน DBMS [p.3]
 
 สไลด์ "DBMS Component Modules" แสดงแผนภาพโมดูลของ DBMS และ **ล้อมกรอบประสีแดง** ที่ **transaction manager** ในส่วน storage manager เป็นการชี้ว่าบทนี้โฟกัสโมดูลนี้ [p.3]
@@ -187,6 +190,36 @@ _ต้นฉบับ: รูปบน p.9 มีข้อความเสร
 - **Isolation** — transaction แต่ละตัวที่วิ่งต้องวิ่งเป็นอิสระและไม่เห็นกิจกรรมที่ทำโดย transaction อื่นเลย ถ้ามี Ti และ Tj วิ่ง overlap กัน (concurrency) จะมี 2 กรณี: Ti สำเร็จก่อน Tj ค่อยเกิด หรือ Tj เสร็จก่อน Ti ค่อยเกิด [p.12]
 - **Durability** — หลัง transaction ทำงานเสร็จ ข้อมูลที่ถูกบันทึกลงฐานข้อมูลต้องอยู่ถาวร ถ้า transaction commit เรียบร้อย ไม่ว่าจะเกิดอะไรขึ้น DBMS รับประกันว่าข้อมูลต้องอยู่บน disk ถาวร [p.12]
 
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Atomicity" → "หน่วยเดียว" ทำครบทุกขั้นหรือไม่เกิดผลเลย ไม่มีการค้างแค่บางขั้น (ผู้รับผิดชอบ: recovery subsystem ของ DBMS ซึ่ง undo งานที่ไม่ครบ)
+- "Consistency" → "ถูกต้อง" ก่อนและหลัง transaction ข้อมูลยังตรงตาม integrity rule เช่น A+B คงเดิม (ผู้รับผิดชอบ: programmer ที่เขียน transaction ถูก ร่วมกับ DBMS ที่บังคับ integrity constraint)
+- "Isolation" → "แยกอิสระ" transaction หนึ่งไม่เห็นผลระหว่างทางของ transaction อื่น (ผู้รับผิดชอบ: concurrency control ของ DBMS)
+- "Durability" → "ถาวร" เมื่อ commit แล้วผลต้องไม่หายแม้ระบบล่ม แม้ขณะ commit ข้อมูลอาจยังอยู่ใน buffer (ผู้รับผิดชอบ: recovery subsystem ของ DBMS)
+
+**ตัวอย่าง:**
+- ✅ A = 100, B = 200 โอน 50: BEGIN → (A = 50, B = 200) → (A = 50, B = 250) → COMMIT → ทุกคนเห็น A = 50, B = 250 (A+B = 300 เท่าเดิม)
+- ❌ ระบบล่มหลัง write(A) แต่ก่อน write(B) แล้วหลัง restart ฐานข้อมูลค้างที่ A = 50, B = 200 (เงินหาย 50 บาท) → Atomicity เสีย
+- ❌ โอนแล้ว Commit แต่ Power Off ข้อมูลกลับไป 100, 200 → Durability เสีย
+- ❌ T2 reads A=50 while T1's transfer is not finished (B still 200), so T2 sees the intermediate result → Isolation violated.
+- **ต่างกันตรง:** Atomicity = "ทั้งหมดหรือไม่เลย" (ดูแลกรณีล่ม**ก่อน** commit); Durability = "commit แล้วต้องไม่หาย" (ดูแลกรณีล่ม**หลัง** commit)
+
+**อย่าสับสน:** "Consistency" ใน ACID หมายถึง (ข้อมูลยังเป็นไปตามกฎ/integrity constraint เช่น A+B = 300 ทั้งก่อนและหลังโอน) ไม่ได้หมายถึง (สำเนาข้อมูลหลายชุดตรงกัน เช่น replica สองเครื่องเหมือนกัน ซึ่งเป็นอีกความหมายในระบบกระจาย)
+
+**เช็คความเข้าใจ:** ถ้าไฟดับขณะ transaction โอนเงินกำลังทำงาน (ยังไม่ Commit) หลังเปิดระบบใหม่ transaction นั้นจะเป็นอย่างไร?
+<details><summary>เฉลย</summary>
+
+Transaction **ยังไม่ Commit** ดังนั้น:
+1. Atomicity → ตอน restart, recovery subsystem จะ undo (rollback) การเปลี่ยนแปลงที่ transaction นี้ทำไปแล้ว เช่น write(A)
+2. Durability ไม่เกี่ยวกับกรณีนี้ เพราะยังไม่ commit จึงไม่มีผลใดที่ต้องรับประกันให้คงอยู่
+3. ผลลัพธ์: ฐานข้อมูลกลับไปเหมือนก่อน transaction เริ่ม (A = 100, B = 200)
+
+ถ้า Power Off หลัง Commit (แต่ก่อนเขียน disk):
+- Durability: recovery subsystem ใช้ log ทำ redo การเปลี่ยนแปลงที่ commit แล้วแต่ยังไม่ลง disk (ใน Oracle คือ redo log และ SMON ทำ instance recovery ดู [[Chapter 06 Database System Architecture]])
+
+</details>
+
 รูปใน p.12: เส้นเวลา T1, T2, T3 วิ่งซ้อนกัน (**Serializable Concurrent Schedule**) ต้องให้ผลลัพธ์เหมือน (same result) **Serial Schedule** ที่ T1, T2, T3 รันเรียงต่อกัน [p.12]
 
 ```mermaid
@@ -271,6 +304,9 @@ _ต้นฉบับ: รูป "สถานะของรายการเ
 
 #### ปัญหา 5 แบบ [p.18-20]
 
+> 💡 **Intuition:** ลองนึกถึงพนักงานสองคนที่ใช้สมุดยอดเงินเล่มเดียวกันโดยไม่มีการล็อก — ถ้าทั้งคู่อ่านยอด 1,000 พร้อมกัน แล้วต่างคนต่างเขียนยอดใหม่ทับ ยอดของคนแรกจะหายไป (Lost Update); ถ้าคนหนึ่งแก้ยอดแล้วยกเลิกทีหลัง อีกคนที่อ่านยอดไปแล้วก็ใช้ค่าที่ไม่มีจริง (Dirty Read) นี่คือปัญหาของ multiuser DBMS เมื่อ transaction ทำงานสลับกัน (interleaving)
+> [Source: generated — not verified against original document]
+
 | # | ปัญหา | คำอธิบายตามสไลด์ | สไลด์ |
 | :-: | :--- | :--- | :--- |
 | 1 | **Lost Update Problem** (ปัญหาการสูญเสียการแก้ไข) | การปรับปรุงค่าข้อมูลไม่เป็นไปตามที่ต้องการ เกิดจากสอง transaction ใช้ข้อมูลเดียวกันพร้อมกันในฐานข้อมูล | p.19 |
@@ -278,6 +314,37 @@ _ต้นฉบับ: รูป "สถานะของรายการเ
 | 3 | **Incorrect Summary / Consistency Control Problem** | transaction หนึ่งหาค่าสรุปรวม (aggregate summary) แล้วอีก transaction เข้าไปปรับปรุงบางข้อมูลเหล่านั้น ทำให้ค่าสรุปรวมไม่สอดคล้องกับความเป็นจริง | p.19 |
 | 4 | **Unrepeatable read** | transaction หนึ่งอ่านข้อมูล X สองครั้ง ระหว่างครั้งที่หนึ่งและสองมีอีก transaction ปรับปรุงค่า X ทำให้อ่านได้ค่าไม่เหมือนกัน | p.19 |
 | 5 | **Phantom Phenomenon** | T1 กำลังนับจำนวนบัญชีในตาราง แต่ application เพิ่มบัญชีใหม่เข้าตาราง ทำให้การนับรวมบัญชีใหม่เข้าไปด้วย ผลลัพธ์ผิดพลาด สิ่งที่ถูกต้องคือต้องไม่นำมาคิดรวมในการนับ | p.20 |
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Lost Update" → อัปเดตของ transaction หนึ่งถูกอีก transaction เขียนทับ เหมือนไม่เคยเกิดขึ้น
+- "Dirty Read" → อ่านค่าที่ T1 เขียนแต่ยังไม่ commit ซึ่งอาจถูก rollback ภายหลัง
+- "Incorrect Summary" → ค่าสรุปรวมผิด เพราะอีก transaction แก้ข้อมูลบางตัวระหว่างที่กำลังรวม
+- "Unrepeatable Read" → อ่านข้อมูล 2 ครั้ง ได้ค่าต่างกัน
+- "Phantom" → แถวใหม่ขึ้นมา ไม่เหมือน Unrepeatable (Unrepeatable = ค่าของแถวเดิมเปลี่ยน, Phantom = จำนวนแถวเปลี่ยน)
+
+**ตัวอย่าง:**
+- ✅ Lost Update: T1 read(X)=100, X:=100-50=50; T2 read(X)=100, X:=100+20=120; T1 write(X)=50; T2 write(X)=120 → 120 ทับ 50 การหัก 50 ของ T1 หายไป (ค่าที่ถูกตาม serial คือ 70)
+- ✅ Dirty Read: T1 UPDATE X=50; T2 read(X)=50; T1 ROLLBACK X กลับไป 100 → T2 ใช้ 50 ที่ไม่มีจริง
+- ✅ Phantom: T1 COUNT(*) = 100 rows; T2 INSERT 1 row; T1 COUNT(*) ซ้ำ = 101 rows → query เงื่อนไขเดิมได้จำนวนแถวต่างกัน เพราะมีแถวใหม่โผล่
+- ✅ Incorrect Summary: A=100, B=200 (รวม 300). T1 อ่าน A=100 → T2 โอน 50 จาก A ไป B (A=50, B=250) แล้ว commit → T1 อ่าน B=250 → SUM = 100 + 250 = 350 (ผิดเกิน 50; ค่าที่ถูกคือ 300)
+- ✅ Unrepeatable read: T1 read(X)=100 → T2 write(X)=80 แล้ว commit → T1 read(X) อีกครั้ง = 80 → อ่านแถวเดิม 2 ครั้งได้ค่าต่างกัน (100 vs 80)
+- **ต่างกันตรง:** Lost Update = write ทับ; Dirty Read = อ่านค่าที่ยังไม่ commit; Phantom = จำนวน row ที่เข้าเงื่อนไขเปลี่ยน
+
+**อย่าสับสน:** "Dirty Read" หมายถึง (อ่านค่าที่ transaction อื่นเขียนแต่ยังไม่ commit ซึ่งอาจถูก ROLLBACK) ไม่ได้หมายถึง (ข้อมูลสกปรก/ผิดรูปแบบที่ต้องทำ Data Cleansing)
+
+**เช็คความเข้าใจ:** T1 SELECT SUM(salary) FROM employee, T2 INSERT new employee ในระหว่าง T1 กำลังรวมอยู่ เป็นปัญหาแบบไหน?
+<details><summary>เฉลย</summary>
+
+**Phantom Phenomenon** (ตรงกับตัวอย่าง Sum(Account) ในสไลด์ p.20):
+1. T1 เริ่มรวม salary ของ employee ทุกคน (เช่น 50 แถว)
+2. ระหว่างนั้น T2 INSERT employee ใหม่ 1 แถว
+3. ผลรวมของ T1 อาจนับแถวใหม่เข้าไปด้วย (51 แถว) ซึ่งตามสไลด์ไม่ควรนับ → ผลผิด
+
+ไม่ใช่ Unrepeatable read (ค่าของแถวเดิมเปลี่ยน) และไม่ใช่ Incorrect Summary แบบที่อีก transaction *แก้ค่า* ของแถวที่มีอยู่แล้ว — ที่นี่เป็นแถวใหม่โผล่ขึ้นมา
+
+</details>
 
 ```mermaid
 sequenceDiagram
@@ -298,9 +365,44 @@ _ต้นฉบับ: รูป Phantom Phenomenon [p.20] เป็นเส�
 
 #### นิยาม (สไลด์หัวข้อ "Concurrent Executions") [p.21]
 
+> 💡 **Intuition:** ลองนึกถึงแคชเชียร์คนเดียวที่ดูแลลูกค้า 3 คน (T1, T2, T3) สลับกันทีละนิด — สแกนของ T1 นิดหนึ่ง ไปรับเงิน T2 แล้วกลับมาทำของ T1 ต่อ — ไม่เป็นไรตราบใดที่ **ผลลัพธ์สุดท้ายเหมือน** การบริการทีละคนจนจบในลำดับใดลำดับหนึ่ง (เช่น T1 → T2 → T3) นี่คือ Serializable ไม่จำเป็นต้องทำทีละคนจริงๆ
+> [Source: generated — not verified against original document]
+
 - **Schedule** คือ ลำดับการจัดคำสั่งใน Tx ว่าคำสั่งไหนของ Tx ไหนทำก่อน คำสั่งไหนของ Tx ไหนทำตามหลัง [p.21]
 - **Concurrent serializable schedule** ทำงานร่วมกันในช่วงเวลาเดียวกัน (รูป T1, T2, T3 ซ้อนเวลา → "ผลลัพธ์ต้องเหมือนกัน" → Serializable Schedule ที่ T1, T2, T3 เรียงต่อกัน) [p.21]
 - **Serial Schedule** คือคำสั่งของ transaction เดียวกันถูกปฏิบัติอย่างต่อเนื่องตั้งแต่ต้นจนจบ [p.22]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Schedule" → ลำดับการสลับคำสั่งของ transaction
+- "Serial schedule" → T1 ทั้งหมด → T2 ทั้งหมด → T3 ทั้งหมด (ไม่สลับ)
+- "Serializable schedule" → ซ้อนกันแต่ผลเหมือน serial schedule ตัวใดตัวหนึ่ง
+- "Concurrent" → ทำงานพร้อมกัน/สลับ
+- "Equivalent" → ผลลัพธ์เหมือนกัน
+
+**ตัวอย่าง:**
+- ✅ Serial: T1 read(A)→write(A) → T2 read(B)→write(B) (ทั้งหมดต่อเนื่อง)
+- ✅ Serializable: T1 read(A), T2 read(B), T1 write(A), T2 write(B) → T1 ใช้แค่ A, T2 ใช้แค่ B จึงไม่มีคู่ conflict เลย ผลเหมือน T1 ต่อ T2 (และ T2 ต่อ T1)
+- ❌ Not Serializable: T1 read(A), T2 write(A), T1 write(A), T2 read(A) → precedence graph มี T1→T2 (T1 read(A) ก่อน T2 write(A)) และ T2→T1 (T2 write(A) ก่อน T1 write(A)) เกิด cycle จึงเทียบกับ serial ลำดับใดไม่ได้
+- **ต่างกันตรง:** Serial = ต่อเนื่อง; Serializable = ซ้อนได้แต่ผลเหมือน serial
+
+**อย่าสับสน:** "Serializable" หมายถึง (ผลลัพธ์เหมือน serial order ตัวใดตัวหนึ่ง ไม่ใช่ว่า schedule เป็น serial) ไม่ได้หมายถึง (transaction ต้องทำทีละตัว)
+
+**เช็คความเข้าใจ:** Schedule ที่มี T1 read(X), T2 write(X), T1 write(X) เป็น Serializable กับ T1→T2 ตามลำดับ หรือไม่?
+<details><summary>เฉลย</summary>
+
+**ไม่ serializable ทั้งกับ T1→T2 และ T2→T1** (เป็นตัวอย่างเดียวกับ T3/T4 ในสไลด์ p.29):
+1. หาคู่ conflict ตามลำดับเวลา: T1 read(X) ก่อน T2 write(X) → เส้น T1→T2; T2 write(X) ก่อน T1 write(X) → เส้น T2→T1
+2. Precedence graph มี cycle T1→T2→T1 → **ไม่ conflict serializable** (สลับคำสั่งให้เป็น serial ไม่ได้)
+3. เช็ค view เพิ่ม: ใน schedule นี้ T1 อ่านค่าเริ่มต้นของ X และ T1 เป็นผู้ write(X) ตัวสุดท้าย
+   - serial T1→T2: ผู้ write ตัวสุดท้ายคือ T2 → ไม่ตรง
+   - serial T2→T1: T1 อ่านค่าที่ T2 เขียน ไม่ใช่ค่าเริ่มต้น → ไม่ตรง
+4. ผลจริงคือ write(X) ของ T2 ถูก T1 เขียนทับ (lost update)
+
+ตอบ: **ไม่ serializable** กับ serial order ใดเลย
+
+</details>
 
 #### Schedule 1, 2, 3 (ตัวอย่างโอนเงิน) [p.22-24]
 
@@ -485,7 +587,40 @@ _ต้นฉบับ: รูป Phantom Phenomenon [p.20] เป็นเส�
 
 ### 2.6 Recoverable, Cascading Rollback, Cascadeless, Isolation Levels — `[Source: extracted]` p.36-39
 
+> 💡 **Intuition:** ลองนึกถึงงานทีม — ถ้า B หยิบงานร่างของ A (ที่ยังไม่ commit) ไปใช้ แล้ว A ล้มเหลวต้องยกเลิกงาน B ก็ต้องยกเลิกงานที่อิงงานร่างนั้นด้วย (Cascading rollback) แต่ถ้า B ส่งงาน (commit) ไปก่อนแล้ว จะดึงกลับไม่ได้ ระบบจึงกู้คืนไม่ได้ — กฎของ "Recoverable" คือ B ต้อง commit หลัง A commit; ถ้าอยากเลี่ยงการยกเลิกลูกโซ่ด้วย B ต้องอ่านเฉพาะงานที่ A commit แล้ว (Cascadeless)
+> [Source: generated — not verified against original document]
+
 - **Recoverable schedule** — ถ้า transaction Tj อ่านข้อมูลที่ Ti เขียนไว้ก่อน แล้ว **commit ของ Ti ต้องมาก่อน commit ของ Tj** [p.36]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Recoverable" → ไม่มี transaction ใด commit ก่อน transaction ที่ตนอ่านข้อมูลมา จึง rollback ได้เสมอโดยไม่ต้องยกเลิกสิ่งที่ commit ไปแล้ว
+- "Cascading rollback" → undo ลูกโซ่ (T1 fail → undo T2 → undo T3)
+- "Cascadeless" → ไม่มีทางเกิด cascading rollback เพราะทุก transaction อ่านเฉพาะข้อมูลที่ commit แล้ว
+- "Commit ก่อน" → ต้องลำดับให้ producer commit ก่อน consumer commit
+
+**ตัวอย่าง:**
+- ✅ Recoverable: T1 write(X), T2 read(X), T1 commit, T2 commit → T1 commit ก่อน T2 commit จึง recoverable (ถ้า T1 fail ก่อน commit ก็ rollback T1 และ T2 ได้เพราะ T2 ยังไม่ commit แต่ไม่ cascadeless เพราะ T2 อ่านก่อน T1 commit)
+- ✅ Cascadeless: T1 write(X), T1 commit, T2 read(X), T2 commit → ไม่มี cascade เพราะ T2 อ่านหลัง T1 commit แล้ว
+- ❌ Not Recoverable: T1 write(X), T2 read(X), T2 commit, T1 rollback → T2 commit ไปแล้วโดยใช้ค่าที่ T1 ยกเลิก ย้อนกลับไม่ได้
+- **ต่างกันตรง:** Recoverable = Tj ที่อ่านค่าของ Ti ต้อง commit หลัง Ti commit; Cascadeless = Tj อ่านค่าของ Ti ได้ต่อเมื่อ Ti commit แล้ว (เข้มกว่า และ cascadeless ทุกตัวเป็น recoverable)
+
+**อย่าสับสน:** "Cascading Rollback" หมายถึง (undo ลูกโซ่เพราะ dependency) ไม่ได้หมายถึง (ON DELETE CASCADE ของ Foreign Key)
+
+**เช็คความเข้าใจ:** ถ้า T1 write(X), T2 read(X), T1 rollback, T2 ยังไม่ commit - schedule นี้ recoverable ได้หรือไม่?
+<details><summary>เฉลย</summary>
+
+**Recoverable ได้**:
+- T2 อ่านข้อมูลจาก T1 ที่ยังไม่ commit
+- เมื่อ T1 fail/rollback, T2 ยังไม่ commit ดังนั้นเรา undo T2 ได้
+- ลำดับ: T2 rollback (undo) → T1 rollback (undo) → กู้คืนได้
+- แต่ schedule นี้ **ไม่ cascadeless**: T1 rollback ทำให้ T2 ต้อง rollback ตาม (cascading rollback)
+
+**ถ้า T2 commit ก่อน T1 rollback → not recoverable** (เพราะ T2 commit ค่าที่ T1 ยกเลิกไปแล้ว ย้อนไม่ได้)
+
+</details>
+
 - Schedule 11 (T8: `read(A)`, `write(A)` … `read(B)`; T9: `read(A)` คั่นหลัง write(A) ของ T8) **ไม่ recoverable ถ้า T9 commit ทันทีหลัง read**; ถ้า T8 abort T9 จะอ่าน (และอาจแสดงให้ผู้ใช้เห็น) สถานะฐานข้อมูลที่ไม่สอดคล้อง จึงต้องให้ฐานข้อมูลมั่นใจว่า schedule เป็น recoverable [p.36]
 - **Cascading rollback** — transaction เดียวล้มเหลวแล้วทำให้เกิด rollback ต่อเนื่องเป็นลูกโซ่ ตัวอย่าง: T10 (`read(A)`, `read(B)`, `write(A)`), T11 (`read(A)`, `write(A)`), T12 (`read(A)`) ยังไม่มีใคร commit (schedule จึง recoverable) ถ้า T10 fail ต้อง rollback T11 และ T12 ด้วย และอาจต้องย้อนงานจำนวนมาก [p.37]
 - **Cascadeless schedule** — rollback ลูกโซ่ไม่เกิด: สำหรับทุกคู่ Ti, Tj ที่ Tj อ่านข้อมูลที่ Ti เขียน **commit ของ Ti ต้องมาก่อน read ของ Tj**; ทุก cascadeless schedule เป็น recoverable ด้วย; พึงต้องการจำกัด schedule ให้เป็น cascadeless [p.38]

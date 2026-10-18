@@ -31,6 +31,9 @@ n-ary Relations & Representing Relations
 
 ### 3. n-ary Relations
 
+> 💡 **Intuition:** n-ary Relation ขยายจาก binary (2 ตัว) ไปเป็น n ตัว — เหมือนเปลี่ยนจาก "คู่เต้น" เป็น "กลุ่มเต้น" ที่มี 3, 4, 5 คนขึ้นไป — Database table ที่มี n column คือตัวอย่างของ n-ary relation (แต่ละ row คือ n-tuple หนึ่งตัว)
+> [Source: generated — not verified against original document]
+
 > **นิยาม:** ให้ $A_1, A_2, \ldots, A_n$ เป็นเซต
 > **n-ary relation** บนเซตเหล่านี้คือ subset ของ $A_1 \times A_2 \times \cdots \times A_n$
 > - $A_1, A_2, \ldots, A_n$ เรียกว่า **domains** ของ relation
@@ -38,6 +41,25 @@ n-ary Relations & Representing Relations
 
 สูตรผลคูณคาร์ทีเซียน n เซต:
 $$A_1 \times A_2 \times \cdots \times A_n = \{(a_1, a_2, \ldots, a_n) : a_i \in A_i \text{ สำหรับ } i = 1, 2, \ldots, n\}$$
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "n-ary relation = subset ของ $A_1 \times A_2 \times \cdots \times A_n$" → เซตของ n-tuple ใด ๆ ที่เป็น subset ของ Cartesian product นี้ก็เป็น n-ary relation (รวมถึงเซตว่าง)
+- "degree = n" → จำนวน component ใน n-tuple (ไม่ใช่จำนวนสมาชิก)
+
+**ตัวอย่าง:**
+- ✅ 3-ary: {(1,a,x), (2,b,y)} ⊆ {1,2}×{a,b}×{x,y} ✓
+- **ต่างกันตรง:** ทุก n-tuple ต้องมี n component และลำดับสำคัญ (1,a,x) ≠ (a,1,x)
+
+**อย่าสับสน:** "Degree = n" ≠ "ขนาด = n" — degree คือจำนวน domains (column), ขนาด คือจำนวนสมาชิก (row)
+
+**เช็คความเข้าใจ:** ให้ $A = B = C = D = \{1,2\}$ และ $R$ เป็น 4-ary relation บนเซตเหล่านี้ — $|A \times B \times C \times D|$ เป็นเท่าใด และ R มีสมาชิกได้มากสุดกี่ตัว
+<details><summary>เฉลย</summary>
+
+$|A \times B \times C \times D| = 2 \times 2 \times 2 \times 2 = 16$  
+R ⊆ A×B×C×D จึงมีได้มากสุด 16 ตัว (4-tuple) และ degree ของ R = 4
+</details>
 
 **คำศัพท์เฉพาะทาง (Terminologies):**
 
@@ -140,6 +162,9 @@ R = {(Ash, 231455, IT), (Blue, 888323, IT), (Green, 102147, DSBA)}
 
 #### 4.1 Zero-One Matrices
 
+> 💡 **Intuition:** ตาราง 0/1 เหมือนแบบฟอร์มติ๊กถูก (checkbox): แถวคือสมาชิกของ A, คอลัมน์คือสมาชิกของ B, ช่องที่คู่นั้น "ติ๊ก" (อยู่ใน R) ใส่ 1 ช่องที่ไม่ติ๊กใส่ 0 — ทำให้เก็บ relation ขนาดใหญ่เป็นตารางเดียว และตรวจ property ได้ด้วยการดูตำแหน่งในตาราง (analogy ใช้ไม่ได้ตรงที่ตารางขึ้นกับลำดับของสมาชิกใน A และ B: เปลี่ยนลำดับแถวหรือคอลัมน์ได้ matrix ต่างกัน แต่ relation เดิม)
+> [Source: generated — not verified against original document]
+
 > ให้ $R$ เป็น relation จาก $A = \{a_1, \ldots, a_m\}$ ไปยัง $B = \{b_1, \ldots, b_n\}$
 > แทน $R$ ด้วย **matrix** $M_R = [m_{ij}]$ ขนาด $m \times n$ โดยที่:
 
@@ -153,9 +178,35 @@ $$M_R = \begin{pmatrix} 0 & 0 \\ 1 & 0 \\ 1 & 1 \end{pmatrix} \quad \begin{matri
 
 (column: $b=1$, $b=2$)
 
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "$m_{ij}$" → ช่องในแถว i (สมาชิก $a_i$) และคอลัมน์ j (สมาชิก $b_j$)
+- "1 ถ้า $(a_i, b_j) \in R$" → 1 คือ "คู่นี้อยู่ใน R" ส่วน 0 คือ "ไม่อยู่ใน R" (ไม่ใช่ "ไม่มีข้อมูล")
+- "ขนาด m × n" → m = |A| คือจำนวนแถว, n = |B| คือจำนวนคอลัมน์
+
+**ตัวอย่าง:** A = {1, 2, 3}, B = {1, 2}, R = {(a,b) | a > b}
+- ✅ แถว 3, คอลัมน์ 2: $3 > 2$ เป็นจริง → $m_{32} = 1$
+- ✅ แถว 1, คอลัมน์ 1: $1 > 1$ เป็นเท็จ → $m_{11} = 0$
+- ❌ สลับแถวกับคอลัมน์ (เอาสมาชิกของ B ขึ้นแถว) → ได้ตารางขนาด 2 × 3 แทน 3 × 2 ซึ่งไม่ตรงนิยาม m × n ของ $M_R$
+- **ต่างกันตรง:** แถวต้องตาม A และคอลัมน์ต้องตาม B เสมอ
+
+**อย่าสับสน:** "0" ในตาราง ≠ "ข้อมูลหาย" — 0 แปลว่า "ตรวจแล้ว คู่นี้ไม่ได้อยู่ใน R"
+
+**เช็คความเข้าใจ:** A = {1, 2}, B = {1, 2, 3}, R = {(a,b) | a + b เป็นเลขคู่} จงเขียน $M_R$
+<details><summary>เฉลย</summary>
+
+ตรวจทีละคู่: (1,1)=2 คู่ ✓ → 1; (1,2)=3 ✗ → 0; (1,3)=4 คู่ ✓ → 1
+(2,1)=3 ✗ → 0; (2,2)=4 คู่ ✓ → 1; (2,3)=5 ✗ → 0
+$M_R = \begin{pmatrix} 1 & 0 & 1 \\ 0 & 1 & 0 \end{pmatrix}$
+</details>
+
 ---
 
 #### Properties ใน Matrix
+
+> 💡 **Intuition:** อ่าน property จากตารางได้โดยตรง: Reflexive ดูแค่แนวทแยง, Symmetric ดูว่าตารางสมมาตรรอบแนวทแยงหรือไม่, Antisymmetric ดูว่ามีคู่ที่ "สลับกันทั้งคู่เป็น 1" หรือไม่ — ทำให้ตรวจได้เร็วโดยไม่ต้องไล่ทุกคู่ (analogy ใช้ไม่ได้ตรงที่ตารางไม่แสดงเส้นทางยาว จึงตรวจ Transitive จากตารางตรง ๆ ไม่ได้ ต้องดูเส้นทางความยาว 2 แยกต่างหาก)
+> [Source: generated — not verified against original document]
 
 | Property | เงื่อนไขใน Matrix $M_R$ |
 |:---|:---|
@@ -169,6 +220,29 @@ $$M_R = \begin{pmatrix} 1 & 1 & 0 \\ 1 & 1 & 1 \\ 0 & 1 & 1 \end{pmatrix}$$
 - **Reflexive?** → diagonal: $m_{11}=1, m_{22}=1, m_{33}=1$ → ✅
 - **Symmetric?** → $m_{12}=1=m_{21}$, $m_{13}=0=m_{31}$, $m_{23}=1=m_{32}$ → ✅
 - **Antisymmetric?** → $m_{12}=1$ และ $m_{21}=1$ แต่ $1 \neq 2$ → ❌
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "diagonal" → ช่อง $m_{ii}$ (แถว i คอลัมน์ i) ต้องเป็น 1 ทั้งหมดสำหรับ Reflexive
+- "$m_{ij} = m_{ji}$" → ค่าที่ตำแหน่งสลับแถว-คอลัมน์ต้องเท่ากัน (Symmetric)
+- "$m_{ij} = 1$ และ $i \neq j$ ⇒ $m_{ji} = 0$" → ห้ามมีคู่นอกแนวทแยงที่สลับกันเป็น 1 ทั้งคู่ (Antisymmetric)
+
+**ตัวอย่าง:** $M = \begin{pmatrix} 1 & 1 & 0 \\ 0 & 1 & 1 \\ 0 & 0 & 1 \end{pmatrix}$ (relation: (1,1),(1,2),(2,2),(2,3),(3,3))
+- ✅ Reflexive: แนวทแยง 1, 1, 1 ครบ
+- ✅ Antisymmetric: $m_{12}=1$ แต่ $m_{21}=0$; $m_{23}=1$ แต่ $m_{32}=0$
+- ❌ Symmetric: $m_{12}=1$ แต่ $m_{21}=0$ → ไม่สมมาตร
+- **ต่างกันตรง:** Symmetric ต้องให้ทุกคู่สลับกันเท่ากัน ส่วน Antisymmetric ห้ามเพียงกรณีที่ทั้งคู่เป็น 1
+
+**อย่าสับสน:** "Antisymmetric" ≠ "ไม่ Symmetric" — relation ว่าง (∅) เป็นทั้ง symmetric และ antisymmetric
+
+**เช็คความเข้าใจ:** $M = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$ บนเซต {1, 2} เป็น reflexive, symmetric, antisymmetric หรือไม่
+<details><summary>เฉลย</summary>
+
+- Reflexive ✅ (แนวทแยงเป็น 1 ทั้งหมด)
+- Symmetric ✅ ($m_{12} = m_{21} = 0$)
+- Antisymmetric ✅ (ไม่มีคู่นอกแนวทแยงที่เป็น 1 เลย)
+</details>
 
 ---
 

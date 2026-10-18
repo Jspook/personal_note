@@ -36,6 +36,9 @@ flowchart TD
 
 ### 2.1 WHERE Clause และ Comparison Operators
 
+> 💡 **Intuition:** ลองนึกถึง WHERE ว่าเป็น **ตัวกรองสินค้าบนเว็บช้อปปิ้ง** — ตัวกรองจะตัดสินใจว่าแต่ละชิ้นควรแสดงหรือซ่อน โดยดูว่าแต่ละแถวข้อมูลตรงตามเงื่อนไขที่ตั้งไว้หรือไม่ SQL เช็ค WHERE ไปทีละแถว (row-by-row)
+> [Source: generated — not verified against original document]
+
 > **WHERE** คือ clause ที่ใช้กรองแถวข้อมูล — SQL จะ evaluate เงื่อนไข WHERE สำหรับทุกแถว แถวที่เงื่อนไข `TRUE` จะปรากฏในผลลัพธ์
 
 ```sql
@@ -73,9 +76,32 @@ FROM employees
 WHERE job_id = 'IT_PROG';
 ```
 
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "evaluate เงื่อนไข WHERE สำหรับทุกแถว" → SQL ดูแต่ละแถวทีละแถว ไม่ว่าจะมีแถวกี่แถวก็ตาม
+- "เงื่อนไข TRUE" → แถวจะขึ้นเฉพาะเมื่อผลการเปรียบเทียบเป็น TRUE เท่านั้น ถ้าเป็น FALSE หรือ UNKNOWN (เช่นเทียบกับ NULL) แถวจะถูกตัดทิ้ง
+- "Comparison Operators" → ตัวดำเนินการที่ใช้เปรียบเทียบค่า (`=`, `<`, `>` ฯลฯ)
+
+**ตัวอย่าง:**
+- ✅ `WHERE salary > 10000` — return พนักงานที่เงินเดือน > 10,000 เท่านั้น
+- ❌ `WHERE salary = NULL` — return 0 แถวเสมอ (NULL ไม่ใช่ค่าปกติ ต้องใช้ IS NULL)
+- **ต่างกันตรง:** `=` ใช้เปรียบเทียบค่าปกติ แต่ NULL ต้องใช้ `IS NULL`
+
+**อย่าสับสน:** "Comparison" ไม่ได้หมายถึง "การเลือก" แต่หมายถึง "การเปรียบเทียบค่า" — WHERE จะ **กรอง** แถวตามผลของการเปรียบเทียบ
+
+**เช็คความเข้าใจ:** ถ้า employees table มี 10 แถว แล้วเขียน `WHERE department_id = 50` จะเห็นกี่แถว?
+<details><summary>เฉลย</summary>
+
+ตอบตายตัวไม่ได้ — ได้ 0 ถึง 10 แถว ขึ้นกับว่ามีกี่แถวที่ department_id = 50 จริง WHERE เช็คทีละแถวแล้วเก็บเฉพาะแถวที่ได้ TRUE แถวที่ department_id เป็น NULL จะไม่ขึ้น เพราะ `NULL = 50` ได้ UNKNOWN
+</details>
+
 ---
 
 ### 2.2 BETWEEN ... AND ...
+
+> 💡 **Intuition:** ลองนึกถึง BETWEEN ว่าเป็น **เครื่องหมายวัดระยะ** — ถ้าเงินเดือน BETWEEN 5000 AND 10000 ก็เหมือนว่า "ตั้งแต่เลข 5000 ขึ้นไปจนถึง 10000" โดยรวมเลข 5000 และ 10000 ด้วย (เช่นเดียวกับการวัดความสูงตั้งแต่ 150 ซม. ถึง 180 ซม. รวมทั้งสอง) ถ้าเงินเดือน 5000 พอดี ก็ยังนับด้วย
+> [Source: generated — not verified against original document]
 
 > **BETWEEN** ใช้กรองค่าในช่วงที่กำหนด — **inclusive** ทั้งสองขอบ (รวมค่าต่ำสุดและสูงสุดด้วย)
 
@@ -100,9 +126,31 @@ FROM employees
 WHERE salary NOT BETWEEN 5000 AND 10000;
 ```
 
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "inclusive ทั้งสองขอบ" → รวมค่า 5000 และ 10000 ด้วย (ไม่ใช่ "ระหว่าง" ในแง่ของ "ไม่รวมขอบ")
+- "BETWEEN low_value AND high_value" → low_value ต้องน้อยกว่าหรือเท่ากับ high_value ถึงจะได้ผล
+
+**ตัวอย่าง:**
+- ✅ `salary BETWEEN 5000 AND 10000` → ได้พนักงาน salary 5000, 7500, 10000 ทั้งหมด
+- ❌ `salary BETWEEN 10000 AND 5000` → ไม่ error แต่ได้ 0 แถว เพราะแปลเป็น `salary >= 10000 AND salary <= 5000` ซึ่งไม่มีค่าใดเป็นจริง
+- **ต่างกันตรง:** BETWEEN ต้องเขียนตัวน้อยก่อน ตัวมากทีหลัง
+
+**อย่าสับสน:** "BETWEEN 5000 AND 10000" ไม่ได้หมายถึง "ระหว่าง 5000 และ 10000" ในแง่ "ไม่รวมขอบ" — มันรวมขอบแล้ว ถ้าต้องการ "ไม่รวม" ต้องเขียน `salary > 5000 AND salary < 10000` แยก
+
+**เช็คความเข้าใจ:** ถ้าเขียน `WHERE hire_date BETWEEN '01-JAN-2000' AND '31-DEC-2005'` พนักงานที่ hire_date = '01-JAN-2000' พอดี ขึ้นแสดงไหม?
+<details><summary>เฉลย</summary>
+
+ใช่ ขึ้นแสดง เพราะ BETWEEN inclusive ทั้งสองขอบ — '01-JAN-2000' รวมอยู่ในช่วงแล้ว
+</details>
+
 ---
 
 ### 2.3 IN และ NOT IN
+
+> 💡 **Intuition:** ลองนึกถึง IN ว่าเป็น **การเลือกจากรายชื่อ** — เช่น "ต้องการพนักงานจากแผนก 10, 20, หรือ 30 เท่านั้น" ก็เหมือนว่า "เลือกจากรายชื่อ 3 แผนก" แทนที่จะเขียน "แผนก 10 หรือ 20 หรือ 30" หลาย ๆ ครั้ง
+> [Source: generated — not verified against original document]
 
 > **IN** ใช้ตรวจสอบว่าค่าอยู่ใน list ที่กำหนดหรือไม่ — เทียบเท่าการใช้ `OR` หลายตัว
 
@@ -127,9 +175,31 @@ FROM employees
 WHERE last_name IN ('King', 'Abel', 'Taylor');
 ```
 
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "IN (value1, value2, ...)" → list ต้องเขียนในวงเล็บ และค่าต่างๆ แยกด้วย comma
+- "เทียบเท่า OR หลายตัว" → `col IN (a, b, c)` = `col = a OR col = b OR col = c`
+
+**ตัวอย่าง:**
+- ✅ `department_id IN (10, 20, 30)` — ได้พนักงานจากแผนก 10, 20, หรือ 30
+- ❌ `department_id IN 10, 20, 30` — syntax error ต้องมีวงเล็บ
+- **ต่างกันตรง:** IN ต้องมีวงเล็บ ค่าต่างๆ ต้องแยกด้วย comma
+
+**อย่าสับสน:** "IN (10, 20, 30)" ไม่ได้หมายถึง "ตั้งแต่ 10 ถึง 30" — มันขึ้นอยู่กับว่าค่าตรงกับ 10, 20, หรือ 30 เท่านั้น ถ้าต้องการเป็น "ตั้งแต่ 10 ถึง 30" ใช้ BETWEEN
+
+**เช็คความเข้าใจ:** `WHERE job_id IN ('IT_PROG', 'ST_CLERK')` จะได้พนักงาน job_id ไหนบ้าง?
+<details><summary>เฉลย</summary>
+
+ได้เฉพาะพนักงานที่ job_id = 'IT_PROG' หรือ job_id = 'ST_CLERK' เท่านั้น — ไม่ใช่ job_id ทุกตัวที่อยู่ระหว่าง 'IT_PROG' ถึง 'ST_CLERK' ตามลำดับตัวอักษร (IN เทียบค่าตรงตัว ถ้าต้องการช่วงต้องใช้ BETWEEN)
+</details>
+
 ---
 
 ### 2.4 LIKE และ Pattern Matching
+
+> 💡 **Intuition:** ลองนึกถึง LIKE ว่าเป็น **การค้นหาด้วยตัวอักษรตัวแทน** (wildcard) — เหมือนเกมเติมคำในช่องว่าง โดย `%` คือ "ช่องว่างยาวเท่าไรก็ได้" (0 ตัวขึ้นไป) และ `_` คือ "ช่องว่าง 1 ตัวพอดี" — เช่น `'S%'` หมายถึง "ชื่อที่ขึ้นต้นด้วย S" (ตัวตามหลังเป็นอะไรก็ได้) ทำให้ค้นหา "Smith", "Steven", "Sun" ได้ในหนึ่งรอบ
+> [Source: generated — not verified against original document]
 
 > **LIKE** ใช้สำหรับค้นหาข้อความที่ตรงกับ pattern (รูปแบบ) มี Wildcard 2 ตัว:
 > - `%` (Percent) — แทนที่อักขระ **ศูนย์ตัวขึ้นไป**
@@ -176,9 +246,35 @@ FROM employees
 WHERE UPPER(first_name) LIKE '%A%';
 ```
 
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Pattern (รูปแบบ)" → ลำดับตัวอักษรที่ต้องการค้นหา เช่น "ขึ้นต้นด้วย S", "มี al ตรงกลาง"
+- "`%` — ศูนย์ตัวขึ้นไป" → สามารถแทนได้ 0 ตัว 1 ตัว หรือหลายตัว เช่น `'A%'` match กับ "A", "Apple", "Alexander"
+- "`_` — 1 ตัวพอดี" → แทนอักษรเดียว เช่น `'_o%'` match กับ "dog", "boy" แต่ไม่ match "o" (ต้องมี 1 ตัวก่อน)
+
+**ตัวอย่าง:**
+- ✅ `LIKE 'S%'` matches Smith, Stevens, Sun, Smithson และ "S" เอง (เพราะ `%` แทน 0 ตัวได้)
+- ❌ `LIKE 'S'` matches เฉพาะ "S" เท่านั้น — ไม่ใช่ "Smith"
+- **ต่างกันตรง:** `LIKE 'S'` ต้องเป็น "S" ทุกประการ แต่ `LIKE 'S%'` "S" ตามด้วยอะไรก็ได้
+
+**อย่าสับสน:** "`%` ศูนย์ตัวขึ้นไป" ไม่ได้หมายถึง "1 ตัวขึ้นไป" — ถ้าใส่ `'%'` โดยลำพัง มันจะ match **ทุกแถวที่ค่าไม่เป็น NULL** — แถวที่เป็น NULL ไม่ match เพราะ `NULL LIKE '%'` ได้ UNKNOWN
+
+**เช็คความเข้าใจ:** `LIKE '_a%'` จะ match คำไหนบ้าง: "David", "Adam", "Taylor", "A"?
+<details><summary>เฉลย</summary>
+
+`'_a%'` = ตัวที่ 1 เป็นอะไรก็ได้ 1 ตัว, ตัวที่ 2 ต้องเป็น `a`, ที่เหลือเป็นอะไรก็ได้
+
+- Match: "David" (ตัวที่ 2 = a), "Taylor" (ตัวที่ 2 = a)
+- ไม่ match: "Adam" (ตัวที่ 2 = d), "A" (ยาวแค่ 1 ตัว แต่ pattern ต้องการอย่างน้อย 2 ตัว)
+</details>
+
 ---
 
 ### 2.5 IS NULL และ IS NOT NULL
+
+> 💡 **Intuition:** ลองนึกถึง NULL ว่าเป็น "**กล่องที่ไม่รู้มีอะไร (unknown)**" — ไม่เหมือนกับ "กล่องว่าง (empty string '')" หรือ "เลข 0" NULL คือ "เรา**ไม่รู้**" ดังนั้น ถ้าคุณถาม "กล่องนี้ = NULL ไหม?" คำตอบคือ "ไม่รู้" (UNKNOWN ไม่ใช่ TRUE) ต้องใช้ `IS NULL` เพื่อเช็ค "กล่องนี้เป็น unknown ไหม?" แทน
+> [Source: generated — not verified against original document]
 
 > `NULL` คือค่าที่ **ไม่ทราบ / ไม่มีข้อมูล** — ไม่ใช่ 0 หรือ empty string
 > **ใช้ `col = NULL` ไม่ได้เด็ดขาด** ต้องใช้ `IS NULL` เท่านั้น
@@ -212,9 +308,33 @@ FROM employees
 WHERE commission_pct IS NOT NULL;
 ```
 
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "NULL" → ไม่ได้หมายถึง 0, '', หรือคำว่า 'NULL' — มันคือ "ไม่รู้ค่า"
+- "`IS NULL` / `IS NOT NULL`" → การตรวจสอบว่า**เซลล์เป็น unknown หรือไม่** — ไม่ใช่ "เท่ากับ"
+
+**ตัวอย่าง:**
+- ✅ `WHERE manager_id IS NULL` — หาพนักงานที่ไม่มีค่า manager_id (เช่น CEO)
+- ❌ `WHERE manager_id = NULL` — return 0 แถวเสมอ (ไม่ว่า manager_id เป็น NULL จริงหรือไม่)
+- **ต่างกันตรง:** `= NULL` ให้ผล UNKNOWN เสมอ เพราะใน SQL `NULL` ไม่เท่ากับอะไรเลย แม้แต่ `NULL`
+
+**อย่าสับสน:** "`NULL`" ไม่ได้หมายถึง "0" หรือ "''" (empty string) ในเชิงแนวคิด — NULL = ไม่รู้ค่า, 0 = เลขศูนย์ (ข้อควรรู้เฉพาะ Oracle: `''` ถูกเก็บเป็น NULL จริง ๆ ดังนั้น `WHERE col IS NULL` จะเจอแถวที่ใส่ `''` ด้วย)
+
+**เช็คความเข้าใจ:** ทำไม `WHERE commission_pct = NULL` return 0 แถวแม้ว่ามีพนักงานที่ commission_pct เป็น NULL จริง ๆ?
+<details><summary>เฉลย</summary>
+
+1. การเปรียบเทียบใด ๆ กับ NULL (รวม `NULL = NULL`) ให้ผลเป็น UNKNOWN ไม่ใช่ TRUE
+2. WHERE เก็บเฉพาะแถวที่ได้ TRUE จึงไม่มีแถวไหนผ่านเลย
+3. ต้องใช้ `IS NULL` ซึ่งถามตรง ๆ ว่า "ค่านี้เป็น NULL ไหม" และให้ TRUE/FALSE เสมอ
+</details>
+
 ---
 
 ### 2.6 Logical Operators: AND, OR, NOT
+
+> 💡 **Intuition:** ลองนึกถึง AND, OR ว่าเป็น "**ตัวประสม**" — AND คือ "ต้องตรงทั้งสองเงื่อนไข" (เหมือนสินค้า "สีแดง **และ** ราคา < 100 บาท" ต้องตรงทั้งสอง), OR คือ "ตรงอย่างน้อยหนึ่ง" (เหมือน "จากแผนก 10 **หรือ** 20" — อยู่แผนกไหนในสองแผนกนี้ก็ผ่าน) ส่วน NOT คือ "ผกผัน" — เหมือนการพูด "ไม่ใช่"
+> [Source: generated — not verified against original document]
 
 > ใช้รวมเงื่อนไขหลายข้อเข้าด้วยกัน **ลำดับความสำคัญ (Precedence):** NOT > AND > OR
 
@@ -250,9 +370,39 @@ WHERE (department_id = 80 OR department_id = 90)
 | FALSE | TRUE | FALSE | TRUE |
 | FALSE | FALSE | FALSE | FALSE |
 
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "AND — ต้องจริงทุกเงื่อนไข" → ถ้า 1 ข้อเท็จ ทั้งหมดก็เท็จ
+- "OR — จริงอย่างน้อยหนึ่งเงื่อนไข" → ถ้า 1 ข้อจริง ทั้งหมดก็จริง
+- "Precedence: NOT > AND > OR" → ลำดับการคำนวณ — NOT อยู่แรก แล้ว AND แล้ว OR (ใช้วงเล็บถ้าไม่แน่ใจ)
+
+**ตัวอย่าง:**
+- ✅ `WHERE salary > 5000 AND department_id = 80` — ได้พนักงาน dept 80 **และ** salary > 5000 พร้อมกัน
+- ❌ `WHERE department_id = 80 AND department_id = 90` — ได้ 0 แถวเสมอ เพราะแถวเดียวอยู่สองแผนกพร้อมกันไม่ได้ ถ้าต้องการ "แผนก 80 หรือ 90" ต้องใช้ OR
+- **ต่างกันตรง:** AND ต้องตรงทั้งสอง OR ตรงหนึ่งพอ
+
+**อย่าสับสน:** "AND มี precedence สูงกว่า OR" ไม่ได้หมายถึง "AND ถูก" — มันหมายถึง **ลำดับการคำนวณ** เช่น `a OR b AND c` ถูกอ่านว่า `a OR (b AND c)` ไม่ใช่ `(a OR b) AND c` ถ้าต้องการแบบหลัง ต้องใส่วงเล็บ
+
+**เช็คความเข้าใจ:** `WHERE salary > 5000 AND department_id = 80 OR department_id = 90` จะหา rows ที่ตรง "salary > 5000 และ dept 80" หรือ "dept 90 ใคร ๆ ก็ได้"?
+<details><summary>เฉลย</summary>
+
+เนื่องจาก AND มี precedence สูงกว่า OR ดังนั้นมันถูกอ่านว่า:
+`WHERE (salary > 5000 AND department_id = 80) OR department_id = 90`
+
+นั่นคือ: 
+- ได้ rows ที่ salary > 5000 **และ** dept = 80 
+- **หรือ** ได้ rows ที่ dept = 90 ไม่ว่า salary เท่าไหร่
+
+ถ้าต้องการ "salary > 5000 ทั้ง dept 80 และ 90" ต้องเขียน `WHERE salary > 5000 AND (department_id = 80 OR department_id = 90)`
+</details>
+
 ---
 
 ### 2.7 ORDER BY
+
+> 💡 **Intuition:** ลองนึกถึง ORDER BY ว่าเป็น "**ตัวจัดเรียง**" — หลังจาก WHERE ได้ผลลัพธ์มาแล้ว ORDER BY ก็มาจัดเรียงแถวต่าง ๆ ให้เรียบร้อยตามที่ต้องการ เช่น "จากเงินเดือนมากไปน้อย" หรือ "ชื่อจาก A ไป Z" อันดับ ASC/DESC ก็เลือกว่า "ไปข้างหน้า (ASC)" หรือ "ถอยหลัง (DESC)"
+> [Source: generated — not verified against original document]
 
 > **ORDER BY** ใช้เรียงลำดับผลลัพธ์ — เป็น clause **สุดท้าย** ของ SELECT statement
 > - `ASC` — เรียงจากน้อยไปมาก (ค่า default ถ้าไม่ระบุ)
@@ -289,6 +439,32 @@ SELECT first_name, salary * 12 AS annual_salary
 FROM employees
 ORDER BY annual_salary DESC;
 ```
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "ORDER BY เป็น clause สุดท้าย" → WHERE, SELECT, ... ต้องมาก่อน ORDER BY เสมอ
+- "ASC — จากน้อยไปมาก (default)" → ถ้าไม่ระบุ ASC/DESC ก็เรียงน้อยไปมากแบบอัตโนมัติ
+- "Multi-column sort" → เรียงตาม column แรกก่อน แล้วถ้าค่าเท่ากัน ใช้ column ที่สองต่อไป
+
+**ตัวอย่าง:**
+- ✅ `ORDER BY salary DESC` — เรียงตามเงินเดือนมากไปน้อย
+- ❌ `ORDER BY 3 DESC` (ถ้า SELECT มี 2 columns เท่านั้น) — error ORA-01785 เพราะไม่มี column ที่ 3 ใน SELECT list
+- **ต่างกันตรง:** `ORDER BY column_name DESC` ชัดเจนกว่า `ORDER BY position DESC` (ถ้าแก้ลำดับ column ใน SELECT ภายหลัง position จะชี้ผิดตัวทันที)
+
+**อย่าสับสน:** "ORDER BY 3" ไม่ได้หมายถึง "column 3 จาก table" — มันหมายถึง "column ที่ 3 ใน SELECT list" ซึ่งขึ้นอยู่กับลำดับใน SELECT
+
+**เช็คความเข้าใจ:** `SELECT first_name, department_id, salary FROM employees ORDER BY 2 ASC, 3 DESC;` จะเรียง rows ตามอะไร?
+<details><summary>เฉลย</summary>
+
+Column position 2 คือ `department_id` column position 3 คือ `salary`
+
+ดังนั้นเรียง:
+1. department_id จากน้อยไปมาก (ASC)
+2. ถ้า department_id เท่ากัน เรียง salary จากมากไปน้อย (DESC)
+
+ตัวอย่าง: dept 10 salary 10000, dept 10 salary 5000, dept 20 salary 8000, ...
+</details>
 
 ---
 

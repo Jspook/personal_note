@@ -54,6 +54,7 @@ Run only when the Editor flags a concept the source cannot explain, a likely sou
 ## 3. Editor
 Goal: write the Complete Note from `raw-content.md` + page renders using `how-to-write-note`.
 - Header with source path and slide count; every claim that comes from the source carries `[p.N]`; link each major section to source pages.
+- Write every core concept in Part 2 to the **Teaching Standard** (`how-to-write-note` Section 3.7): intuition → formal definition → phrase breakdown → ✅/❌ contrast → "อย่าสับสน" → check question with `<details>` answer. Intuition, analogies and invented examples are generated content and carry the 💡 label. The Verifier checks that the standard was applied without altering source content (user rule, 2026-10-17).
 - Diagrams are Mermaid only (no ASCII art). Embed the original figures from `attachments/` only when they add information.
 - Content added beyond the source goes in blockquotes starting with 💡 and the `[Source: generated — not verified against original document]` label. Never present generated content as source content.
 - Keep all meaningful content: lists, numbers, parameters, SQL/code, diagram labels, exceptions. Do not drop a bullet because it looks minor. Do not fill gaps in the source: show `[xxxx — ต้นฉบับขาดหาย]`.

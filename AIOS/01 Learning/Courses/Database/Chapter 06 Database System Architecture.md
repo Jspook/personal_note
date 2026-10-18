@@ -53,6 +53,9 @@ flowchart LR
 
 #### Three-Schema Architecture
 
+> 💡 **Intuition:** ลองนึกถึงห้องสมุดใหญ่ที่มองได้ 3 ระดับ — (1) External: ผู้ใช้แต่ละกลุ่มเห็นเฉพาะส่วนที่เกี่ยวกับตน (นักเรียนเห็นหมวด "วิทยาศาสตร์", นักธุรกิจเห็นหมวด "บริหารธุรกิจ") แต่เป็นคอลเลกชันเดียวกัน, (2) Conceptual: บัญชีรายการหนังสือทั้งหมดที่บรรณารักษ์ออกแบบ (มีหนังสืออะไร อยู่หมวดไหน กฎการยืมเป็นอย่างไร) ครอบคลุมทั้งห้องสมุด, (3) Internal: ตำแหน่งวางจริงบนชั้น A1-A3, B1-B5 — บรรณารักษ์ย้ายชั้นวางได้โดยผู้ใช้ไม่ต้องเปลี่ยนวิธีค้นหา เพราะผู้ใช้เห็นแค่ view ของตนเอง
+> [Source: generated — not verified against original document]
+
 > สถาปัตยกรรมระบบฐานข้อมูลแบ่ง **สกีมา (schema)** เป็น 3 ระดับ เพื่อ **แยกโปรแกรมของผู้ใช้งานออกจากข้อมูล (program-data independence)** และ **สนับสนุนมุมมองข้อมูลที่หลากหลาย (multi-view of data)** ตามความต้องการใช้งาน [p.3]
 
 | ระดับ Schema          | หน้าที่                                                                           | ได้มาจาก                                                                |
@@ -60,6 +63,35 @@ flowchart LR
 | **Internal schema**   | อธิบาย **โครงสร้างเชิงกายภาพ** ของฐานข้อมูล                                       | ผลลัพธ์จาก Physical data model [p.4]                                    |
 | **Conceptual schema** | อธิบาย **โครงสร้างฐานข้อมูลและเงื่อนไขบังคับ (constraints)** สำหรับกลุ่มผู้ใช้งาน | การออกแบบด้วย Conceptual data model และ Implementation data model [p.4] |
 | **External schema**   | อธิบายฐานข้อมูลใน **มุมมอง (View)** ต่าง ๆ ตามกลุ่มผู้ใช้งาน                      | ใช้แบบจำลองข้อมูลเดียวกับ Conceptual schema [p.4]                       |
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "External schema" → "มุมมองจากภายนอก" (ผู้ใช้งานคนหนึ่งเห็นตาราง/ข้อมูลไหนเท่านั้น ไม่เห็นทั้งหมด)
+- "Conceptual schema" → "นิยามตรงกลาง" (อธิบายโครงสร้างของทั้งฐานข้อมูลสำหรับผู้ใช้ทุกกลุ่ม: Relation, Attribute, ความสัมพันธ์ และ Constraint โดยซ่อนรายละเอียดการจัดเก็บ)
+- "Internal schema" → "รูปแบบเก็บจริง" (ระดับไฟล์ index page block ซึ่ง user และ analyst ไม่จำเป็นต้องรู้)
+- "Mapping" → "แปลงคำร้องขอและข้อมูลระหว่างระดับ" (query บน View → query บน Conceptual schema → การอ่าน record/page จากไฟล์)
+
+**ตัวอย่าง:**
+- ✅ External: นักเรียน (view1) เห็น "Student(ID, Name, GPA)"; ฝ่ายทะเบียน (view2) เห็น "Student(ID, Name, GPA, Major)" ส่วน Address ถูกซ่อนจากทั้งสอง view
+- ✅ Conceptual: DBA ออกแบบ "STUDENT(ID, Name, GPA, Major, Address)" 1 Relation เดียว
+- ✅ Internal: STUDENT เก็บเป็น record ในไฟล์ students.dat บนดิสก์ จัดเป็น page/block และมี index บน ID
+- **ต่างกันตรง:** ทั้ง 3 ระดับอธิบายข้อมูลเดียวกัน แต่ "เห็น/เข้าใจ/จัดเก็บ" ต่างกัน
+
+**อย่าสับสน:** "External schema" หมายถึง (View ที่ผู้ใช้แต่ละกลุ่มเห็นต่างกัน) ไม่ได้หมายถึง (ฐานข้อมูลภายนอก/remote database)
+
+**เช็คความเข้าใจ:** ถ้า DBA เพิ่ม Attribute ใหม่ "Department" ใน Conceptual schema ของ STUDENT แต่ไม่สร้าง External schema ใหม่ให้นักเรียน นักเรียนจะเห็น Department หรือไม่?
+<details><summary>เฉลย</summary>
+
+นักเรียน **ไม่เห็น** Department:
+1. External schema (View) ของนักเรียนนิยามไว้แค่ "Student(ID, Name, GPA)" — View แสดงเฉพาะ Attribute ที่นิยามไว้
+2. สิ่งที่ถูกปรับคือ External/Conceptual Mapping (View definition) ให้ View เดิมยังชี้ไปยัง ID, Name, GPA ใน Conceptual schema ใหม่ได้ถูกต้อง (ตามสไลด์ ระบบปรับ View definition และ Mapping ให้)
+3. โปรแกรมและ query ที่นักเรียนใช้บน View เดิมจึงทำงานได้ตามปกติ ไม่ต้องแก้
+4. ถ้าต้องการให้นักเรียนเห็น Department ต้องแก้ External schema ของนักเรียนเพิ่มเอง
+
+นี่คือ **Logical Data Independence** — Conceptual เปลี่ยน แต่ External ไม่ต้องเปลี่ยน (ระบบแก้ Mapping)
+
+</details>
 
 ```mermaid
 flowchart TB
@@ -217,6 +249,9 @@ _ต้นฉบับ: รูป p.22 (หมายเลข 1-7 ซ้อน�
 
 #### 6.5.1 Centralized DBMS Architecture [p.23-26]
 
+> 💡 **Intuition:** ลองนึกถึงร้านกาแฟที่มีบาริสต้าคนเดียวทำทุกอย่าง ทั้งรับเงิน ชงกาแฟ จดออร์เดอร์ — ช่องบริการหน้าร้านแต่ละช่อง (Terminal) เป็นแค่จุดรับ-ส่ง ทำอะไรเองไม่ได้ เพราะงานทั้งหมดอยู่ที่คนเดียว การประสานงานจึงเร็ว (เทียบ IPC ใน main memory เครื่องเดียว) และแก้ไขที่จุดเดียว (maintain ง่าย) แต่ถ้าบาริสต้าทำงานช้า (H/W host ต่ำ) ทุกช่องต้องรอ และถ้าคนนี้หยุด ทั้งร้านหยุด
+> [Source: generated — not verified against original document]
+
 - แต่เดิมใช้ **mainframe** เป็นส่วนประมวลผลกลางของทุกฟังก์ชัน (รวมแอปพลิเคชันและส่วนประสานผู้ใช้) ผู้ใช้ใช้ผ่าน **terminal** ที่ไม่มีหน่วยประมวลผล เรียกว่า **"Centralized DBMS" (แบบรวมศูนย์)**; เมื่อฮาร์ดแวร์ถูกลง ก็ใช้ workstation/PC แทน terminal ในช่วงแรก ซึ่งยังเป็นลักษณะเดิม [p.23]
 - รูป p.24: Terminals (Display monitor หลายตัว) → SOFTWARE (Application Programs, Terminal display control, Text editors, DBMS, Compilers) → OPERATING SYSTEM → HARDWARE/FIRMWARE (CPU, Controller, Memory, Disk, I/O devices)
 
@@ -290,7 +325,40 @@ _ต้นฉบับ: รูป p.29_
 
 ### 2.6 Client/Server Architecture (หัวข้อ 6.5.2) — `[Source: extracted]` p.33-42
 
+> 💡 **Intuition:** ลองนึกถึงร้านอาหารที่สั่งผ่านแอป — ลูกค้า (Client) มีหน้าจอสั่งอาหาร (UI) แต่ไม่มีครัว; ครัวกลาง (Server) ทำอาหารให้ลูกค้าหลายคนโดยรับ order ผ่านเครือข่าย ลูกค้าไม่ต้องรู้ว่าครัวทำอย่างไร แค่ส่ง order แล้วรอผล (Result)
+> [Source: generated — not verified against original document]
+
 > สถาปัตยกรรมแบบ **แม่ข่าย-ลูกข่าย (Client/Server)** พัฒนาขึ้นเพื่อรองรับสภาพแวดล้อมที่มี PC, workstation, file server, print server, database server, web server และอุปกรณ์อื่นเชื่อมผ่านเครือข่าย โดย **Server** มีฟังก์ชันเฉพาะ (file server, print server, web server, email server) และ **Client** เข้าถึงทรัพยากรที่ไม่มีในเครื่องตนเองจาก server [p.33]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Client" → เครื่องคนใช้ (PC, Workstation) ที่ขอบริการ
+- "Server" → เครื่องให้บริการเฉพาะด้าน (Database Server, Web Server)
+- "Network" → เส้นทางสื่อสารระหว่าง Client และ Server
+- "Two-tier" → Client ต่อกับ Database Server โดยตรงผ่าน ODBC/JDBC (ไม่มี Application Server คั่นกลาง)
+- "Three-tier" → มี Application Server คั่นกลาง
+
+**ตัวอย่าง:**
+- ✅ Two-Tier: Workstation (Client) → ส่ง SQL → Database Server → ตอบกลับ Result
+- ✅ Three-Tier: Browser (Client) → ส่ง HTTP request → Web Server (Application logic) → ส่ง SQL → DB Server
+- ✅ Message-base C/S: Client เรียก stored procedure ที่ฝั่ง Server แล้วส่งแค่ parameter ไป → traffic ในเครือข่ายน้อย เพราะ logic และการประมวลผล SQL อยู่ที่ Server
+- ❌ Terminal ที่ไม่มีหน่วยประมวลผล ส่งแค่การกดแป้นไปให้ mainframe ซึ่งทำทั้ง Application และ DBMS → นี่คือ Centralized ไม่ใช่ Client/Server
+- **ต่างกันตรง:** Two-tier: application อยู่ฝั่ง client แล้วคุยกับ DB Server โดยตรง; Three-tier: ย้าย business rules ไปไว้ที่ middle tier (Application Server / Web Server) ระหว่าง client กับ DB Server
+
+**อย่าสับสน:** "Client/Server" หมายถึง (Architecture ที่แบ่ง Client / Server แล้วเข้าถึงผ่านเครือข่าย) ไม่ได้หมายถึง (แค่มีเครื่องหลายเครื่องต่อ LAN — ใน Resource Sharing LAN ที่มี File server ตัว workstation ยังทำ search/sort/lock เอง ต่างจาก SQL-base C/S ที่ DBMS ฝั่ง server จัดการข้อมูลให้)
+
+**เช็คความเข้าใจ:** โปรแกรมฝั่ง Client ใช้ ODBC ส่ง SQL ไปยัง Database Server ได้โดยตรง นี่คือ Two-tier หรือ Three-tier?
+<details><summary>เฉลย</summary>
+
+**Two-tier**:
+- Client (Workstation) → ODBC Driver → SQL → Database Server → Result
+- ไม่มี Application Server คั่นกลาง
+
+ถ้ามี Application Server (เช่น Java Application Server, .NET Server) คั่นกลาง → Three-tier:
+- Client (Browser) → HTTP → Application Server → SQL → Database Server
+
+</details>
 
 | รูปแบบ [p.34] | ตัวอย่างตามสไลด์ |
 | :--- | :--- |

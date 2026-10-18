@@ -38,10 +38,35 @@ flowchart TD
 
 #### Design Phase คืออะไร
 
+> 💡 **Intuition:** ลองคิดถึงการไปแคมป์ปิ้ง: ช่วง Analysis คือการลิสต์ว่าต้องการอะไร (ที่นอนกันฝนสำหรับ 4 คน, ไฟฟ้าสำหรับชาร์จโทรศัพท์, อาหาร 2 วัน) ส่วน Design Phase คือการตัดสินใจว่าจะทำให้ได้อย่างไร: ใช้เต็นท์รุ่นไหน วัสดุอะไร ขนาดเท่าไหร่ ใช้ Power Bank หรือแผงโซลาร์ วางเต็นท์ตรงไหน การเปลี่ยนจากคำถาม "เราต้องการอะไร" เป็น "เราจะทำให้ได้อย่างไร" นี่แหละคือ Design
+> [Source: generated — not verified against original document]
+
 > Design Phase คือขั้นตอนที่ตัดสินใจว่า **ระบบใหม่จะทำงานอย่างไร** — เป็น "สะพาน" เชื่อม Requirements สู่ Solution จริง
 
 - **Analysis Phase** → ตอบคำถาม **"What"** (ธุรกิจต้องการอะไร)
 - **Design Phase** → ตอบคำถาม **"How"** (จะสร้างระบบนั้นอย่างไร)
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "ระบบจะทำงานอย่างไร" → ไม่ใช่สิ่งที่ต้องทำ แต่เป็น _วิธี_ ที่ใช้ทำ (Technology, Architecture, UI, Database)
+- "สะพาน เชื่อม Requirements สู่ Solution" → Requirements คือสิ่งที่ผู้ใช้บอกว่าต้องการ Solution คือระบบจริงที่ทำงาน Design Phase คือการแปลงข้อความความต้องการ (Requirements) เป็นแบบก่อสร้าง (Plans)
+
+**ตัวอย่าง:**
+- ✅ **Analysis บอก:** "ระบบต้องอนุญาตให้ผู้จัดการจัดการบัญชีผู้ใช้ได้" → **Design ตอบ:** "เราจะใช้ Role-Based Access Control (RBAC), พร้อม Database Permission Level เพื่อจำกัดสิทธิ์" — นี่คือการตอบ "How"
+- ❌ **ถ้า Design เพียงแค่บอก:** "ระบบต้องอนุญาตให้ผู้จัดการจัดการบัญชีผู้ใช้ได้" — นั่นคือยังอยู่ที่ระดับ Analysis ยังไม่ก้าวพ้น "What"
+- **ต่างกันตรง:** Analysis บอกปัญหา Design บอกการแก้ปัญหา
+
+**อย่าสับสน:** "Design" และ "Analysis" ต่างกัน — Analysis ถามว่า "ต้องการอะไร" Design ถามว่า "จะสร้างอย่างไร"
+
+**เช็คความเข้าใจ:** บริษัทต้องการระบบเก็บข้อมูลลูกค้า เรียกหากลุ่มคนซื้อจากภูมิภาคกำหนด ควรเกิดขึ้นในช่วง Analysis หรือ Design? เพราะอะไร?
+<details><summary>เฉลย</summary>
+
+**Analysis** — "จำเป็นต้องสามารถเรียกข้อมูลลูกค้าตามภูมิภาค" คือความต้องการทางธุรกิจ (What)
+
+**Design** จะตัดสินใจ: "ใช้ WHERE clause ใน SQL ตามหลัก Regional ID หรือใช้ Partition ใน Database?"
+
+</details>
 
 #### กระบวนการเปลี่ยนผ่าน
 
@@ -58,6 +83,9 @@ flowchart TD
 
 #### กลยุทธ์ที่ 1: Custom Development
 
+> 💡 **Intuition:** นึกถึงการทำชุดสูท: คุณไปหาช่างตัดผ้าและบอกความต้องการเฉพาะของคุณ (ผ้า, สี, รูป) ช่างก็วาดแบบและตัดทำให้จากศูนย์ ใช้เวลานาน, มีค่าใช้จ่าย, แต่คุณได้สิ่งที่พอดีกับตัวคุณเพียงคนเดียว นั่นคือ Custom — สร้างจากศูนย์เพื่อให้พอดีกับความต้องการที่เฉพาะเจาะจง
+> [Source: generated — not verified against original document]
+
 **Custom Development** คือการสร้างระบบใหม่ตั้งแต่เริ่มต้นโดยทีมภายในองค์กร
 
 **ข้อดี (Pros):**
@@ -70,9 +98,33 @@ flowchart TD
 - ต้องการบุคลากร IS ที่มีทักษะหลากหลายและสูง ซึ่งหาและรักษาไว้ยาก
 - ความเสี่ยงในการพัฒนาระบบจากศูนย์นั้นสูงมาก
 
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "ความยืดหยุ่น ... ได้อย่างเต็มที่" → สามารถปรับเปลี่ยนทุกส่วน: UI, Database, Algorithm, Integration points
+- "สร้างทักษะเชิงเทคนิค ... ไว้ภายในองค์กร" → เมื่อโครงการจบ ทีมของคุณยังมีความรู้และความสามารถนั้นอยู่ (ไม่เหมือน Outsourcing ที่จ้างแล้วจบ)
+- "ความเสี่ยง ... สูงมาก" → อาจเกิดการไป Over-budget, Delay, หรือ Quality ต่ำ ถ้า Project Management ไม่ดี
+
+**ตัวอย่าง:**
+- ✅ **ใช้ Custom ได้ดี:** กลยุทธ์หลักขององค์กร, ความต้องการเฉพาะมาก, และมีทีม Developer ที่มีประสบการณ์ → ระบบที่เป็นจุดแข่งขันหลักของบริษัท เช่น ระบบ Dynamic Pricing เฉพาะของสายการบิน
+- ❌ **ไม่ควร Custom:** ระบบ HR ทั่วไป, เวลาน้อย, Budget น้อย → เพราะมี HR Software สำเร็จรูปมากมาย
+- **ต่างกันตรง:** Custom ใช้เมื่อไม่มี Solution สำเร็จรูป หรือต้องการควบคุมทุกอย่าง
+
+**อย่าสับสน:** "สร้างเองทั้งหมด" หมายถึง In-house Team ทำ ไม่ได้หมายถึงเขียน Code บรรทัดแรกแบบ Scratch ทั้งหมด — ยังคงใช้ Frameworks, Libraries ได้
+
+**เช็คความเข้าใจ:** ธนาคารต้องการระบบให้ลูกค้าโอนเงินแบบ Same-day ซึ่งมีกฎหมายเฉพาะที่เปลี่ยนตามประเทศ Custom Development หรือ Packaged Software ดีกว่า? เพราะอะไร?
+<details><summary>เฉลย</summary>
+
+**Custom Development** — เพราะความต้องการเป็น Niche (ไม่มี Solution สำเร็จรูปครอบคลุม), มีกฎหมายเฉพาะแต่ละประเทศ, และนี่คือกลยุทธ์หลักของธนาคาร → ต้องการการควบคุมเต็มที่ และสามารถ maintain ได้อย่างต่อเนื่อง
+
+</details>
+
 ---
 
 #### กลยุทธ์ที่ 2: Packaged Software
+
+> 💡 **Intuition:** นึกถึง IKEA — คุณไปเลือกชุดเฟอร์นิเจอร์สำเร็จรูป ประกอบมันเองก็ได้ เร็ว, ราคาถูกกว่า Custom Furniture, แต่ "ต้องนั่งในสไตล์ IKEA" — ถ้าคุณต้องการสี Marsala แต่เขามีแค่ Black & White ก็ต้องยอมรับ Packaged = ซื้อของสำเร็จรูปจากร้าน ไม่ได้พอดีกับเราทุกอย่าง แต่ "ดีพอ" และได้เร็ว
+> [Source: generated — not verified against original document]
 
 **Packaged Software** คือการซื้อซอฟต์แวร์สำเร็จรูปที่ถูกพัฒนามาสำหรับความต้องการทางธุรกิจทั่วไป
 
@@ -85,15 +137,66 @@ flowchart TD
 - องค์กรต้อง "ยอมรับ" ฟีเจอร์ที่มีให้เท่านั้น
 - แก้ไขได้บางส่วนผ่าน **Customization** (ปรับ Parameters) หรือสร้าง **Workaround** (โปรแกรมเสริมที่เชื่อมต่อกับ Packaged Application)
 
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "ยอมรับฟีเจอร์ที่มีให้เท่านั้น" → Packaged Software ออกแบบมาสำหรับ 80% ของตลาด ถ้า Business ต้องการ 20% พิเศษ → ใช้ Customization (ถ้า Vendor เปิดให้ปรับ), สร้าง Workaround, หรือปรับวิธีทำงานของธุรกิจให้เข้ากับซอฟต์แวร์ เพราะแก้ Source Code ของ Vendor เองไม่ได้
+- "ได้รับการทดสอบแล้ว" → มีผู้ใช้หลายร้อยหรือพันคน → Bug น้อย, ความมั่นคง สูง
+- "Customization" → Parameter Settings (Configuration) ที่ Vendor เตรียมให้ (เช่น เปลี่ยน Color Theme, Report Layout)
+- "Workaround" → เขียน Code เสริม (Plugin, Script) เชื่อมกับ Packaged Software เพื่อรองรับสิ่งที่ Software ไม่มี
+
+**ตัวอย่าง:**
+- ✅ **ใช้ Packaged Software ได้:** ระบบ HR ทั่วไป, Accounting Software, CRM ทั่วไป → เพราะต้องการทั่วไป, ต้องการเร็ว, Budget จำกัด
+- ❌ **ไม่ควร Packaged:** ระบบลอจิสติกส์สำหรับเฉพาะอุตสาหกรรม หรือ Fixed Assets Tracking ที่มีกฎอย่างพิเศษ → เพราะ Packaged อาจไม่มี Feature ที่พอ
+- **ต่างกันตรง:** Packaged ดีเมื่อความต้องการเป็นแบบทั่วไป; Custom ดีเมื่อความต้องการเฉพาะเจาะจง
+
+**อย่าสับสน:** "Customization" (ปรับ Config) ≠ "Workaround" (เขียน Code เสริม) — Customization คือ Standard Feature ของ Vendor, Workaround คือเรา "สร้างเพิ่มเติม"
+
+**เช็คความเข้าใจ:** บริษัทต้องการระบบ ERP สำหรับขาย/ซื้อ/คลัง ระหว่าง SAP (Packaged) กับ Custom Development ตัวเลือกไหนดีกว่า? เพราะอะไร?
+<details><summary>เฉลย</summary>
+
+**Packaged Software (SAP)** — เพราะ ERP Process เป็น Standard (Sell, Buy, Inventory คือ Best Practices เดียวกัน), ติดตั้งได้เร็วกว่าและความเสี่ยงต่ำกว่าการสร้าง Custom ที่ใช้เวลานาน, มีผู้ใช้มากมายจึงผ่านการทดสอบมาแล้วและมี Support ดี
+
+ถ้า Business มีกระบวนการ Custom (เช่น ขายแบบ Make-to-Order ที่ Unique) → อาจต้อง Workaround เสริม หรือเปลี่ยนวิธีทำงาน
+
+</details>
+
 **Systems Integration:**
+
+> 💡 **Intuition:** นึกถึงบริษัทที่มี 3 แผนก: แผนกแรกใช้ Excel และโปรแกรมเก่า (Legacy), แผนกสองใช้ SAP (Packaged Software), แผนกสามใช้ Shopify (Packaged/SaaS) ตอนนี้บริษัทต้องการให้ทุกแผนกทำงานด้วยกัน → ต้อง "เสียบ" ระบบทั้ง 3 เข้าด้วยกัน เชื่อมข้อมูล เพื่อไม่ให้ data ซ้ำหรือหลุด นั่นคือ Integration
+> [Source: generated — not verified against original document]
 
 > **Systems Integration** คือการสร้างระบบใหม่โดยการรวมกัน (Combine) ระหว่าง Packaged Software, ระบบเก่า (Legacy Systems), และซอฟต์แวร์ใหม่ที่เขียนขึ้นมาเพื่อเชื่อมต่อ
 
 - ความท้าทายหลัก: การ integrate ข้อมูลจากระบบที่แตกต่างกัน
 
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "รวมกัน (Combine)" → ไม่ได้เลือกแหล่งซอฟต์แวร์แค่แบบเดียว แต่ผสมหลายแหล่ง (Packaged + Legacy + Code ใหม่) เข้าเป็นระบบเดียว
+- "Legacy Systems" → ระบบเก่า ที่องค์กรใช้งานมาสักระยะ ไม่สามารถเปลี่ยนได้ทันที
+- "ซอฟต์แวร์ใหม่เพื่อเชื่อมต่อ" → Middleware, Adapter, API Gateway — ตัวแปลข้อมูลระหว่างระบบต่างๆ
+
+**ตัวอย่าง:**
+- ✅ **ใช้ Systems Integration ได้:** บริษัทมี Accounting Software (20 ปี), ต้องเพิ่ม CRM ใหม่ (Packaged) → ต้อง Integration เพื่อให้เมื่อทำการขาย (CRM) ระบบ Accounting อัปเดตอัตโนมัติ
+- ❌ **ไม่ต้อง Integration:** บริษัทตัดสินใจเปลี่ยนจากระบบเก่าเป็น One Single ERP ใหม่ → ไม่ต้อง Integration (เหลือระบบเดียว แค่ทำ Data Conversion ครั้งเดียว)
+- **ต่างกันตรง:** Integration เกิดเมื่อ "ต้องรักษา Legacy ไว้" + "เพิ่ม Packaged/ระบบใหม่" ใช้งานไปพร้อมกัน
+
+**อย่าสับสน:** "Workaround" (Plugin สำหรับ Packaged) ≠ "Integration" (เชื่อม Packaged + Legacy + New Software) — Workaround คือปรับแต่ง 1 ระบบ Integration คือ เสียบหลายระบบ
+
+**เช็คความเข้าใจ:** โรงแรมใช้ระบบจองห้อง (Legacy 10 ปี) และซื้อ Accounting Software ใหม่ (Packaged) ต้องการให้เมื่อมีการจอง ข้อมูลถูกส่งไป Accounting อัตโนมัติ → เป็น Integration หรือ Workaround?
+<details><summary>เฉลย</summary>
+
+**Systems Integration** — เพราะเชื่อม 2 ระบบ (Legacy + Packaged) เข้าด้วยกัน วิธีที่ใช้ได้ เช่น เขียน API Adapter หรือ ETL Process ที่ส่งข้อมูลจากระบบจองห้องไปยัง Accounting Software
+
+</details>
+
 ---
 
 #### กลยุทธ์ที่ 3: Outsourcing
+
+> 💡 **Intuition:** นึกถึงการเช่าบ้าน — คุณเช่า แต่เจ้าบ้านคือคนดูแล ซ่อม ทำความสะอาด คุณต้องจ่ายค่าเช่า แต่ "การควบคุม" อยู่กับเจ้าบ้าน ถ้าเจ้าบ้านเลิกให้เช่า → คุณต้องไปหาบ้านใหม่ นั่นแหละ Outsourcing — เราใช้บริการจากภายนอก ราคาต่ำแต่ "การควบคุม" ไม่ได้อยู่ในมือ
+> [Source: generated — not verified against original document]
 
 **Outsourcing** คือการจ้าง Vendor, Developer, หรือ Service Provider ภายนอกมาสร้างหรือดูแลระบบ
 
@@ -126,6 +229,29 @@ flowchart TD
 - มีผู้รับผิดชอบจัดการความสัมพันธ์กับ Outsourcer
 - อย่า Outsource สิ่งที่ตัวเองไม่เข้าใจ
 - เน้นความยืดหยุ่นในข้อกำหนด, ความสัมพันธ์ระยะยาว, และสัญญาระยะสั้น
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "ต้นทุนเริ่มต้นต่ำ" → ไม่ต้องเสียต้นทุน Hiring, Recruiting, Training บุคลากรใหม่
+- "เสียการควบคุมการพัฒนา" → ทิศทางการพัฒนาต่อ (Feature, Roadmap, ราคา) ขึ้นกับ Vendor; ถ้า Vendor เลิกทำหรือถูกซื้อกิจการ คุณมีอำนาจต่อรองน้อย
+- "สูญเสียทักษะภายใน" → เมื่อจบโครงการ ทีมของคุณไม่ได้เรียนรู้ → เวลาต้องแก้หรือต่อยอด ต้องพึ่ง Vendor อีก
+- "อย่า Outsource สิ่งที่ตัวเองไม่เข้าใจ" → ถ้าคุณเข้าใจ Requirement เอง สามารถ Monitor และ Verify Vendor ได้; ถ้าไม่เข้าใจ → ต้องพึ่ง Vendor ทั้งหมด
+
+**ตัวอย่าง:**
+- ✅ **ใช้ Outsourcing ได้:** ระบบ HR (ไม่ใช่ Core Competency), ระบบ Helpdesk, Network Infrastructure → เพราะไม่ใช่จุดที่ธุรกิจใช้แข่งขัน
+- ❌ **ไม่ควร Outsourcing:** Core Algorithm ที่สร้าง Competitive Advantage, ระบบวิเคราะห์ข้อมูลลูกค้า → เพราะนั่นคือ Core Competency (ความสามารถหลัก)
+- **ต่างกันตรง:** Outsource ได้สำหรับงาน "Non-core"; งาน "Core" ควรเก็บความรู้ไว้ In-house (มักใช้ Custom Development)
+
+**อย่าสับสน:** "อย่า Outsource สิ่งที่ตัวเองไม่เข้าใจ" เป็น **คำเตือน** — ถ้าจะ Outsource งานใด องค์กรต้องเข้าใจงานนั้น **ก่อน** เพื่อเขียน Requirement และตรวจงาน Vendor ได้
+
+**เช็คความเข้าใจ:** บริษัทขายออนไลน์ ต้องการระบบ Payment Gateway (รับเงิน) หรือ Recommendation Engine (แนะนำสินค้า) ควร Custom/Packaged/Outsource ตัวไหน? เพราะอะไร?
+<details><summary>เฉลย</summary>
+
+- **Payment Gateway** → **Outsourcing** (หรือ Packaged) — เพราะเป็น Non-core (บริษัทขาย ไม่ใช่ธนาคาร), มี Standard Solution, เสี่ยงด้าน Security ต้องให้ Specialist
+- **Recommendation Engine** → **Custom Development** — เพราะเป็น Core (สร้าง UX ดีทำให้ขายได้เยอะ), ต้องการ Competitive Advantage, ต้องรู้ข้อมูลลูกค้า → ควรสร้าง In-house
+
+</details>
 
 ---
 
@@ -183,6 +309,9 @@ flowchart TD
 
 #### Alternative Matrix (ตารางเปรียบเทียบทางเลือก)
 
+> 💡 **Intuition:** ลองคิดว่าเลือกซื้อรถ — คุณมี 3 ตัวเลือก (Toyota, Honda, BMW) ต้องเปรียบเทียบ ราคา, เชื้อเพลิง, Maintenance, ความสวย, Speed — แต่ละคนให้ความสำคัญแต่ละเรื่องไม่เท่ากัน สำหรับคุณราคาสำคัญที่สุด (Weight 50%) สำหรับเพื่อน ความสวยสำคัญที่สุด (Weight 50%) → ทำตาราง ให้ Score แต่ละตัวในแต่ละเรื่อง คูณ Weight แล้วรวม → ได้คะแนนรวม → เลือกคะแนนสูงสุด นั่นคือ Matrix
+> [Source: generated — not verified against original document]
+
 > **Alternative Matrix** คือตารางที่รวบรวม Pros/Cons และการวิเคราะห์ Feasibility ของทุก Design Alternative ไว้ในที่เดียว เพื่อให้ Approval Committee ตัดสินใจได้ง่าย
 
 **ขั้นตอนการสร้าง Alternative Matrix:**
@@ -205,6 +334,33 @@ Alternative Matrix Structure:
 └──────────────┴───────────────┴───────────────┴───────────────┘
 → ทางเลือกที่ได้ TOTAL Score สูงสุด = ทางเลือกที่แนะนำ
 ```
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Pros/Cons และการวิเคราะห์ Feasibility" → ไม่ใช่แค่บอก "ดี-ไม่ดี" ต้องวิเคราะห์ว่า ทำได้จริงหรือไม่ (Technical), ใช้เงินได้หรือไม่ (Economical), องค์กรพร้อมหรือไม่ (Organizational)
+- "Weight (น้ำหนัก)" → บอกว่าเกณฑ์ไหน ความสำคัญเท่าไหร่ (เช่น Budget คิดเป็น 40% ของการตัดสินใจ)
+- "Score" → คะแนนที่ให้แต่ละทางเลือกในแต่ละเกณฑ์ (เช่น 1-10 หรือ 1-5 โดยคะแนนสูง = ดีกว่า) แล้วคูณกับ Weight
+
+**ตัวอย่าง:**
+- ✅ **ใช้ Alternative Matrix ได้ดี:** เลือกระหว่าง Custom Development (ราคาแพง, ยืดหยุ่น) / Packaged Software (ราคาถูก, ไม่ยืดหยุ่น) / Outsourcing (ราคาปานกลาง, ต้องหา Vendor) → ต้องชั่งน้ำหนัก จึงใช้ Matrix
+- ❌ **ไม่ต้อง Matrix:** เลือกระหว่าง Custom vs. Outsourcing แต่ Custom ทำไม่ได้เลย (ไม่ผ่าน Technical Feasibility เพราะไม่มีทีม) → เหลือทางเลือกเดียว ตัดสินได้ทันที
+- **ต่างกันตรง:** Matrix ใช้เมื่อทุกทางเลือกเป็นไปได้ แต่ต้อง Weighted decision (มี trade-offs)
+
+**อย่าสับสน:** "Alternative Matrix" (เพียงแค่ Pros/Cons) ≠ "Weighted Alternative Matrix" (เพิ่ม Weight + Score) — Weighted ดีกว่าเพราะทำให้การตัดสินใจเป็นระบบและโปร่งใส (แต่การกำหนด Weight ยังเป็นการตัดสินใจของคน)
+
+**เช็คความเข้าใจ:** บริษัท Decision Criteria คือ Cost (Weight 50%), Speed to Market (Weight 30%), Flexibility (Weight 20%) คะแนน 3 ตัวเลือก: Custom (10/10 flexibility แต่ 2/10 speed, 3/10 cost), Packaged (5/10 flexibility, 9/10 speed, 8/10 cost), Outsourcing (6/10 flexibility, 8/10 speed, 7/10 cost) — ทุกเกณฑ์คะแนนสูง = ดีกว่า (Cost 8/10 = ถูก) ทางเลือกไหนได้ Score สูงสุด?
+<details><summary>เฉลย</summary>
+
+คำนวณตาม Weight:
+
+- **Custom:** (3 × 0.5) + (2 × 0.3) + (10 × 0.2) = 1.5 + 0.6 + 2 = **4.1**
+- **Packaged:** (8 × 0.5) + (9 × 0.3) + (5 × 0.2) = 4 + 2.7 + 1 = **7.7** ← สูงสุด
+- **Outsourcing:** (7 × 0.5) + (8 × 0.3) + (6 × 0.2) = 3.5 + 2.4 + 1.2 = **7.1**
+
+→ **Packaged Software** เป็นทางเลือกที่แนะนำ เพราะ Cost และ Speed to Market สำคัญกว่า
+
+</details>
 
 ---
 

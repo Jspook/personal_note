@@ -35,17 +35,92 @@ sequenceDiagram
 ## Part 2: Module-by-Module Deep Dive
 
 ### 2.1 มโนทัศน์สำคัญและการรักษาความปลอดภัย (Security Flags)
+
+#### Cookie vs Session
+
+> 💡 **Intuition:** นึกถึง Cookie เหมือน "บัตรเก็บของ" ที่เซิร์ฟเวอร์ให้คุณเก็บไว้บ้าน — สิ่งที่เขียนบนบัตร "ชื่อ: Jack" คุณแก้ไขได้ (ไม่ปลอดภัย) ส่วน Session เหมือน "ตั๋วเลขที่ 5" — บัตรบอก "ตั๋วที่ 5" แค่นั้น ส่วนความจริง "Jack" ถูกเก็บบนเคาน์เตอร์ (Server) — ใช้ Session ID คือ "ตั๋วที่ 5" ไปขอข้อมูล (ตั๋วจริงเป็นสตริงสุ่มยาวที่เดาไม่ได้ ไม่ใช่เลขเรียง) — Cookie = Data ชิ้นเล็กเก็บฝั่ง Client ส่วน Session = Data เก็บบน Server โดยมี Session ID ใน Cookie เป็นตัวชี้
+> [Source: generated — not verified against original document]
+
 * **Cookie:** ข้อความ Key-Value ขนาดเล็กที่เซิร์ฟเวอร์สร้างและสั่งให้เบราว์เซอร์จัดเก็บผ่าน Response Header `Set-Cookie` และเบราว์เซอร์จะแนบส่งกลับมาใน Request Header `Cookie` ทุกครั้งโดยอัตโนมัติ
 * **Session & Session ID (SID):** ข้อมูลสถานะของผู้ใช้ที่เก็บอยู่บนเซิร์ฟเวอร์ โดยส่งเพียงสตริงสุ่ม SID สั้นๆ ไปเก็บไว้ในคุกกี้ฝั่งเบราว์เซอร์เพื่อใช้อ้างอิง
 * **Session Store:** โครงสร้างข้อมูลจัดเก็บเซสชัน บนสภาพแวดล้อม Production **ห้ามใช้ MemoryStore (In-Memory)** เนื่องจากเกิด Memory Leak และไม่สามารถขยายระบบแบบ Multi-server ได้ ให้เปลี่ยนไปใช้ **Redis** หรือ **Database (MySQL/MongoDB)** แทน
 
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Cookie" → ข้อมูลชิ้นเล็ก (name=value + Attribute เช่น Expires, HttpOnly) ที่ Browser เก็บไว้ และแนบกลับไปกับทุก Request ไปยัง Domain นั้น
+- "Session ID (SID)" → Pointer เล็กๆ ชี้ไปที่ข้อมูลที่เก็บบน Server
+
+**ตัวอย่าง:**
+```javascript
+// ❌ ใช้ Cookie เก็บข้อมูลความลับโดยตรง
+res.cookie('user_role', 'admin'); // ข้อมูล "admin" ไปที่ Client
+// Client สามารถแก้ไข: document.cookie = 'user_role=superadmin'
+
+// ✅ ใช้ Session + Cookie (SID)
+// Server: Session Store = { "sid_12345": { role: "admin", username: "jack" } }
+// Cookie: connect.sid = "sid_12345" (ถ้า Client แก้ SID → ไม่ตรงกับ Session ใดใน Store และ express-session ยัง Sign SID ไว้ จึงตรวจจับการแก้ได้)
+```
+
+| ด้าน | Cookie | Session |
+| :--- | :--- | :--- |
+| จัดเก็บ | Client Browser | Server |
+| ขนาด | ~4 KB ต่อ Cookie | ไม่ติดลิมิต 4 KB (ขึ้นกับ Session Store) |
+| ปลอดภัย | ต่ำ (Client แก้ได้) | สูง (Server รักษา) |
+| ความเร็ว | เร็ว (ไม่ต้องค้นหา) | ช้าลง (ค้นหา Server) |
+| ใช้สำหรับ | ธีม, ภาษา, ปรับแต่ง UI | Login, สิทธิ์, รายละเอียด |
+
+- **ต่างกันตรง:** Cookie = Data ที่เก็บสิ่งจริง Session = Pointer ชี้ไปที่ข้อมูล
+
+**อย่าสับสน:** Session ไม่ได้มาแทน Cookie — Session ส่วนใหญ่ยังต้องใช้ Cookie เพื่อพก Session ID (SID) ไปกับทุก Request — จำไว้: Cookie = ภาชนะฝั่ง Client, Session = ข้อมูลฝั่ง Server, SID ใน Cookie = ตัวเชื่อมสองฝั่ง
+
+**เช็คความเข้าใจ:** ถ้าเก็บ `{ username: "jack", role: "admin" }` ใน Cookie โดยตรง vs ใช้ Session — อันตรายต่างกันอย่างไร?
+<details><summary>เฉลย</summary>
+
+Cookie โดยตรง: Client ดูและแก้ไข Cookie ได้ (DevTools หรือ `document.cookie` ถ้าไม่ได้ตั้ง HttpOnly) — ถ้าเก็บ `role: "user"` ผู้ใช้แก้เป็น `role: "admin"` แล้วส่งกลับไป — ถ้า Server เชื่อค่าใน Cookie ผู้ใช้คนนั้นได้สิทธิ์ admin ทันที → อันตราย
+
+Session + SID: Cookie มีแค่ `sid_12345` ส่วน `role` อยู่ใน Session Store บน Server ที่ Client แตะไม่ได้ — ถ้าแก้ SID เป็น `sid_99999` Server หาไม่เจอ (หรือ Signature ไม่ตรง) → ไม่มีสิทธิ์ — ความเสี่ยงที่เหลือคือ SID ถูกขโมย (Session Hijacking) จึงควรตั้ง Cookie เป็น HttpOnly, Secure และ SameSite
+</details>
+
 #### แฟล็กความปลอดภัยของคุกกี้ที่ไม่ควรพลาดในข้อสอบ (Cookie Security Flags):
+
+> 💡 **Intuition:** นึกถึง Cookie เหมือน "บัตรผ่านประตูที่ Browser พกไว้" และ Flags คือ "กฎการใช้บัตร" — `HttpOnly` คือ "ห้ามให้ใครอ่านข้อมูลบนบัตรจากภายนอก (รวมถึง JavaScript)" — `Secure` คือ "ใช้บัตรได้เฉพาะเมื่อส่งผ่านท่อปิดผนึก (HTTPS)" — `SameSite` คือ "บัตรนี้ใช้ได้เฉพาะคำขอจากบ้านเดียวกัน" ซึ่งกันคนนอกหลอกให้ Browser กดส่งคำขอ — จุดที่ Analogy ไม่ตรง: Flags จำกัด "การอ่านและการส่ง" ของ Browser เท่านั้น ไม่ได้เข้ารหัสค่าใน Cookie และไม่ได้แทนการตรวจสอบ Session ที่ Server
+> [Source: generated — not verified against original document]
+
 1. **`HttpOnly`:** ป้องกันไม่ให้สคริปต์ JavaScript ฝั่งไคลเอ็นต์ (`document.cookie`) อ่านหรือแก้ไขคุกกี้ได้ ช่วยป้องกันการโจมตีแบบ **Cross-Site Scripting (XSS)**
 2. **`Secure`:** บังคับให้เบราว์เซอร์ส่งคุกกี้กลับมาเฉพาะการเชื่อมต่อแบบเข้ารหัส **HTTPS** เท่านั้น
 3. **`SameSite`:** ควบคุมการส่งคุกกี้เมื่อมีการเรียกข้ามโดเมน เพื่อป้องกันการโจมตีแบบ **Cross-Site Request Forgery (CSRF)**
    * `Strict`: ไม่ส่งคุกกี้เลยหากมาจากลิงก์ภายนอก
    * `Lax`: ส่งคุกกี้เฉพาะกรณีการนำทางระดับ Top-level (เช่น คลิก Link)
    * `None`: ส่งคุกกี้ทุกกรณี (ต้องใช้ร่วมกับ `Secure: true`)
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "HttpOnly" → Cookie ยังถูกส่งอัตโนมัติพร้อม Request แต่ `document.cookie` มองไม่เห็นค่านั้น
+- "Secure" → Browser จะไม่ส่ง Cookie นี้บนการเชื่อมต่อ `http://` เลย
+- "SameSite=Lax" → ส่ง Cookie เมื่อผู้ใช้เปิดลิงก์จากเว็บอื่นได้ แต่ไม่ส่งกับ `POST` ข้ามโดเมน หรือการโหลด Resource ฉากหลัง เช่น `<img>` และ `<iframe>`
+
+**ตัวอย่าง:**
+```javascript
+// ✅ ตั้ง flag ครบ (Production บน HTTPS)
+res.cookie('sid', token, { httpOnly: true, secure: true, sameSite: 'lax' });
+```
+```javascript
+// ❌ SameSite=None โดยไม่มี Secure — Browser ปฏิเสธ Cookie นี้
+res.cookie('sid', token, { sameSite: 'none' });
+```
+- ✅ `httpOnly: true` → `document.cookie` ไม่เห็น `sid` แต่ Cookie ยังถูกส่งไปยัง Server ตามปกติ
+- ❌ คิดว่า `httpOnly` กัน CSRF — ไม่ใช่ มันกันเฉพาะการอ่านค่าด้วย JavaScript
+- **ต่างกันตรง:** `HttpOnly` ควบคุม "ใครอ่านค่าได้" / `SameSite` ควบคุม "คำขอมาจากที่ไหนแล้วจึงแนบ Cookie" / `Secure` ควบคุม "ส่งผ่านช่องทางไหนได้"
+
+**อย่าสับสน:** `Secure` กับ `HttpOnly` — `Secure` คือช่องทางการส่ง (ต้อง HTTPS) ส่วน `HttpOnly` คือใครอ่านได้ (JavaScript หรือไม่)
+
+**เช็คความเข้าใจ:** ถ้าเว็บมีช่องโหว่ XSS และ Cookie `sid` ตั้ง `HttpOnly` Script ที่ถูกฉีดเข้ามาจะขโมยค่า Session ได้หรือไม่ และยังทำอะไรได้อีกบ้าง?
+<details><summary>เฉลย</summary>
+
+ขโมยค่า `sid` ผ่าน `document.cookie` ไม่ได้ แต่ Script ที่ฉีดเข้ามายังส่ง Request ไปยัง Server จากหน้าเว็บนั้นได้ และ Browser จะแนบ Cookie ให้เองอัตโนมัติ ดังนั้น `HttpOnly` ลดความเสี่ยงแต่ไม่ได้ป้องกัน XSS โดยสมบูรณ์ ต้องแก้ช่องโหว่ XSS ที่ต้นเหตุด้วย
+</details>
 
 ---
 
@@ -206,6 +281,79 @@ app.listen(PORT, () => console.log(`Session Server running on port ${PORT}`));
    * **สาเหตุ:** ผู้โจมตีกำหนด Session ID ให้เหยื่อใช้ก่อนเข้าสู่ระบบ เมื่อเหยื่อล็อกอินสำเร็จ ผู้โจมตีจึงสามารถใช้ Session ID เดิมเข้าถึงบัญชีเหยื่อได้
    * **การป้องกัน:**
      * ต้องสั่ง **`req.session.regenerate()`** เพื่อสร้าง Session ID ชุดใหม่ทันทีที่ผู้ใช้ล็อกอินหรือเปลี่ยนระดับสิทธิ์ (Privilege Escalation)
+
+#### 💡 เสริม: Session Fixation และ `req.session.regenerate()`
+
+> 💡 **Intuition:** นึกถึง "ตั๋วแข็งที่คนร้ายเตรียมไว้ล่วงหน้า" — คนร้ายได้เลข Session ID มาก่อน (เช่น ยัดให้เหยื่อผ่าน URL หรือ Cookie) แล้วรอให้เหยื่อ Login โดยเลขนั้นยังเหมือนเดิม เมื่อ Login สำเร็จเลขนั้นก็กลายเป็น "ตั๋วที่ผ่านการยืนยันแล้ว" และคนร้ายใช้ได้ทันที วิธีแก้คือ "เปลี่ยนเลขใหม่ทุกครั้งที่สิทธิ์เปลี่ยน" — จุดที่ Analogy ไม่ตรง: ตั๋วกระดาษเปลี่ยนสถานะเองไม่ได้ แต่ Session บน Server เปลี่ยนสถานะจาก Guest เป็น Logged-in ได้ ทำให้ ID เดิมมีค่ามากขึ้นหลัง Login
+> [Source: generated — not verified against original document]
+
+* **ขั้นตอนที่ถูกต้อง:** Login สำเร็จ → เรียก `req.session.regenerate()` เพื่อได้ Session ID ใหม่ → ใส่ข้อมูลผู้ใช้ลงใน Session ใหม่
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Session Fixation" → คนร้ายรู้หรือกำหนด Session ID ของเหยื่อก่อนเหยื่อ Login แล้วใช้ ID เดิมนั้นหลังเหยื่อ Login สำเร็จ
+- "regenerate()" → สร้าง Session ID ใหม่และทิ้งข้อมูล Session เดิม จึงต้องใส่ข้อมูล Login กลับเข้าไปหลังเรียกเสมอ
+
+**ตัวอย่าง:**
+```javascript
+// ✅ เปลี่ยน SID หลัง Login แล้วค่อยใส่ข้อมูลผู้ใช้
+app.post('/login', (req, res, next) => {
+  // ... ตรวจ username/password แล้ว
+  req.session.regenerate((err) => {
+    if (err) return next(err);
+    req.session.user = { username: 'admin' };
+    res.redirect('/dashboard');
+  });
+});
+```
+```javascript
+// ❌ เก็บผู้ใช้ลงใน Session เดิมโดยไม่เปลี่ยน SID
+app.post('/login', (req, res) => {
+  // ... ตรวจ username/password แล้ว
+  req.session.user = { username: 'admin' }; // SID ยังเป็นเลขเดิมที่คนร้ายอาจรู้
+  res.redirect('/dashboard');
+});
+```
+- ✅ เปลี่ยน SID ตรงจุดที่สิทธิ์เปลี่ยน (Login) → SID เดิมที่คนร้ายรู้ใช้ไม่ได้อีก
+- ❌ ไม่เปลี่ยน SID → SID ที่คนร้ายตั้งไว้ก่อนหน้ากลายเป็น Session ที่ Login แล้ว
+- **ต่างกันตรง:** ✅ มี `regenerate()` ก่อนผูกสิทธิ์ / ❌ ผูกสิทธิ์กับ ID เดิมโดยตรง
+
+**อย่าสับสน:** `regenerate()` ไม่ใช่ `destroy()` — `regenerate()` เปลี่ยน ID ให้ผู้ใช้ยังคงอยู่ในระบบ ส่วน `destroy()` ลบ Session ทิ้งเมื่อ Logout
+
+**เช็คความเข้าใจ:** ถ้า Login แล้วไม่เรียก `regenerate()` คนร้ายที่รู้ SID เดิมจะใช้ Session นั้นได้หรือไม่? และถ้าเรียกแล้ว SID เดิมยังมีผลไหม?
+<details><summary>เฉลย</summary>
+
+ใช้ได้ เพราะ SID เดิมยังผูกอยู่กับ Session ที่เพิ่ง Login สำเร็จ ส่วนหลังเรียก `regenerate()` SID เดิมจะไม่ผูกกับ Session ที่ Login แล้วอีก คนร้ายใช้ ID นั้นเข้าระบบไม่ได้
+</details>
+
+#### 💡 เสริม: MemoryStore ใน Production
+
+> 💡 **Intuition:** นึกถึง MemoryStore เหมือน "สมุดจดที่วางบนโต๊ะทำงานของพนักงานคนเดียว" — เร็วและง่ายตอนพัฒนา แต่ถ้าพนักงานกลับบ้าน (Restart Server) สมุดหายหมด และถ้ามีพนักงานหลายคนคนละโต๊ะ (หลาย Instance) ข้อมูลในสมุดแต่ละโต๊ะก็ไม่ตรงกัน — จุดที่ Analogy ไม่ตรง: สมุดบนโต๊ะไม่กินพื้นที่โต๊ะเพิ่มเรื่อยๆ แต่ MemoryStore จะกินหน่วยความจำเพิ่มขึ้นตามจำนวน Session ที่ยังไม่หมดอายุ
+> [Source: generated — not verified against original document]
+
+* **MemoryStore** เป็น Store เริ่มต้นของ `express-session` ที่เก็บ Session Data ใน RAM ของ Process นั้น
+* ข้อจำกัด: Restart Server แล้ว Session หาย และหลาย Instance ไม่แชร์ Session กัน
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "MemoryStore" → Store เริ่มต้นที่เก็บข้อมูล Session ในหน่วยความจำของ Process เดียว
+- "Session Store" → ที่เก็บข้อมูล Session จริงฝั่ง Server (เช่น Redis หรือ RDBMS) ซึ่งทุก Instance อ่านจากจุดเดียวกันได้
+- "Session ID" กับ "Session Data" → SID อยู่ในคุกกี้ของ Client ส่วนข้อมูลจริงอยู่ใน Store ฝั่ง Server (MemoryStore เก็บข้อมูลนี้ใน RAM)
+
+**ตัวอย่าง:**
+- ✅ Dev รัน `node server.js` บนเครื่องเดียว ใช้ MemoryStore เพื่อทดสอบ Login ได้เร็ว
+- ❌ Production รัน 3 Instance หลัง Load Balancer ด้วย MemoryStore — Login ที่ Instance A แล้ว Request ถัดไปไปตกที่ Instance B ซึ่งไม่มี Session นั้น ผู้ใช้จึงถูกให้ Login ใหม่
+- **ต่างกันตรง:** เครื่องเดียว/ทดสอบ = MemoryStore ใช้ได้ / หลายเครื่องหรือต้องคงอยู่ข้าม Restart = ใช้ Store กลาง เช่น Redis หรือ RDBMS
+
+**อย่าสับสน:** Session ID ที่อยู่ในคุกกี้กับ Session Data ที่อยู่ใน Store เป็นคนละส่วนกัน — การเปลี่ยน Store ไม่ได้เปลี่ยน Cookie ที่ Client เก็บไว้
+
+**เช็คความเข้าใจ:** ทำไมการใช้ Redis เป็น Session Store แก้ปัญหาหลาย Instance ได้ ทั้งที่โค้ด `express-session` ยังเหมือนเดิม?
+<details><summary>เฉลย</summary>
+
+เพราะทุก Instance อ่านและเขียน Session Data จาก Redis ตัวเดียวกัน เมื่อ Login ที่ Instance A แล้ว Instance B ก็เห็น Session เดียวกันผ่าน SID เดียวกัน นอกจากนี้การ Restart Instance ไม่ทำให้ Session หาย ตราบใดที่ Redis ยังทำงานอยู่ สิ่งที่เปลี่ยนคือ `store` option ไม่ใช่โค้ดส่วนที่ใช้ `req.session`
+</details>
 
 ---
 

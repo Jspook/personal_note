@@ -35,18 +35,103 @@ sequenceDiagram
 ## Part 2: Module-by-Module Deep Dive
 
 ### 2.1 มโนทัศน์สำคัญ (Core Concepts)
+
+#### Safe vs Idempotent HTTP Methods
+
+> 💡 **Intuition:** นึกถึง "Safe" เหมือน "คนอ่านหนังสือ" ไม่ได้ฉีกหนังสือ "Idempotent" เหมือน "กดปุ่ม 'ปิดทีวี'" 10 ครั้ง ทีวีก็ยังปิดอยู่ — ส่วน "Non-Idempotent" เหมือน "กดปุ่ม 'เพิ่มเพลง'" 10 ครั้ง เพลงจะเพิ่มไปเท่า 10 เพลง — Safe = "ไม่เขียน" Idempotent = "เขียนแต่ผล Final เดียวกัน"
+> [Source: generated — not verified against original document]
+
 * **Safe Methods:** HTTP Method ที่ไม่ก่อให้เกิดการเปลี่ยนแปลงข้อมูลหรือสถานะบนเซิร์ฟเวอร์ (เช่น `GET`, `HEAD`, `OPTIONS`)
 * **Idempotent Methods:** คุณสมบัติที่คำนวณว่า การเรียกใช้เมธอดเดิมซ้ำหลายๆ ครั้งด้วยข้อมูลชุดเดิม จะต้อง **ส่งผลต่อสถานะของเซิร์ฟเวอร์เท่ากับการเรียกใช้เพียงครั้งเดียว** (เช่น `GET`, `PUT`, `DELETE`)
   * `POST` **ไม่เป็น Idempotent** เพราะการยิงซ้ำจะสร้างข้อมูลซ้ำซ้อนขึ้นเรื่อยๆ
   * `PUT` **เป็น Idempotent** เพราะการแทนที่ข้อมูลด้วยชุดเดิม 10 ครั้ง ผลลัพธ์ใน DB ก็ยังคงเป็นข้อมูลชุดนั้น
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Safe" → ไม่ "เขียน" ข้อมูล — อ่านเท่านั้น
+- "Idempotent" → ยิงซ้ำกี่ครั้ง "ผลลัพธ์สุดท้าย" บน Server ยังเหมือนเดิม
+
+**ตัวอย่าง:**
+```
+✅ GET /products/5 (Safe + Idempotent)
+   ยิง 100 ครั้ง → ดึงข้อมูลเดิม 100 ครั้ง → Data ไม่เปลี่ยน
+
+✅ PUT /products/5 { name: "Apple", price: 100 } (Not Safe, Idempotent)
+   ยิง 1 ครั้ง → name=Apple, price=100
+   ยิง 10 ครั้ง → name=Apple, price=100 (ยังเป็นแบบเดิม ไม่ทวีคูณ)
+
+❌ POST /products { name: "Banana" } (Not Safe, Not Idempotent)
+   ยิง 1 ครั้ง → เพิ่ม Banana 1 ชิ้น
+   ยิง 10 ครั้ง → เพิ่ม Banana 10 ชิ้น (ข้อมูลทวีคูณ)
+```
+
+- **ต่างกันตรง:** Safe = "ไม่เขียน" Idempotent = "เขียนแต่ผล Final เดียวกัน"
+
+**อย่าสับสน:** "Idempotent" ไม่ได้หมายถึง "ได้รับ Response เดียวกัน" — หมายถึง "State on Server เดียวกัน" — ตัวอย่างเช่น DELETE `/users/5` ครั้งแรกได้ `200`/`204` (ลบสำเร็จ) ครั้งที่สองได้ `404` (ไม่มีให้ลบแล้ว) — Response ต่างกัน แต่ State บน Server เหมือนกัน (User 5 ไม่มีอยู่) → DELETE จึงยังเป็น Idempotent — ส่วน PATCH ไม่รับประกันว่า Idempotent (เช่น PATCH ที่สั่ง "เพิ่ม stock อีก 1" ยิงซ้ำแล้วค่าเพิ่มทุกครั้ง)
+
+**เช็คความเข้าใจ:** ทำไม Network ที่ Unstable มักส่ง Request ซ้ำ และต้องเลือก `PUT` (Idempotent) มากกว่า `POST` (Non-Idempotent) สำหรับ Update?
+<details><summary>เฉลย</summary>
+
+เพราะ Network ที่ Unstable อาจ Timeout — Client สงสัยว่า Request ไป Server รึเปล่า → พยายาม Retry (ส่งซ้ำ) — ถ้าใช้ POST (Non-Idempotent) ส่งซ้ำ = ข้อมูล Duplicate ขึ้น — ถ้าใช้ PUT (Idempotent) ส่งซ้ำ = Server State ยังเดียวกัน → ปลอดภัย
+</details>
+
+#### Same-Origin Policy (SOP) & CORS Preflight
+
+> 💡 **Intuition:** นึกถึง "Same-Origin Policy" เหมือน "ป้องกันคนนอกเข้าบ้าน" — Browser ไม่ยอมให้ JavaScript จาก `https://site-a.com` อ่าน Response ที่ดึงมาจาก `https://site-b.com` โดย Default (Origin เดียวกัน = Scheme, Host, Port ต้องเหมือนกันทั้งหมด) — เพื่อกันเว็บของคนร้ายใช้ Script อ่านข้อมูลบัญชีธนาคารของคุณจากอีกเว็บ — ถ้า `site-b.com` ยินยอม ต้องบอก Browser ผ่าน CORS Header (และถ้าเป็น Non-Simple Request Browser จะถามไฟเขียวด้วย `OPTIONS` Preflight ก่อน) — จุดที่ Analogy ไม่ตรง: "คนนอก" ยังเคาะประตูได้ (Request อาจถึง Server แล้ว) แต่ Browser ไม่ยอมส่งของ (Response) ให้ Script
+> [Source: generated — not verified against original document]
+
 * **Same-Origin Policy (SOP):** นโยบายความปลอดภัยพื้นฐานของเบราว์เซอร์ที่ห้ามการดึงข้อมูลข้ามจุดกำเนิด (ต่าง Scheme, Host, หรือ Port)
 * **CORS Preflight Check (`OPTIONS`):** สำหรับ Request ที่ไม่ใช่ Simple Request (เช่น มีการใช้ `PUT`, `PATCH`, `DELETE` หรือส่ง Header `Authorization`) เบราว์เซอร์จะส่งคำขอ `OPTIONS` ไปถามเซิร์ฟเวอร์ล่วงหน้าเพื่อตรวจสอบสิทธิ์ก่อนส่งคำขอจริง
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Same-Origin" → Origin = Scheme + Host + Port — เช่น `https://example.com:443`
+- "Simple Request" vs "Non-Simple Request" → Simple = GET/HEAD/POST ที่ใช้เฉพาะ Header พื้นฐาน และ Content-Type เป็น `application/x-www-form-urlencoded`, `multipart/form-data` หรือ `text/plain` เท่านั้น (ไม่มี Preflight) / Non-Simple = Method อื่น (PUT/PATCH/DELETE), Content-Type `application/json` หรือมี Custom Header เช่น `Authorization` (ต้อง Preflight)
+
+**ตัวอย่าง:**
+```
+❌ SOP Block (จาก https://site-a.com ไปดึง https://site-b.com):
+fetch('https://site-b.com/api/data')
+  .then(res => res.json())
+  .catch(e => console.log('CORS Error:', e));
+// Browser block: "Access-Control-Allow-Origin header is missing"
+
+✅ CORS Preflight (PUT/PATCH/DELETE หรือ Authorization):
+fetch('https://site-b.com/api/users/5', {
+  method: 'PUT',
+  headers: { 'Authorization': 'Bearer token' },
+  body: JSON.stringify({...})
+});
+// Browser ส่ง OPTIONS ก่อน:
+// OPTIONS /api/users/5
+// Access-Control-Request-Method: PUT
+// Access-Control-Request-Headers: authorization
+// ถ้า site-b.com ตอบพร้อม Access-Control-Allow-Origin / -Methods / -Headers ที่อนุญาต → Browser ส่ง PUT จริง
+```
+
+- **ต่างกันตรง:** SOP = Browser enforcement (บังคับ) CORS = Server Permission (อนุญาต)
+
+**อย่าสับสน:** "CORS is enforced by the browser, not the server" — Server เพียงบอก Header `Access-Control-Allow-Origin` ว่า "accept request from site-a.com" — Browser ถึงยอมให้ JavaScript อ่าน Response — เครื่องมือที่ไม่ใช่ Browser (curl, Postman) จึงไม่โดน CORS
+
+**เช็คความเข้าใจ:** ทำไม `<img src="https://other-site.com/image.png">` ใน HTML ไม่ block แต่ `fetch('https://other-site.com/api')` ถูก block?
+<details><summary>เฉลย</summary>
+
+1. SOP อนุญาต "Cross-Origin Embedding" — `<img>`, `<link rel="stylesheet">`, `<script src=...>` โหลดทรัพยากรข้าม Origin มา "แสดงหรือใช้งาน" บนหน้าได้
+2. แต่ JavaScript ของหน้าเราอ่านข้อมูลดิบของทรัพยากรนั้นไม่ได้ (เช่น วาดรูปข้าม Origin ลง `<canvas>` แล้วเรียก `getImageData()` จะ Error เพราะ Canvas ถูก Taint)
+3. `fetch()`/XHR ตั้งใจให้ Script อ่าน Response Body ได้โดยตรง → ถ้าไม่จำกัด เว็บร้ายจะอ่านข้อมูลส่วนตัวจากเว็บอื่นได้ → Browser จึงบล็อกการอ่าน เว้นแต่ Server ตอบ CORS Header อนุญาต
+</details>
 
 ---
 
 ### 2.2 โค้ดตัวอย่างการใช้งานจริง (Implementation Code)
 
 #### 1. การส่ง Request ฝั่ง Client ด้วย Fetch API (JavaScript Async/Await)
+
+> 💡 **Intuition:** นึกถึง `fetch` เหมือน "การส่งพัสดุ" — ถ้าพัสดุไปถึงหน้าบ้านแล้ว (Server ตอบกลับมาแล้ว ไม่ว่าจะ 200 หรือ 404) `fetch` ก็ถือว่า "ส่งถึงแล้ว" ต้องเปิดกล่องดูเองว่าของข้างในใช่ที่ต้องการหรือไม่ (`res.ok`) — จุดที่ Analogy ไม่ตรง: ถ้าพัสดุไปไม่ถึงเลย (Network ล้มเหลว หรือ CORS ถูก Block) `fetch` จะ reject เป็น Error ทันที ซึ่งต่างจากกรณี 404 ที่ยังได้ Response กลับมา
+> [Source: generated — not verified against original document]
+
 
 ```javascript
 // client_fetch.js - ฟังก์ชันจัดการ HTTP Methods ฝั่งไคลเอ็นต์
@@ -106,7 +191,41 @@ async function deleteUser(id, token) {
 }
 ```
 
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "fetch resolve" → Promise สำเร็จเมื่อได้ Response กลับมา ไม่ว่า Status จะเป็นอะไร
+- "res.ok" → `true` เฉพาะเมื่อ Status อยู่ในช่วง `200–299`
+- "reject" → Promise ล้มเหลวเมื่อ Request ไปไม่ถึง Server (Network error หรือ CORS block) และได้ `TypeError`
+
+**ตัวอย่าง:**
+```javascript
+// ❌ ไม่เช็ค res.ok — 404 ไม่ถูก throw ทำให้โค้ดไม่รู้ว่าพลาด
+const res = await fetch('http://localhost:3000/api/users/999');
+const data = await res.json(); // ได้ Body ของ Error หรือ parse ไม่ได้ โดยไม่มีการแจ้งเตือน
+```
+```javascript
+// ✅ เช็ค res.ok ก่อนใช้ข้อมูล
+const res = await fetch('http://localhost:3000/api/users/999');
+if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`); // 404
+const data = await res.json();
+```
+- ✅ `POST` ที่ได้ `201 Created` → `res.ok` เป็น `true` เพราะ `201` อยู่ในช่วง `200–299`
+- ❌ คิดว่า `try/catch` จับ `404` ได้เอง — ไม่ได้ เพราะ `fetch` ไม่ throw ตาม Status Code
+- **ต่างกันตรง:** "ได้ Response กลับมา" ≠ "Response สำเร็จ" ต้องเช็ค `res.ok` เอง
+
+**อย่าสับสน:** `res.ok` ไม่ได้หมายถึง "ข้อมูลถูกต้องตามที่ต้องการ" แค่บอกว่า Status อยู่ในช่วง 2xx เท่านั้น
+
+**เช็คความเข้าใจ:** ถ้า `getUser(999)` (ตัวอย่างโค้ดด้านบนที่มี `if (!res.ok) throw`) ถูกเรียกใน `try/catch` แล้วเซิร์ฟเวอร์ตอบ 404 โค้ดจะเข้า `catch` ไหม? และถ้า Server ดับอยู่ (Network error) ล่ะ?
+<details><summary>เฉลย</summary>
+
+เข้า `catch` ทั้งสองกรณี กรณี 404 เกิดจาก `throw new Error(...)` ที่เราเขียนเองหลังเช็ค `res.ok` ส่วนกรณี Server ดับ `fetch` จะ reject เองอยู่แล้ว แต่ถ้าไม่มี `if (!res.ok)` กรณี 404 จะไม่เข้า `catch` เลย
+</details>
+
 #### 2. การตั้งค่า CORS และจัด Route รับ HTTP Methods ฝั่ง Express.js Server
+
+> 💡 **Intuition:** นึกถึง `cors` middleware เหมือน "เจ้าหน้าที่ต้อนรับหน้าอาคาร" ที่ติดป้ายบอกว่าแขกจากบริษัทไหนเข้าได้ (`Access-Control-*` Headers) และตอบ Preflight `OPTIONS` แทนเราอัตโนมัติ — จุดที่ Analogy ไม่ตรง: เจ้าหน้าที่คนนี้แค่ "ติดป้ายว่าใครอ่านผลได้" ไม่ได้ตรวจบัตรผู้ใช้ การยืนยันตัวตน (Authentication) ยังต้องทำที่ Server เอง
+> [Source: generated — not verified against original document]
 
 ```javascript
 // server_cors.js - เซิร์ฟเวอร์ Express ที่รองรับ CORS และ HTTP Methods
@@ -177,6 +296,27 @@ app.delete('/api/users/:id', (req, res) => {
 app.listen(PORT, () => console.log(`CORS-enabled Server running on port ${PORT}`));
 ```
 
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "origin" → โดเมนที่อนุญาตให้ Browser ส่ง Request แล้วอ่าน Response ได้ (ส่งออกเป็น `Access-Control-Allow-Origin`)
+- "methods" / "allowedHeaders" → Method และ Header ที่อนุญาตให้ใช้กับคำขอข้ามโดเมน (ตอบกลับใน Preflight)
+- "maxAge" → จำนวนวินาทีที่ Browser จำผล Preflight ไว้ ทำให้ไม่ต้องส่ง `OPTIONS` ซ้ำทุกครั้ง
+
+**ตัวอย่าง:**
+- ✅ `origin: 'https://myapp.com'` และหน้าเว็บเปิดจาก `https://myapp.com` → Browser ให้อ่านผลได้
+- ❌ `origin: 'https://myapp.com'` แต่หน้าเว็บเปิดจาก `http://localhost:5173` → Browser block เพราะ Scheme/Host/Port ไม่ตรงกัน (ทั้งสามส่วนนับ)
+- ❌ ตั้ง `origin: '*'` แล้วฝั่ง Client ส่ง Cookie ด้วย `credentials: 'include'` — Browser ไม่ยอมรับ เพราะเมื่อมี Credentials ต้องระบุ Origin ให้ชัดเจน
+- **ต่างกันตรง:** ✅ Origin ตรงทุกส่วน (Scheme + Host + Port) / ❌ ไม่ตรงแม้แต่ส่วนเดียว Browser ก็ block
+
+**อย่าสับสน:** `origin: '*'` ไม่ได้แปลว่า "ปลอดภัยที่สุด" แต่หมายถึง "ยอมให้ทุกโดเมนอ่าน Response ที่ไม่มี Credentials" ข้อมูลที่ต้องยืนยันตัวตนต้องจำกัด Origin ให้เจาะจง
+
+**เช็คความเข้าใจ:** Server ตั้ง `allowedHeaders: ['Content-Type']` (ไม่มี `Authorization`) แล้ว Client ที่ `https://myapp.com` ส่ง `PUT` พร้อม `Authorization` — Request จริงจะถูกส่งไป Server หรือไม่ และ Error เกิดที่จุดไหน?
+<details><summary>เฉลย</summary>
+
+Request จริงไม่ถูกส่งไป Server Browser ส่ง Preflight `OPTIONS` ก่อน พบว่า `Authorization` ไม่อยู่ในรายการที่อนุญาตจึงไม่ส่ง `PUT` จริง Error (CORS) จะปรากฏฝั่ง Client ทั้งที่ Route ฝั่ง Server เขียนถูกต้อง
+</details>
+
 ---
 
 ### 2.3 การวิเคราะห์โจทย์ตัวอย่าง (Assignment Case Analysis)
@@ -190,6 +330,34 @@ app.listen(PORT, () => console.log(`CORS-enabled Server running on port ${PORT}`
 * **`PATCH` (Partial Modification):**
   * ส่งเฉพาะ **ส่วนต่างที่แก้ไข (Delta/Changes)** เช่น `{ email: "new@ex.com" }`
   * เซิร์ฟเวอร์จะทำการอัปเดตเฉพาะฟิลด์ `email` โดยคงฟิลด์ `name` และ `role` ไว้ตามเดิม ประหยัดแบนด์วิดท์และป้องกันปัญหาข้อมูลสูญหาย
+
+#### 💡 เสริม: CORS Response Headers (`Access-Control-*`)
+
+> 💡 **Intuition:** นึกถึง `Access-Control-*` เหมือน "ใบอนุญาตที่ Server แนบมากับ Response" — Browser อ่านใบนี้เพื่อตัดสินว่าจะยอมให้ Script ของหน้าเว็บอ่านผลลัพธ์หรือไม่ — จุดที่ Analogy ไม่ตรง: Server ส่ง Response มาได้ตามปกติเสมอ ใบอนุญาตมีผลเฉพาะกับ Browser เครื่องมืออย่าง `curl` หรือ Postman ไม่สนใจใบนี้เลย
+> [Source: generated — not verified against original document]
+
+* **`Access-Control-Allow-Origin`:** โดเมนที่ Browser ยอมให้ Script อ่าน Response ได้
+* **`Access-Control-Allow-Methods`:** Method ที่อนุญาต (ตอบกลับใน Preflight)
+* **`Access-Control-Allow-Headers`:** Header ที่อนุญาต (ตอบกลับใน Preflight)
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Access-Control-Allow-Origin" → คำตอบของ Server ว่า "โดเมนนี้อ่านผลได้"
+- "Preflight Response" → Response ของ `OPTIONS` ที่บอก Browser ว่า Method และ Header ไหนส่งได้บ้าง
+
+**ตัวอย่าง:**
+- ✅ Server ตอบ `Access-Control-Allow-Origin: https://myapp.com` และหน้าเว็บมาจาก `https://myapp.com` → Script อ่านผลได้
+- ❌ Server ตอบ `Access-Control-Allow-Origin: https://myapp.com` แต่หน้าเว็บมาจาก `https://other.com` → Browser block ทั้งที่ Server ประมวลผลและส่ง Response มาแล้ว
+- **ต่างกันตรง:** Server ส่ง Response ได้เสมอ สิ่งที่ Browser ตัดสินคือ "Script ของหน้าเว็บมีสิทธิ์อ่านหรือไม่"
+
+**อย่าสับสน:** Header เหล่านี้ไม่ได้กันการเข้าถึง Server — คำขอยังถึง Server ได้เสมอ นี่คือเหตุผลที่ API ต้องมี Authentication ฝั่ง Server เอง
+
+**เช็คความเข้าใจ:** ทำไม `curl` ไปยัง API ที่ตั้ง CORS ไว้แล้วถึงทำงานได้ แม้ Origin ที่ `curl` ส่งมาจะไม่ตรงกับที่ตั้งไว้?
+<details><summary>เฉลย</summary>
+
+เพราะ CORS เป็นกลไกของ Browser เท่านั้น `curl` ไม่ตรวจ `Access-Control-*` Header จึงไม่มีการ Block ส่วน Server ยังรับ Request และตอบกลับตามปกติ การป้องกันจริงของ API จึงต้องทำด้วย Authentication
+</details>
 
 ---
 

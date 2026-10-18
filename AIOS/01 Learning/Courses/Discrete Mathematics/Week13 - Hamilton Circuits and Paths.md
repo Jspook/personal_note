@@ -40,7 +40,31 @@ _ที่มา: นิยามและทฤษฎีบทใน [p.16, 20-
 
 ### 2.1 นิยามและที่มาของคำ [p.16-17]
 
+> 💡 **Intuition:** Hamilton circuit/path คือการเดินผ่านทุก **จุดยอด** พอดีหนึ่งครั้ง (ต่างจาก Euler ที่ผ่านทุก edge) — เหมือนการนำเที่ยวที่ต้องไปเยี่ยมทุกเมืองพอดีหนึ่งครั้งแล้วกลับเมืองเดิม (circuit) หรือไม่ต้องกลับก็ได้ (path) ทำไมสำคัญ: ปัญหา traveling salesman (หาเส้นทางที่ไปครบทุกเมืองแล้วกลับจุดเริ่มด้วยค่าใช้จ่ายน้อยสุด) คือการหา Hamilton circuit ที่น้ำหนักรวมต่ำสุด
+> [Source: generated — not verified against original document]
+
 > **Definition 2:** simple circuit ในกราฟ G ที่ผ่านทุกจุดยอดพอดี 1 ครั้ง เรียกว่า **Hamilton circuit** simple path ในกราฟ G ที่ผ่านทุกจุดยอดพอดี 1 ครั้ง เรียกว่า **Hamilton path** [p.16]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "ผ่านทุกจุดยอดพอดี 1 ครั้ง" → ต้องไปเยี่ยมทุกจุด ไม่ซ้ำและไม่ข้ามจุดใด
+- "Simple circuit" → เริ่มและจบที่จุดเดียวกัน ไม่ใช้ edge ซ้ำ (circuit = ปิด)
+- "Simple path" → ไม่ต้องกลับจุดเริ่ม (path = ไม่ต้องปิด)
+
+**ตัวอย่าง:**
+- ✅ วงจร a–b–c–d–a (4 จุด) → Hamilton circuit
+- ✅ เส้นทาง a–b–c–d (4 จุด ไม่ต้องกลับ a) → Hamilton path
+- ❌ ในกราฟ 5 จุด เดิน a–b–c–d–a–e → ไม่ใช่ Hamilton path/circuit เพราะผ่าน a ซ้ำกลางทาง
+- **ต่างกันตรง:** Euler = ผ่านทุก edge, Hamilton = ผ่านทุก จุดยอด
+
+**อย่าสับสน:** "ผ่านทุกจุดยอด" ≠ "ผ่านทุก edge" — Hamilton ไม่ต้องใช้ edge ทั้งหมด เพียง path ที่เชื่อมทุกจุด
+
+**เช็คความเข้าใจ:** กราฟ 5 จุด {a,b,c,d,e} มี edges a–b–c–d–e–a (เส้นวง) มี Hamilton circuit หรือไม่
+<details><summary>เฉลย</summary>
+
+ใช่ มี Hamilton circuit คือ a–b–c–d–e–a เพราะเส้นวงนี้ผ่านทุก 5 จุดพอดีหนึ่งครั้ง
+</details>
 
 **Hamilton's Puzzle: A Voyage Round the World [p.17]:** คำว่า Hamilton มาจากเกมชื่อ **Icosian puzzle** ที่นักคณิตศาสตร์ชาวไอริช Sir William Rowan Hamilton คิดขึ้นในปี 1857 เกมประกอบด้วยทรงสิบสองหน้า (dodecahedron คือ polyhedron ที่มีหน้าเป็นห้าเหลี่ยมปกติ 12 หน้า) ที่ไม้ มีหมุดที่ทุกจุดยอดของทรง และมีเชือก รูปในสไลด์มี (a) ทรงสิบสองหน้า และ (b) รูปกราฟแบบแบนที่ดูเหมือนจุดยอดและ edges ของทรงนั้น (สไลด์ไม่มีคำอธิบายใต้รูป b)
 
@@ -102,9 +126,61 @@ _ต้นฉบับ: รูป G₁, G₂, G₃ [p.19]_
 * Euler circuit มีเงื่อนไขจำเป็นและเพียงพอ (Theorem 1) แต่ Hamilton circuit ยังไม่มีเงื่อนไขง่ายๆ ที่จำเป็นและเพียงพอ [p.20]
 * พบแค่เงื่อนไขที่เพียงพอไม่กี่ข้อ แนวคิด: ยิ่งแต่ละจุดยอดมี edges มาก ยิ่งมีโอกาสมี Hamilton circuit [p.20]
 
+> 💡 **Intuition:** เพราะไม่มีเงื่อนไขจำเป็นและเพียงพอที่ง่าย — เราใช้เงื่อนไขที่ "เพียงพอ" แทน: ถ้ากราฟผ่าน Dirac หรือ Ore → มี Hamilton circuit แน่นอน แต่ถ้าไม่ผ่าน → สรุปอะไรไม่ได้ (อาจมีหรือไม่มีก็ได้) เหมือนสอบได้ 90 คะแนนรับประกันว่าผ่าน แต่คนที่ได้ 60 ก็อาจผ่านได้เหมือนกัน ทำไมสำคัญ: ให้วิธีตรวจเร็วว่ากราฟมี Hamilton circuit แน่นอน โดยไม่ต้องไล่หาเส้นทาง
+> [Source: generated — not verified against original document]
+
 > **Dirac's Theorem:** ถ้า G เป็น simple graph ที่มี n ≥ 3 จุด และ degree ของทุกจุดยอดใน G ≥ n/2 แล้ว G มี Hamilton circuit [p.21]
 
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Simple graph, n ≥ 3" → ต้องไม่ loop/multigraph, ต้อง ≥ 3 จุด
+- "Degree ของทุกจุด ≥ n/2" → ถ้า 5 จุด ทุกจุดต้อง deg ≥ 2.5 คือ ≥ 3
+- "มี Hamilton circuit" → เงื่อนไข เพียงพอ (sufficient ไม่จำเป็น necessary)
+
+**ตัวอย่าง:**
+- ✅ K₅ (5 จุด): ทุกจุด deg = 4 ≥ 2.5 → เข้า Dirac → มี Hamilton circuit (กราฟ 5 จุดที่ทุกจุด deg = 3 สร้างไม่ได้ เพราะผลรวม degree = 15 เป็นเลขคี่)
+- ✅ กราฟ 6 จุด: ทุกจุด deg = 4 ≥ 3 (เช่น K₆ ลบ 3 edges ที่ไม่มีจุดร่วมกัน) → เข้า Dirac → มี Hamilton circuit
+- ❌ C₅ (วง 5 จุด): ทุกจุด deg = 2 < 2.5 → ไม่เข้า Dirac แต่ตัว C₅ เองเป็น Hamilton circuit → ไม่ผ่าน Dirac ไม่ได้แปลว่าไม่มี circuit
+- **ต่างกันตรง:** Dirac ตรวจทุกจุด, Ore ตรวจคู่ที่ไม่ adjacent
+
+**อย่าสับสน:** "Dirac เป็นเงื่อนไขเพียงพอ" ≠ "เป็นเงื่อนไขจำเป็น" — กราฟที่ไม่เข้า Dirac อาจยังมี Hamilton circuit (ต้องตรวจ Ore หรือวิธีอื่น)
+
+**เช็คความเข้าใจ:** กราฟ 4 จุด ทุกจุด degree = 2 เข้า Dirac หรือไม่
+<details><summary>เฉลย</summary>
+
+n = 4 ≥ 3 และ n/2 = 4/2 = 2 ดังนั้นต้อง degree ≥ 2 ทุกจุด ทั้ง 4 จุด deg = 2 ≥ 2 → เข้า Dirac → มี Hamilton circuit (simple graph 4 จุดที่ทุกจุด deg = 2 คือ C₄ เช่น a–b–c–d–a)
+</details>
+
 > **Ore's Theorem:** ถ้า G เป็น simple graph ที่มี n ≥ 3 จุด และ deg(u) + deg(v) ≥ n สำหรับทุกคู่จุดยอดที่ไม่ adjacent กัน แล้ว G มี Hamilton circuit [p.21]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "ทุกคู่จุดยอดที่ไม่ adjacent" → เฉพาะคู่ที่ไม่มี edge เชื่อม (adjacent คู่มี edge)
+- "deg(u) + deg(v) ≥ n" → ผลรวม degree ต้อง ≥ จำนวนจุด
+- "Dirac ⇒ Ore" → ถ้าผ่าน Dirac (ทุกจุด ≥ n/2) จะผ่าน Ore อัตโนมัติ (แต่กลับกันไม่จริง)
+
+**ตัวอย่าง:**
+- ❌ C₅ คือ a–b–c–d–e–a: คู่ไม่ adjacent คือ (a,c), (a,d), (b,d), (b,e), (c,e) ทุกจุด deg = 2 ดังนั้น deg(u)+deg(v) = 4 < 5 → ไม่เข้า Ore แต่ตัวมันเองคือ Hamilton circuit (Ore เป็นเงื่อนไขเพียงพอ ไม่ใช่จำเป็น)
+- ✅ K₅ ลบ edge a–b: deg(a) = deg(b) = 3, จุดอื่น deg = 4 คู่ไม่ adjacent มีคู่เดียวคือ (a,b): 3+3 = 6 ≥ 5 → เข้า Ore → มี Hamilton circuit
+- ❌ เอาคู่ที่ adjacent (มี edge เชื่อม) มาเช็คด้วย → ไม่จำเป็น Ore ไม่สนใจคู่ที่ adjacent
+- **ต่างกันตรง:** Dirac = ทุกจุด, Ore = คู่ที่ไม่ adjacent
+
+**อย่าสับสน:** "ทุกคู่" ไม่ได้หมายถึง "ทุกจุดทั้งหมด" — Ore เช็คคู่ (pairs) ของจุดที่ไม่มี edge
+
+**เช็คความเข้าใจ:** กราฟ 6 จุด a-f มี edges: a–b–c–d–e–f–a (วงจร 6 จุด) + เพิ่ม a–d เข้า Ore หรือไม่
+<details><summary>เฉลย</summary>
+
+วงจร 6 จุด: ทุกจุด deg = 2. เพิ่ม a–d: deg(a) = 3, deg(d) = 3, อื่น deg = 2
+
+Edges มี 7 เส้น: a–b, b–c, c–d, d–e, e–f, f–a, a–d จากคู่ทั้งหมด 15 คู่ จึงเหลือคู่ไม่ adjacent 8 คู่: (a,c), (a,e), (b,d), (b,e), (b,f), (c,e), (c,f), (d,f)
+
+ตรวจ:
+- deg(a)+deg(c) = 3+2 = 5 < 6 ❌
+
+เจอคู่ที่ไม่ผ่านแล้ว 1 คู่ก็พอ → ไม่เข้า Ore แต่กราฟนี้ยังมี Hamilton circuit คือ a–b–c–d–e–f–a (วงเดิม) → ตัวอย่างว่า Ore เป็นแค่เงื่อนไขเพียงพอ
+</details>
 
 รูปใน p.20 (อ่านจากรูป): จุด a, d, e แถวบน และ b, c แถวล่าง มี edges a–d, d–e, a–b, d–c, b–c
 
@@ -178,6 +254,32 @@ Hamilton path และ circuit ใช้แก้ปัญหาที่ต้
 > 💡 การจับคู่ตัวเลขกับเส้นอ่านจากรูปในสไลด์โดยผู้เขียน `[Source: generated — not verified against original document]`
 
 สไลด์หน้านี้เป็นหน้าสุดท้ายและไม่มีอัลกอริทึมหรือเนื้อหาต่อ
+
+#### 💡 เสริม: Weighted Graph และ Shortest Path
+
+> 💡 **Intuition:** ถ้า edge มี "ระยะ" กำกับ เส้นทางที่ใช้ edge น้อยที่สุดอาจไม่ใช่เส้นทางที่ระยะรวมสั้นที่สุด — เหมือนขับรถไปที่ทำงาน ทางตรงที่ผ่านทางด่วนที่อ้อมอาจไกลกว่าทางอ้อมที่สั้นกว่า shortest path จึงต้องเทียบ "ผลรวมน้ำหนัก" ทั้งเส้นทาง (analogy ใช้ไม่ได้ตรงที่ระยะทางบนถนนจริงอาจเปลี่ยนตามเวลาและจราจร แต่ weight ในกราฟคงที่)
+> [Source: generated — not verified against original document]
+
+**แตกวลีสำคัญ:**
+- "weighted graph" → กราฟที่ทุก edge มีตัวเลข (น้ำหนัก) กำกับ
+- "ความยาวของ path" → ผลรวมน้ำหนักของ edge บน path นั้น
+- "shortest path" → path ที่ความยาวรวมน้อยที่สุดระหว่างสองจุด (ไม่ใช่จำนวน edge น้อยที่สุด)
+
+**ตัวอย่าง:** กราฟ A–B (น้ำหนัก 2), B–C (น้ำหนัก 3), A–C (น้ำหนัก 6)
+- ✅ A → C ผ่าน B: 2 + 3 = **5** → สั้นกว่า
+- ❌ A → C ตรง ๆ: ความยาว 6 → ไม่สั้นที่สุด แม้จะมีแค่ 1 edge
+- **ต่างกันตรง:** ต้องเทียบผลรวมน้ำหนัก ไม่ใช่จำนวน edge
+
+**อย่าสับสน:** shortest path ≠ path ที่มี edge น้อยสุด — ทางตรงที่มี 1 edge อาจยาวกว่าทางอ้อมที่มี 2 edges
+
+**เช็คความเข้าใจ:** เพิ่ม edge C–D น้ำหนัก 1 และ B–D น้ำหนัก 10 (จากกราฟข้างบน) หาความยาว shortest path จาก A ไป D
+<details><summary>เฉลย</summary>
+
+- A–B–C–D: 2 + 3 + 1 = **6**
+- A–B–D: 2 + 10 = 12
+- A–C–D: 6 + 1 = 7
+→ shortest path คือ A–B–C–D ความยาว **6**
+</details>
 
 ---
 

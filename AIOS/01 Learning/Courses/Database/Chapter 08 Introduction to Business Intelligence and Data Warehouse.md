@@ -52,11 +52,43 @@ flowchart LR
 
 #### ข้อมูลสนับสนุนการตัดสินใจต่างจากข้อมูลระบบปฏิบัติงาน (Operational Data) 3 ประการ [p.4]
 
+> 💡 **Intuition:** ลองนึกถึงร้านกาแฟ — **Operational Data** คือ "ใบเสร็จ/ออร์เดอร์จริง" ที่เกิดขึ้นทุกวัน (ลูกค้าสั่งกาแฟเวลา 9:00 วันจันทร์) มีรายละเอียดทีละรายการ (กาแฟ 1 แก้ว, 60 บาท, ลูกค้า: มณฑา) แต่เมื่อผู้จัดการถามว่า "ปีที่แล้วขายกาแฟกี่แก้ว แยกตามเดือนและเมนู" ต้องใช้ข้อมูลแบบ **BI ใน Data Warehouse** — รวบรวมใบเสร็จย้อนหลัง สรุปตามเดือน, เมนู, ลูกค้า (หลายมิติ) เก็บไว้ที่เดียว ผู้จัดการจึงได้คำตอบเร็ว
+> [Source: generated — not verified against original document]
+
 | ประการ | คำอธิบายตามสไลด์ |
 | :--- | :--- |
 | **Time Span** | จัดเก็บตามกาลเวลา ตั้งแต่อดีตถึงปัจจุบัน วิเคราะห์ข้อมูลในแต่ละช่วงเวลาได้ |
 | **Level of Aggregation** | จัดเก็บเป็นการสรุปรวม (Aggregation) หลายระดับ เช่น ยอดขายแต่ละเดือน ไตรมาส ปี เข้าถึงได้อย่างรวดเร็ว |
 | **Dimensionality** | จัดเก็บหลายมิติ หรือแบบลูกบาศก์ (Cube Data) วิเคราะห์ตามมิติที่ต้องการ เช่น มิติผลิตภัณฑ์ (Product), สถานที่ (Region), เวลา (Time) |
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Operational Data" → ข้อมูลวันต่อวัน (transaction-level) เพื่อการทำงาน (เหมือน POS ร้านกาแฟ)
+- "BI Data" → ข้อมูลที่สรุป, รวบรวม, จัดเรียง เพื่อการตัดสินใจ (executive dashboard)
+- "Time Span" → เก็บประวัติย้อนหลัง (ต่างจาก operational ที่เน้นข้อมูลปัจจุบัน)
+- "Aggregation" → สรุปรวมหลายระดับ (sum, average) เช่น รายเดือน ไตรมาส ปี
+
+**ตัวอย่าง:**
+- ✅ Operational: "วันนี้เวลา 9:30 กาแฟดำ 1 แก้ว 60 บาท ลูกค้า: มณฑา"
+- ✅ BI: "ไตรมาสที่ 3 กาแฟดำ ขาย 2,500 แก้ว รวม 150,000 บาท (เฉลี่ยต่อวัน 27 แก้ว)"
+- ❌ Operational Data ไม่เหมาะสำหรับผู้บริหารตัดสินใจ (ต้องอ่านใบเสร็จ 10,000 รายการ)
+- **ต่างกันตรง:** Operational = รายละเอียดทีละรายการ, BI = สรุป + ประวัติ + หลายมิติ
+
+**อย่าสับสน:** "Data Warehouse" หมายถึง (ระบบเก็บ + วิเคราะห์ข้อมูล เพื่อ BI) ไม่ได้หมายถึง (คลังเก็บสินค้า physical)
+
+**เช็คความเข้าใจ:** ถ้าผู้จัดการกาแฟต้องการ "หลายปี ขายมากสุด ช่วงเดือนไหน" มีวิธี 2 แบบ: (1) query จาก Operational Database ของหน้าร้านโดยตรง (2) query จาก Data Warehouse แบบไหนเหมาะกว่า?
+<details><summary>เฉลย</summary>
+
+**แบบ 2 (Data Warehouse) เหมาะกว่าและเร็วกว่า**:
+1. Operational DB: ต้อง scan + GROUP BY รายการขายทุกแถวของหลายปี และ join หลายตาราง (normalized) ข้อมูลเก่าอาจไม่อยู่ในระบบแล้ว และ query หนักแย่งทรัพยากรกับงานขายหน้าร้าน
+2. Data Warehouse: มีครบทั้ง 3 ประการของสไลด์ — เก็บประวัติ (Time Span), มียอดสรุปรายเดือนเตรียมไว้ (Level of Aggregation), มีมิติเวลา/เมนู (Dimensionality)
+
+เพราะว่า:
+- Operational = ออกแบบให้ INSERT/UPDATE ทีละรายการได้เร็ว (normalized)
+- Data Warehouse = ออกแบบให้อ่านและ aggregate ข้อมูลปริมาณมากได้เร็ว (Star Schema ที่ Dimension denormalized)
+
+</details>
 
 - **ข้อมูลแบบหลายมิติ (Cube Data)** [p.5]: รูป "Sales Revenues" แกน **Products** (White Wine, Red Wine, Vodka, Rum), **Regions** (North, South, East, West), **Time** (Q1-09, Q2-09, Q3-09, Q4-09, Q1-10, Q2-10, Q3-10, Q4-10) ลูกบาศก์หนึ่งก้อนถูกล้อมกรอบสีแดง; ที่มา: John Wiley & Sons, Inc. [p.5]
 
@@ -103,8 +135,45 @@ _ต้นฉบับ: รูปบน p.9 — ทิศลูกศรอ่�
 
 ### 2.3 Data Warehouse (หัวข้อ 8.3) — `[Source: extracted]` p.10-13
 
+> 💡 **Intuition:** ลองเหมือน Operational System = ระบบ POS ร้านอาหาร (insert/update รายการขายวันต่อวัน), Data Warehouse = ห้องวิเคราะห์ที่รวม POS ทุกสาขา + ข้อมูลเก่า 5 ปี (เพิ่มเข้าผ่าน ETL แต่ไม่แก้ทับ) — ผู้บริหารเข้าห้องนี้เพื่อดูเทรนด์ยอดขาย ไม่ query POS โดยตรง (ช้าและรบกวนงานขาย)
+> [Source: generated — not verified against original document]
+
 - การออกแบบฐานข้อมูลขึ้นอยู่กับลักษณะและวัตถุประสงค์การใช้งาน; ความต้องการข้อมูลแบบ **บูรณาการ (Integrated data)** และลักษณะการใช้ข้อมูลของ BI ทำให้ใช้ระบบฐานข้อมูลธรรมดาแบบ **TPS (Transaction Process System)** ไม่ได้ แต่ต้องเป็น **Data Warehouse Database** ที่จัดเก็บข้อมูลสนับสนุนการตัดสินใจตามลักษณะที่กำหนด [p.10]
 - **คลังข้อมูล (Data Warehouse)** = ฐานข้อมูลขนาดใหญ่ขององค์กร รองรับข้อมูลปริมาณมากจากหลายแหล่ง ตั้งแต่อดีตถึงปัจจุบัน เป็นฐานข้อมูลแบบ **อ่านได้อย่างเดียว (Read-only)** ใช้วิเคราะห์และประมวลผลคิวรีที่ซับซ้อน [p.11]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Data Warehouse" → ระบบเก็บข้อมูลเพื่อการวิเคราะห์ (ไม่ใช่ระบบบันทึกการขายประจำวัน)
+- "Integrated" → รวมจากหลายแหล่ง (CRM, ERP, SCM เป็นต้น)
+- "Read-only" → ผู้ใช้อ่านอย่างเดียว ไม่แก้/ลบข้อมูลเดิม ข้อมูลใหม่เข้าคลังผ่าน ETL เท่านั้น
+- "Time-variant" → เก็บประวัติตามเวลา
+- "Data Mart" → คลังข้อมูลขนาดเล็กเฉพาะส่วนงาน (มักเป็น subset ของ DW)
+
+**ตัวอย่าง:**
+- ✅ Data Warehouse: เก็บยอดขาย ผู้ซื้อ ผลิตภัณฑ์ ตั้งแต่ปี 2015-ปัจจุบัน; ผู้บริหารตรวจ Q1 vs Q2 vs ปีที่แล้ว
+- ✅ Data Mart: Marketing team เห็นแค่ "ยอดขายตามลูกค้า + เขตพื้นที่" (ไม่ต้องดูต้นทุนวัตถุดิบ)
+- ❌ Operational DB ของร้านกาแฟที่บันทึก "เวลา 9:30 กาแฟดำ 60 บาท ลูกค้า: มณฑา" → ดีสำหรับบันทึกการขาย แต่ไม่ใช่ Data Warehouse
+- **ต่างกันตรง:** Operational = บันทึก/ทำงาน day-to-day; DW = วิเคราะห์เทรนด์หลายช่วงเวลา
+
+**อย่าสับสน:** "Data Warehouse" หมายถึง (ระบบข้อมูลวิเคราะห์ read-only) ไม่ได้หมายถึง (คลังเก็บสินค้า physical)
+
+**เช็คความเข้าใจ:** ผู้บริหารอยากเทียบยอดขายปีที่แล้วกับปีนี้โดย query ตรงจาก Operational DB (TPS) ที่หน้าร้านใช้อยู่ ทำได้ไหม และเหตุใดจึงควรใช้ Data Warehouse?
+<details><summary>เฉลย</summary>
+
+**ทำได้ในทางเทคนิค แต่ไม่เหมาะ**:
+1. Operational DB ออกแบบให้ insert/update ทีละรายการเร็ว (รองรับ POS/เคาน์เตอร์)
+2. ข้อมูลปีที่แล้วอาจถูก archive ออกไปแล้ว และ index ออกแบบไว้สำหรับค้นทีละรายการ ไม่ใช่ aggregate
+3. ต้อง join หลายตาราง normalized และ aggregate ทุกรายการของ 2 ปี → ช้า และแย่งทรัพยากรกับงานหน้าร้าน
+4. ถ้าข้อมูลอยู่หลายระบบ (POS, ERP) ต้องบูรณาการก่อน ซึ่ง DW ทำไว้แล้วผ่าน ETL (Integrated)
+5. Data Warehouse ออกแบบมาเพื่ออ่าน/aggregate และมียอดสรุปเตรียมไว้ → ตอบได้เร็วกว่ามาก
+
+**ตัวอย่าง:** `SELECT year, month, SUM(sales) FROM ... WHERE sale_date BETWEEN '2023-01-01' AND '2024-12-31' GROUP BY year, month`
+- Operational: ต้อง scan ทุกรายการขายของ 2 ปี (อาจหลายสิบล้านแถว)
+- DW: อ่านจากตารางสรุปรายเดือน (เช่น monthly_sales มีแค่ 24 แถวต่อสาขา)
+
+</details>
+
 - **Data Mart** = คลังข้อมูลขนาดเล็กที่ใช้เฉพาะส่วนงาน เช่น คลังข้อมูลฝ่ายการตลาด [p.11]
 - **DBMS สำหรับคลังข้อมูล** ต้องมีคุณลักษณะพิเศษเพื่อรองรับการประมวลผลที่รวดเร็ว [p.12]:
 
@@ -171,12 +240,53 @@ _ต้นฉบับ: รูป ETL [p.15] — ข้อความสไล�
 
 #### องค์ประกอบ 4 อย่าง [p.17-18]
 
+> 💡 **Intuition:** ลองนึกถึงผลสอบระดับประเทศ — **Fact Table** = "คะแนนที่วัดได้ (70, 85, 60 ...)"; **Dimension Table** = มิติที่ใช้แยกดูคะแนน เช่น สายการเรียน (วิทย์, ศิลป์), ภูมิภาค (กรุงเทพ, เชียงใหม่), ปีที่สอบ — การวิเคราะห์คือ "ดูคะแนน" (Fact) "แยกตามภูมิภาค" (Dimension) "ในแต่ละปี" (Dimension เวลา)
+> [Source: generated — not verified against original document]
+
 | # | องค์ประกอบ | ความหมายตามสไลด์ |
 | :-: | :--- | :--- |
 | 1 | **Fact Table** | ตารางเก็บข้อมูลตัวเลขของกิจกรรม/ธุรกิจ (Fact) ที่ต้องการวัดหรือวิเคราะห์ (Numeric Measurements) เช่น ยอดขาย จำนวนหน่วยขาย จำนวนลูกค้า [p.17] |
 | 2 | **Dimension Tables** | ตารางเก็บมิติต่าง ๆ ที่ใช้ศึกษา Fact เช่น ศึกษายอดขายตามมิติลูกค้าหรือมิติเวลา [p.17] |
 | 3 | **Attributes** | ใน Fact Table: คุณลักษณะที่ใช้สืบค้น กรอง และจำแนกข้อมูลของ Fact; ใน Dimension Table: คุณลักษณะของมิติที่ใช้เป็นเงื่อนไขวิเคราะห์ เช่น มิติเวลามี วัน เดือน ไตรมาส ปี ตัวอย่างเงื่อนไข: วิเคราะห์ยอดขายรายไตรมาส [p.17] |
 | 4 | **Attribute Hierarchies** | ลำดับของแอตทริบิวต์ใน Dimension Table เช่น มิติเวลา: วัน -> เดือน -> ไตรมาส -> ปี; มิติสินค้า: กลุ่มย่อยสินค้า (Sub-Category) -> ประเภทสินค้า (Category) [p.18] |
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Fact Table" → ตารางเก็บตัวเลขที่ต้องการวัด (ยอดขาย, จำนวนหน่วย) + FK ไปยังแต่ละ Dimension
+- "Dimension Table" → มิติที่ใช้กรอง (ใคร, ที่ไหน, เมื่อไร, อะไร)
+- "Attributes" → คุณลักษณะ (เช่น Name, Price ใน Dimension)
+- "Hierarchy" → ลำดับ level (วัน → เดือน → ปี)
+- "Measure" → ตัวเลขใน Fact ที่นำไป sum, count, average
+
+**ตัวอย่าง:**
+- ✅ Fact: SaleAmount = 50,000; SaleFact (ProductID_FK, TimeID_FK, SaleAmount)
+- ✅ Dimension: TimeDimension (TimeID, Day, Month, Quarter, Year)
+- ✅ Hierarchy: Year 2024 → Quarter Q1 → Month Jan → Day 15
+- ❌ เก็บชื่อลูกค้า (ข้อความ) ซ้ำในทุกแถวของ Fact Table → ชื่อไม่ใช่ Measure ควรอยู่ใน CustomerDim แล้วให้ Fact ถือแค่ CustomerID_FK
+- **ต่างกันตรง:** Fact = ตัวเลขวัด; Dimension = ข้อมูล context
+
+**อย่าสับสน:** "Fact" ใน Data Warehouse หมายถึง (ค่าตัวเลขที่วัดได้ของกิจกรรมทางธุรกิจ เช่น ยอดขาย จำนวนหน่วย) ไม่ได้หมายถึง ("ข้อเท็จจริง" ทั่วไปแบบคำว่า Data ในบทที่ 1 — ชื่อลูกค้าก็เป็นข้อเท็จจริง แต่อยู่ใน Dimension)
+
+**เช็คความเข้าใจ:** ตาราง Sales(ProductName, RegionName, SalesAmount, SalesDate) ควรแตกเป็น Fact + Dimension อย่างไร?
+<details><summary>เฉลย</summary>
+
+**Fact Table:**
+- SalesFact (ProductID_FK, RegionID_FK, TimeID_FK, SalesAmount)
+- เก็บแค่ Measure + foreign key ชี้ไป Dimension; FK ทุกตัวรวมกันเป็น Composite key (ตามสไลด์ p.20)
+
+**Dimension Tables:**
+- ProductDim (ProductID, ProductName, Category, ...)
+- RegionDim (RegionID, RegionName, Country, ...)
+- TimeDim (TimeID, Day, Month, Quarter, Year, ...)
+
+ทำไม?
+- ProductName = ข้อความ (dimension)
+- RegionName = ข้อความ (dimension)
+- SalesAmount = ตัวเลข (fact measure)
+- SalesDate = time element (dimension)
+
+</details>
 
 - ลำดับของแอตทริบิวต์เป็นสกีมาที่เก็บใน **Data Dictionary** เพื่อใช้ประมวลผลรวมของข้อมูล (**Data Aggregation**) และวิเคราะห์แบบ **Drill down / Roll up** โดยใช้ลำดับนี้ในการเข้าถึงและแสดงข้อมูล [p.18]
 
@@ -185,7 +295,43 @@ _ต้นฉบับ: รูป ETL [p.15] — ข้อความสไล�
 สไลด์ระบุว่ามี 2 แบบจำลอง คือ **Star Schema** และ **Snowflake Schema** [p.19]
 
 **1) Star Schema** [p.19-20]
+
+> 💡 **Intuition:** ลองนึกถึงวงล้อจักรยาน — Fact Table อยู่ตรงกลาง (hub) คือ "ยอดขาย"; Dimension เป็นซี่ล้อ (spoke) ชี้ออกไป "วันไหน", "สาขาไหน", "สินค้าไหน" — query จาก Fact ไปแต่ละ Dimension จึง join ระดับเดียว แลกกับการยอมให้ Dimension มีข้อมูลซ้ำซ้อน (Denormalized) เพื่อความเร็ว
+> [Source: generated — not verified against original document]
+
 - ประกอบด้วย **1 Fact Table** (เก็บข้อมูลวัดหรือ Metrics) ซึ่งอยู่ในขั้น **3NF** และมี **Dimension Table ตารางเดียวต่อแต่ละมิติ** โดยยอมให้ Dimension Table มีความซ้ำซ้อนของข้อมูลหรือลดระดับนอร์มัลไลเซชัน (**Denormalized**) ให้อยู่ในขั้น **2NF** เพื่อความรวดเร็วในการเข้าถึงข้อมูล [p.19]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Star Schema" → 1 Fact ตรงกลาง + Dimension ตารางเดียวต่อมิติล้อมรอบ
+- "Denormalized" → ยอมให้ข้อมูลซ้ำซ้อน (เพื่อความเร็ว)
+- "Join ระดับเดียว" → Fact → Dimension โดยตรง (ไม่ต้อง join ต่อเป็นทอดๆ)
+- "Surrogate key" → key ที่ระบบสร้างขึ้น (เช่น auto-increment) ไม่มีความหมายทางธุรกิจ ใช้แทน key ธรรมชาติ (เช่น ProductID แทน ProductName+Supplier)
+
+**ตัวอย่าง:**
+- ✅ Star: SaleFact ← TimeDim, ProductDim, CustomerDim (1 Fact + 3 Dimension)
+- ✅ ProductDim เก็บ SubCategory และ Category ในตารางเดียว (denormalized for speed)
+- ❌ ถ้าแยก Category ออกจาก ProductDim (normalize) → ไม่ใช่ Star แล้ว แต่เป็น Snowflake ที่ต้อง join มากกว่า 1 ชั้น
+- **ต่างกันตรง:** Star = 1 level join; Snowflake = multi-level join
+
+**อย่าสับสน:** "Star Schema" หมายถึง (Fact 1 ตารางอยู่กลาง Dimension ตารางเดียวต่อมิติล้อมรอบ เชื่อมแบบ One-to-Many จาก Dimension ไป Fact) ไม่ได้หมายถึง (Schema ที่ทุกตาราง normalize ถึง 3NF — Dimension ใน Star ตั้งใจให้อยู่ 2NF)
+
+**เช็คความเข้าใจ:** ทำไมต้อง Denormalize Dimension ใน Star แต่ Fact ต้อง 3NF?
+<details><summary>เฉลย</summary>
+
+**Denormalize Dimension (เหตุผล)**:
+1. Dimension มีแถวน้อยกว่า Fact มาก (เช่น หลักพันแถว) ข้อมูลซ้ำจึงเปลืองพื้นที่ไม่มาก
+2. Dimension ถูก join แทบทุก query ถ้าแตกตารางเพิ่ม (Snowflake) ต้อง join หลายชั้น ช้าลง
+3. DW เป็น Read-only จึงไม่เกิด Update Anomaly แม้ Dimension ไม่ผ่าน 3NF (สไลด์ p.19)
+
+**ทำไม Fact อยู่ใน 3NF**:
+1. Fact มีจำนวนแถวมหาศาล (ล้าน–พันล้านแถว) ถ้าใส่ข้อความซ้ำ เช่น ProductName ในทุกแถว จะเปลืองพื้นที่มาก จึงเก็บแค่ FK + Measure
+2. Key ของ Fact คือ Composite key จาก FK ทุกตัว และ Measure แต่ละตัวขึ้นกับ key ทั้งชุด ไม่มี non-key → non-key จึงอยู่ใน 3NF
+3. FK ชี้ไป Dimension ชัดเจน รักษา integrity ได้ง่าย
+
+</details>
+
 - ใน Product Dimension ยังมี Functional Dependency (FD) คือความสัมพันธ์ระหว่างแอตทริบิวต์ Sub-category กับ Category (**ไม่ผ่าน 3NF** เนื่องจาก Non-key -> Non-key) แต่เนื่องจากระบบนี้เข้าถึงแบบ **Read-only** จึงไม่มีปัญหาการปรับปรุงข้อมูล (**Update Anomaly**) [p.19]
 - **Primary key**: Dimension Table เป็นคีย์หลักปกติ (**Surrogate key**); Fact Table เป็น **Composite key** ที่ประกอบด้วย **Foreign keys จากทุก Dimension Tables** [p.20]
 - Star Schema ทำให้ประมวลผลวิเคราะห์ตามมิติได้เร็ว เพราะคิวรีไม่ซับซ้อน Join จาก Fact ไป Dimension **ระดับเดียว** [p.20]
@@ -265,7 +411,40 @@ _ต้นฉบับ: รูป Snowflake [p.21] — เส้นเชื่�
 
 #### 1. Drill down และ Roll up [p.22-23]
 
+> 💡 **Intuition:** ลองนึกถึงกล้องซูม — Drill Down = zoom in เห็นรายละเอียดมากขึ้น (ปี → เดือน → วัน), Roll Up = zoom out เห็นภาพสรุป (วัน → เดือน → ปี); Slice = ตัดเลือกเฉพาะชิ้นที่สนใจ (ดูแค่สินค้า Glossary ซ่อน Misc.), Dice ตามสไลด์ = หมุนกล้องไปดูอีกมุม (เปลี่ยนมิติจาก Shop เป็น Date)
+> [Source: generated — not verified against original document]
+
 - **Drill Down** = เข้าถึงข้อมูลแบบเจาะลึกลงในระดับรายละเอียด; **Roll Up** = ดูข้อมูลในระดับสรุปรวมขึ้นไปทีละระดับ [p.22]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Drill Down" → จากสรุป ไป detail (ปี → เดือน → วัน)
+- "Roll Up" → จาก detail ไป สรุป (วัน → เดือน → ปี)
+- "Slice" → เลือก 1 ค่า (เห็นแค่ North region, ซ่อน South)
+- "Dice" (ตามสไลด์ p.25) → เปลี่ยนมิติที่ใช้วิเคราะห์ / หมุนแกน cube (เช่น จากมิติ Shop เป็นมิติ Date) — หมายเหตุ: ตำราทั่วไปเรียกการหมุนแกนว่า Pivot และใช้คำ Dice กับการเลือกช่วงค่าหลายมิติพร้อมกัน สอบให้ตอบตามสไลด์
+- "Hierarchy" → ลำดับระดับที่ Drill Down / Roll Up เดินตาม (นิยามไว้ใน Data Dictionary)
+
+**ตัวอย่าง:**
+- ✅ Drill Down: "ยอดขายประจำปี 2024" → "ยอดขายประจำ Q1 2024" → "ยอดขาย Jan 2024"
+- ✅ Roll Up: รวม "ยอดขายรายวัน 1–31 Jan 2024" ทุกวัน → "ยอดขาย Jan 2024"
+- ✅ Slice: Select โดย "Region = North เท่านั้น" (ลบ South, East, West ออกจากมุมมอง)
+- ✅ Dice (ตามสไลด์): ตารางยอดขาย Glossary/Misc. ตามมิติ Shop → เปลี่ยนไปดูตามมิติ Date
+- ❌ Drill Down จาก Region ไปยัง attribute ที่ไม่อยู่ใน Attribute Hierarchy ที่นิยามไว้ → ระบบไม่มีลำดับให้เดิน (ต้องเดินตาม hierarchy เช่น Region → Product Type → Shop ตามสไลด์ p.22)
+- **ต่างกันตรง:** Drill/Roll = เปลี่ยนระดับความละเอียดตาม hierarchy; Slice = กรองเฉพาะส่วนของ cube; Dice (ตามสไลด์) = เปลี่ยน/หมุนมิติที่ใช้ดู
+
+**อย่าสับสน:** "Drill Down" หมายถึง (ไปดูรายละเอียดชั้นล่าง) ไม่ได้หมายถึง (กระโดดไปดูข้อมูลดิบทุกแถวทีเดียว)
+
+**เช็คความเข้าใจ:** ผู้บริหารดูยอดขาย "2024 ทั้งปี" พบว่า Q3 สูงสุด → เข้าไปดู "Q3 ทั้งสาขา" → เข้าไปดู "North store ใน Q3" แต่ละขั้นเป็น OLAP operation อะไร?
+<details><summary>เฉลย</summary>
+
+**Drill Down 2 ครั้ง แล้ว Slice**:
+1. Year 2024 → Quarter Q3 = **Drill Down** ตาม hierarchy เวลา (ปี → ไตรมาส)
+2. Q3 → แยกยอดตามสาขา = **Drill Down** เพิ่มรายละเอียดลงอีกระดับ (Region/Shop)
+3. เลือกดูเฉพาะ North ใน Q3 ซ่อนสาขาอื่น = **Slice** (กรองเฉพาะชิ้นที่สนใจ ตามความหมายในสไลด์ p.24)
+
+</details>
+
 - ตัวอย่าง Drill Down ในสไลด์: ขณะดูยอดขายสินค้าแต่ละประเภท พบว่าสินค้าเครื่องใช้ไฟฟ้ายอดขายสูงที่สุด ผู้วิเคราะห์สนใจดูว่าเป็นเครื่องใช้ไฟฟ้ากลุ่มไหนมียอดขายเท่าไร จึง Drill Down เพื่อดูรายละเอียด ระบบสรุปยอดรวมสินค้าในกลุ่มย่อยที่อยู่ในประเภทนั้น [p.22]
 - **Roll Up ตรงกันข้าม**: ขณะดูในระดับกลุ่มสินค้า ก็ Roll Up ขึ้นไปดูสรุปยอดรวมของแต่ละประเภทสินค้า [p.22]
 - การ Drill down / Roll up ประมวลผลตามลำดับของแอตทริบิวต์ (Attribute Hierarchies) ตัวอย่าง: **Region -> Product Type -> Shop** [p.22]

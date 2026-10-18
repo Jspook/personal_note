@@ -54,6 +54,38 @@ flowchart TD
 
 **เครื่องมือสมัยใหม่ในสไลด์:** Azkaban (เริ่มโดย LinkedIn เหมาะกับ Hadoop), Airflow และอื่นๆ `[ตัวอย่างอื่นเสริมนอกสไลด์: Luigi, Prefect, Dagster]`
 
+#### 💡 เสริม: Orchestration vs Cron
+
+> 💡 **Intuition:** Orchestration เหมือน **"ผู้จัดการกองถ่ายหนัง"** — ไม่ได้ถ่ายฉากเอง แต่รู้ว่าฉากไหนต้องรอฉากไหนก่อน ถ้าฉากพังก็สั่งถ่ายใหม่ได้ ส่วน Cron เหมือน **"นาฬิกาปลุก"** ที่ดังตามเวลาอย่างเดียว ไม่รู้ว่าฉากก่อนหน้าเสร็จหรือยัง (จุดที่ analogy ไม่ตรง: Orchestrator ไม่ได้ประมวลผลข้อมูลเอง มันแค่สั่งงานและติดตามสถานะ)
+> [Source: generated — not verified against original document]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Automation" → ทำงานเองโดยไม่ต้องกดมือทุกครั้ง
+- "Dependency" → งานหนึ่งต้องรออีกงานให้เสร็จก่อนจึงเริ่มได้
+- "Cron" → ตัวตั้งเวลาพื้นฐานของ Linux ที่รันตามรูปแบบเวลาที่กำหนด แต่ไม่รู้สถานะของงานอื่น
+- "Orchestration" → การจัดตาราง ควบคุมลำดับ ติดตามสถานะ และจัดการความผิดพลาดของหลาย Pipeline
+
+**ตัวอย่าง:**
+- ✅ "ทุกวันตี 2 รันสคริปต์ดึงข้อมูลหนึ่งตัว" — Cron เพียงพอ เพราะมีงานเดียวและไม่มี dependency
+- ✅ "รอ A และ B เสร็จ แล้วค่อยรัน C และถ้า C ล้มให้ retry 3 ครั้ง" — ต้องใช้ Orchestrator เช่น Airflow
+- ❌ "Cron จัดการ dependency ให้เองถ้าตั้งเวลาของงานต่อกันไว้" — ไม่จริง การตั้งเวลาไม่รับประกันว่างานก่อนหน้าเสร็จจริง
+- **ต่างกันตรง:** งานเดียวตามเวลา (Cron) หรือหลายงานที่พึ่งพากันพร้อมติดตามสถานะ (Orchestrator)
+
+**อย่าสับสน:** "Orchestrator = ตัวที่ประมวลผลข้อมูล" — ไม่ใช่ Orchestrator สั่งและติดตามงาน ส่วนงานจริง (เช่น Spark, BigQuery) ทำที่ระบบอื่น
+
+**เช็คความเข้าใจ:** ต้องรัน Pipeline A (ดึงข้อมูล) → B (แปลง) → C (โหลด) ทุกคืน และถ้า A ล้ม ห้ามรัน B กับ C ควรใช้ Cron หรือ Orchestrator เพราะอะไร?
+<details><summary>เฉลย</summary>
+
+**ตอบ: Orchestrator (เช่น Airflow)**
+
+**เหตุผล:**
+1. มี dependency ต่อกันเป็นลำดับ (A → B → C)
+2. ต้องหยุดงานปลายน้ำเมื่องานต้นน้ำล้ม ซึ่ง Cron ทำไม่ได้ เพราะ Cron รันตามเวลาโดยไม่รู้สถานะงานก่อนหน้า
+
+</details>
+
 ---
 
 ### 2.3 Apache Airflow
@@ -75,9 +107,40 @@ flowchart TD
 | **CLI** | สั่งงาน Pipeline ผ่านคำสั่ง |
 | **Providers** | ตัวเชื่อมต่อกับระบบอื่นๆ มากมาย (GCP, AWS, MySQL ฯลฯ) |
 
+> 💡 **Intuition:** Airflow เหมือน **"ร้านอาหารที่มีหลายตำแหน่ง"** — Web UI คือ "กระดานดูออเดอร์" ให้ดูและสั่งเปิด/หยุด, Scheduler คือ "ผู้คุมคิว" ที่รู้ว่าออเดอร์ไหนถึงเวลาทำ, Workers คือ "พ่อครัว" ที่ลงมือทำจริง, Metadata Database คือ "สมุดบันทึก" ว่าแต่ละออเดอร์อยู่สถานะไหน (จุดที่ analogy ไม่ตรง: ในระบบจริง Scheduler กับ Worker มักแยกกันอยู่คนละเครื่อง และ Executor เป็นตัวกำหนดวิธีส่งงานให้ Worker)
+> [Source: generated — not verified against original document]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Scheduler" → ตัดสินว่า Task ไหนพร้อมรันแล้ว
+- "Worker" → ทำงานจริงของแต่ละ Task
+- "Metadata Database" → เก็บสถานะการรัน (สำเร็จ/ล้ม) และการตั้งค่าของ Airflow เอง
+- "Providers" → ชุดตัวเชื่อมต่อกับระบบภายนอก เช่น GCP, MySQL
+
+**ตัวอย่าง:**
+- ✅ DAG ตั้งให้รันทุกวันตี 5 — Scheduler เป็นคนตัดสินว่าถึงเวลาและส่ง Task ให้ Worker ทำ
+- ✅ เปิด Web UI ดูแล้วเห็น Task `load` เป็นสีแดง — สถานะนี้มาจาก Metadata Database
+- ❌ "ถ้าปิด Web UI แล้ว DAG จะหยุดรันทั้งหมด" — ไม่จริง Scheduler และ Worker ทำงานแยกจาก UI หน้าเว็บเป็นเพียงหน้าดูและควบคุม
+
+**ต่างกันตรง:** ตัดสินใจว่าจะรันอะไร (Scheduler) / ลงมือทำจริง (Worker) / จำสถานะ (Metadata Database)
+
+**อย่าสับสน:** "Metadata Database = ฐานข้อมูลธุรกิจที่ Pipeline ใช้" — ไม่ใช่ ฐานนี้เก็บข้อมูลของ Airflow เอง เช่น สถานะงาน ไม่ใช่ข้อมูลยอดขายที่ Pipeline ประมวลผล
+
+**เช็คความเข้าใจ:** (ก) Task ไม่เริ่มทั้งที่ถึงเวลาแล้ว ควรดู component ไหนก่อน (ข) อยากรู้ว่า Task ไหนล้มเมื่อวาน ดูจากที่ไหน?
+<details><summary>เฉลย</summary>
+
+1. **(ก)** ดู **Scheduler** ว่ายังทำงานและส่ง Task เข้าคิวหรือไม่ และดู **Worker** ว่ามีตัวว่างรับงานหรือไม่
+2. **(ข)** ดูจาก **Web UI** ซึ่งอ่านสถานะการรันที่เก็บใน **Metadata Database**
+
+</details>
+
 #### 2.3.2 DAG: หัวใจของ Airflow
 
 > **DAG (Directed Acyclic Graph)** = กราฟที่มีทิศทางและ **ไม่วนกลับ** (วิ่งทางเดียว) 1 Data Pipeline ใน Airflow = 1 DAG
+
+> 💡 **Intuition:** DAG เหมือน **"ใบสั่งงานในโรงงาน"** — ขั้นตอนต่างๆ (Task) ต้องทำตามลำดับ (Extract → Transform → Load) ไม่ได้เพราะ Load ขึ้นมาก่อน Transform, ไม่ได้วนกลับ (ทำ Load แล้วกลับไป Extract อีกรอบ) นี่คือ DAG — มีลำดับที่ชัดเจน ไม่วนลูป Scheduler (ตัวจัดการ) ใช้กราฟนี้ตัดสิน Task ไหนต้องรัน เมื่อไร
+> [Source: generated — not verified against original document]
 
 ```mermaid
 flowchart TD
@@ -93,6 +156,73 @@ flowchart TD
         B2 --> C2["C"] --> D2
     end
 ```
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- **Directed** = มีลูกศร (ทิศทาง) ไป A→B ไม่ใช่ B→A
+- **Acyclic** = "ไม่วนกลับ" (ไม่มี cycle/loop)
+- **Graph** = แสดงเป็นรูป: Node = Task, Edge = ลำดับ (dependency)
+- **Dependency** = "ต้องรอใคร" เช่น Transform ต้องรอ Extract เสร็จก่อน
+
+**ตัวอย่าง:**
+- ✅ **DAG ถูก** — Extract → Transform → Load (ลำดับ, ไม่วน)
+- ✅ **DAG ถูก** — Parallel: Extract → [Transform_A, Transform_B] → Load (กระจาย task)
+- ❌ "Load → Extract → Transform" — ยังคงเป็น DAG (ไม่มี cycle) แต่ dependency ผิดตรรกะทางธุรกิจ
+- ❌ "Transform → Transform (ตัวเดียวเพราะรอตัวเองเสร็จ)" — ไม่ใช่ DAG (Loop)
+- **ต่างกันตรง:** ต้องแสดง dependency ให้ชัดเจน Task ไหนต้องรอใคร
+
+**อย่าสับสน:** "DAG = Task ลำดับที่ยาว" — ไม่ใช่ DAG อาจมี parallel (กิ่งแยก) ตราบใดไม่วนกลับ
+
+**เช็คความเข้าใจ:** Extract มี 2 source (MySQL, API), แต่ละ extract ต่อเป็น Merge task ตัวเดียว ก่อน Load. นี่เป็น DAG หรือไม่?
+<details><summary>เฉลย</summary>
+
+**ตอบ: ใช่ เป็น DAG**
+
+**เหตุผล:**
+1. **มีทิศทาง** — ExtractMySQL → Merge, ExtractAPI → Merge, Merge → Load
+2. **ไม่วนกลับ** — ไม่มีวน ข้อมูลไหลทางเดียว
+3. **Fan-in pattern** — [ExtractMySQL, ExtractAPI] → Merge (รอทั้งคู่เสร็จ) → Load
+
+ถ้าไม่กำหนดให้ Merge รอทั้งสอง Extract ให้เสร็จก่อน Merge อาจรันก่อนข้อมูลพร้อม — โครงสร้างยังคงเป็น DAG แต่ dependency ไม่ครบถ้วนตามตรรกะงาน
+
+</details>
+
+#### Task และ Operator
+
+> 💡 **Intuition:** Task เหมือน **"คำสั่งงานในโรงงาน"** และ Operator เหมือน **"เครื่องจักรที่ทำคำสั่งนั้น"** — คำสั่ง "บดแป้ง" เป็น Task, เครื่องโม่แป้ง (BashOperator, PythonOperator) เป็น Operator ที่รับคำสั่งไป execute ทำให้ Airflow มี Operator หลายแบบ คุณเลือกเครื่องจักรที่เหมาะกับงาน
+> [Source: generated — not verified against original document]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- **Task** = งานย่อยในกราฟ (node) มีชื่อ และสถานะ (scheduled, queued, running, success, failed)
+- **Operator** = เครื่องจักรที่ Task ใช้ (BashOperator, PythonOperator, EmptyOperator เป็นต้น)
+- **Instantiate** = การสร้าง Task จาก Operator เช่น `t1 = BashOperator(task_id="say_hello", ...)`
+- **Task Status** = สถานะการทำงานของ Task ในแต่ละรอบ
+- **Task Dependency** = ความสัมพันธ์ลำดับก่อนหลัง (upstream/downstream)
+
+**ตัวอย่าง:**
+- ✅ **BashOperator** — `bash_command="echo Hello"` รันคำสั่ง shell
+- ✅ **PythonOperator** — `python_callable=my_function` รันฟังก์ชัน Python
+- ❌ "สร้าง Task โดยไม่บอก Operator" — ต้องระบุ Operator ให้ Task รู้ว่าทำยังไง
+- **ต่างกันตรง:** Task = "สิ่งที่ต้องทำ", Operator = "วิธีที่ทำ"
+
+**อย่าสับสน:** "Operator = Task" — ไม่ใช่ Task คือ "อินสแตนซ์" ของ Operator (Task = instance, Operator = class)
+
+**เช็คความเข้าใจ:** เขียน Task ที่ดึงข้อมูล MySQL แล้วส่งผลลัพธ์ให้ Task ตัวถัดไป ควรใช้ Operator ชนิดไหน?
+<details><summary>เฉลย</summary>
+
+**ตอบ: PythonOperator + return value (หรือ XCom)**
+
+**เหตุผล:**
+1. **SQL query ต้องเขียนเพิ่มเติม** → PythonOperator ให้ควบคุมได้
+2. **ส่งข้อมูลต่อ** → ใช้ `return` ลงใน XCom หรือเขียนลง temporary table
+3. **BashOperator เพียงอย่างเดียว** → ก็ได้แต่ต้องบันทึก stdout เพื่อให้ Task ถัดไปอ่าน (ยุ่งมากกว่า)
+
+ตัวอย่างที่ถูก: PythonOperator (ใช้ MySqlHook) เขียนผลลง GCS หรือ Temporary Table แล้วส่งแค่ path/ชื่อตารางผ่าน XCom (return ค่าตรงๆ ได้เฉพาะผลลัพธ์เล็กมาก เช่น จำนวนแถว)
+
+</details>
 
 * **Task:** หน่วยงานย่อยใน DAG
 * **Task Status:** แต่ละ Task มีสถานะกำกับ (เช่น สำเร็จ ล้มเหลว กำลังรัน) ดูได้ใน UI
@@ -155,8 +285,41 @@ with DAG(
 
 #### 2.4.2 Schedule Interval และแนวคิด ETL ของ Airflow
 
+> 💡 **Intuition:** เหมือน **"ใบแจ้งหนี้รายเดือน"** — บิลของเดือนมกราคมออกได้ก็ต่อเมื่อสิ้นเดือนมกราคมแล้ว เพราะต้องรอให้ยอดใช้จ่ายครบก่อน Airflow ทำแบบเดียวกัน: รันงานของช่วงเวลาหนึ่งหลังช่วงนั้นจบ ส่วน `start_date` คือวันเริ่มนับรอบแรก และ `catchup` คือการตัดสินใจว่าจะ "ออกบิลย้อนหลัง" ให้ทุกรอบที่ผ่านมาแล้วหรือไม่ จุดที่ analogy ไม่ตรง: บิลจริงมีวันออกที่คนกำหนด แต่ Airflow สร้างรอบให้อัตโนมัติจาก `start_date` + `schedule_interval`
+> [Source: generated — not verified against original document]
+
 * ใช้ **Preset** หรือ **Cron expression** ได้ (สไลด์แนะนำ crontab.guru ช่วยสร้าง Cron)
 * Airflow ออกแบบตามแนวคิดว่า ETL ของช่วงเวลาหนึ่ง จะรัน **เมื่อช่วงเวลานั้นสิ้นสุดแล้ว** (เช่น ETL ของวันนี้ต้องรอข้อมูลครบทั้งวัน ก่อนรัน)
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- **schedule_interval** = "ความถี่การรัน" เช่น `@daily` (ทุกวัน), `@hourly` (ทุกชั่วโมง), หรือ cron `"0 6 * * *"` (เวลา 6 โมงเช้า)
+- **start_date** = "วันเริ่มนับ" ไม่มี DAG run ของช่วงก่อนวันนี้
+- **execution_date** = "วันอ้างอิง" ของ DAG run นั้น (Airflow 2.2+ เรียก logical_date) ไม่ใช่วันรันจริง (รันเมื่อช่วงเวลาสิ้นสุด)
+- **catchup** = `True` ให้ "รันทุกวันย้อนหลัง" ตั้งแต่ start_date, `False` ให้รันเฉพาะช่วงล่าสุด
+
+**ตัวอย่าง:**
+- ✅ **Airflow ออกแบบดี** — `start_date=2024-01-01`, `schedule_interval=@daily`, `catchup=False` → รันวันแรก = 2024-01-02 เวลากำหนด (execution_date = 2024-01-01)
+- ✅ **ต้องการรันย้อนหลัง** — set `catchup=True` → Airflow สร้าง run ย้อนหลังทุกช่วงที่จบแล้ว ตั้งแต่ 2024-01-02, 03, 04, ... ถึงปัจจุบัน
+- ❌ "รันงานทันทีที่สั่งเปิด DAG" — Airflow ไม่ทำทันที รอให้รอบเวลานั้นสิ้นสุดก่อน
+- **ต่างกันตรง:** execution_date ≠ run_date; Airflow รัน "ข้างหลัง" เวลาหนึ่งช่วง
+
+**อย่าสับสน:** "run ของวัน X รันตอน 00:00 ของวัน X" — ไม่ถูก run ของวัน X (logical_date = X) เริ่มรันตอน 00:00 (UTC ค่าเริ่มต้น) ของวัน X+1 หลังช่วงของวัน X จบ
+
+**เช็คความเข้าใจ:** ตั้ง `start_date=2024-06-01`, `schedule_interval=@daily`, `catchup=False`. วันนี้ = 2024-06-10. DAG ตัวแรกจะรันเมื่อไหร่?
+<details><summary>เฉลย</summary>
+
+**ตอบ: รันทันที 1 รอบ สำหรับช่วงเวลาล่าสุดที่สิ้นสุดแล้ว**
+
+**เหตุผล:**
+1. เมื่อเปิด DAG ระหว่างวัน 2024-06-10 ด้วย `catchup=False` Airflow จะสร้าง DAG Run ทันที 1 รอบ สำหรับช่วงเวลาล่าสุดที่สมบูรณ์แล้ว คือ logical_date = 2024-06-09 (ช่วง 2024-06-09 ถึง 2024-06-10)
+2. Run ถัดไปจะเกิดขึ้นที่เวลา 00:00 ของ 2024-06-11 (สำหรับ logical_date = 2024-06-10)
+3. `catchup=False` ข้าม logical_date 2024-06-01 ถึง 2024-06-08
+
+ถ้า `catchup=True` Airflow จะสร้างรันย้อนหลัง logical_date 2024-06-01 ถึง 2024-06-09 (ครบ 9 runs) ทันที
+
+</details>
 
 #### 2.4.3 Operator ที่พบบ่อย
 
@@ -194,12 +357,110 @@ flowchart TD
     end
 ```
 
+> 💡 **Intuition:** Dependency เหมือน **"ลำดับขั้นตอนทำอาหาร"** — ต้องหั่นผักก่อนผัด และต้องผัดเสร็จก่อนตักเสิร์ฟ ไม่ว่าครัวจะมีกี่คน ขั้นที่ยังไม่เสร็จก็ไม่ควรเริ่มขั้นถัดไป (จุดที่ analogy ไม่ตรง: งานที่ไม่มีลูกศรต่อถึงกันสามารถรันขนานกันได้ ไม่จำเป็นต้องเรียงทีละขั้น)
+> [Source: generated — not verified against original document]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- `t1 >> t2` → t1 ต้องเสร็จก่อน t2 จึงเริ่มได้ (upstream → downstream)
+- **Fan-out** (`t1 >> [t2, t3]`) → งานเดียวแตกเป็นหลายงานที่รันขนานกันหลังจาก t1 เสร็จ
+- **Fan-in** (`[t2, t3] >> t4`) → หลายงานรวมเข้าจุดเดียว และ t4 รอให้ทั้ง t2 และ t3 เสร็จก่อน
+
+**ตัวอย่าง:**
+- ✅ `extract >> transform >> load` — เรียงลำดับทีละขั้น
+- ✅ `extract >> [clean_a, clean_b] >> report` — clean_a และ clean_b รันขนานกันหลัง extract และ report รอทั้งคู่
+- ❌ คิดว่า `[clean_a, clean_b] >> report` หมายความว่า report เริ่มทันทีที่ clean_a เสร็จ — ไม่จริง report ต้องรอทั้งสองตัวเสร็จก่อน
+- **ต่างกันตรง:** `t1 >> [t2, t3]` = แตกออกจากจุดเดียว, `[t2, t3] >> t4` = รวมเข้าจุดเดียวและรอทุกตัว
+
+**อย่าสับสน:** "`>>` = รันพร้อมกัน" — ไม่ใช่ `>>` หมายถึง "ต้องเสร็จก่อน" ส่วนงานที่ไม่มีลูกศรเชื่อมถึงกันต่างหากที่รันพร้อมกันได้
+
+**เช็คความเข้าใจ:** ต้องการให้ `load_sales` รอทั้ง `clean_sales` และ `clean_stock` และ `clean_sales` ต้องรอ `extract_sales` เขียน dependency อย่างไร?
+<details><summary>เฉลย</summary>
+
+```python
+extract_sales >> clean_sales
+[clean_sales, clean_stock] >> load_sales
+```
+
+**เหตุผล:** บรรทัดแรกบอกว่า `clean_sales` รอ `extract_sales` บรรทัดที่สองเป็น Fan-in ให้ `load_sales` รอทั้งสองงาน
+
+</details>
+
+#### 💡 เสริม: XCom (Cross-communication between Tasks)
+
+> 💡 **Intuition:** XCom เหมือน **"โน้ต (เมโม) ที่ติดบอร์ด"** — Task ที่จบลงก็เขียนข้อความลงบอร์ด Task ตัวถัดไปเข้ามาอ่านได้ ข้อมูลชั่วคราวบอร์ด (ไม่ต้องจดจำในหัว) แต่ไม่ใหญ่มากเท่า Database ถ้าข้อมูลใหญ่ให้ เก็บลง GCS/Database แล้วใช้ XCom เก็บแค่ path
+> [Source: generated — not verified against original document]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- **XCom** = กลไกส่งค่าเล็กๆ ระหว่าง Task เก็บใน Metadata Database ของ Airflow
+- **push** = Task ส่งข้อมูล XCom (ส่วนมากผ่าน return value)
+- **pull** = Task ดึงข้อมูลจาก XCom ของ Task อื่น
+- **key** = ชื่อข้อมูล เช่น "sql_result", "file_path"
+
+**ตัวอย่าง:**
+- ✅ **PythonOperator push** — return จำนวนแถว หรือ path ไฟล์ → XCom บันทึกเป็น metadata
+- ✅ **Task ถัดไป pull** — `ti.xcom_pull(task_ids="previous_task")` → อ่านจาก XCom
+- ❌ "เก็บไฟล์ 1GB ใน XCom" — ขนาดจำกัดขึ้นกับ Metadata DB (เช่น MySQL ~64KB, PostgreSQL ~1GB) แต่ไม่ว่าเท่าไหร่ XCom ไม่ได้ออกแบบมาสำหรับข้อมูลใหญ่ ต้องเก็บลง Storage แล้วส่ง path แทน
+- **ต่างกันตรง:** XCom = ข้อมูลเล็ก (metadata, path, count), Storage (GCS/Table) = ข้อมูลใหญ่ (actual data)
+
+**อย่าสับสน:** "XCom = ตัวแปรร่วม global" — ไม่ใช่ XCom isolated ต่อ DAG run; วันพรุ่งนี้ DAG รันใหม่ XCom ใหม่
+
+**เช็คความเข้าใจ:** Task A query MySQL ได้ 100K rows, Task B ต้องใช้ข้อมูลนี้ ควรทำไหน?
+<details><summary>เฉลย</summary>
+
+**ตอบ: เก็บลง Temporary Table/GCS แล้วใช้ XCom เก็บ path**
+
+**เหตุผล:**
+1. **XCom limit** = ขนาดจำกัดตาม Metadata DB (เช่น MySQL ~64KB, PostgreSQL ~1GB) แต่ 100K rows เป็น JSON ขนาดใหญ่เกินกว่าจะเก็บใน Metadata DB
+2. **วิธีที่ดี:**
+   - Task A: เขียน Parquet ลง GCS ที่ path มี logical date (ให้ idempotent) → return GCS path
+   - Task B: pull XCom → อ่าน parquet จาก GCS path
+3. **Task B เข้าถึง** → `ti.xcom_pull(task_ids="task_a")` ได้ path แล้วอ่านไฟล์
+
+</details>
+
 #### 2.4.5 Bonus: Atomic & Idempotent
 
 | หลักการ | ความหมาย `[คำอธิบายขยายนอกสไลด์]` | ตัวอย่าง |
 | :--- | :--- | :--- |
 | **Atomic** | Task ทำสำเร็จทั้งหมดหรือไม่ทำเลย | ไม่โหลดข้อมูลแค่ครึ่งเดียว |
 | **Idempotent** | รันซ้ำกี่ครั้งผลลัพธ์ก็เหมือนเดิม | โหลดข้อมูลของวันที่ X ด้วยการ "แทนที่" ไม่ใช่ "เพิ่มต่อท้าย" |
+
+> 💡 **Intuition:** Atomic & Idempotent เหมือน **"ร้านค้ารับการสั่งซื้อ"** — Atomic = ร้านไม่ทำการชำระเงินครั้งเดียวแต่ให้สินค้า (ทั้งหมดหรือไม่เลย ไม่มี "เศษ") Idempotent = ถ้าลูกค้าโทรสั่งซื้อซ้ำ ร้านก็ส่งซ้ำหรือ update สินค้า (ไม่เพิ่มอีก) ผลลัพธ์เท่าเดิม ทั้งสองนี้สำคัญเพราะ Pipeline บนจริงล้มบ่อย ต้องรันใหม่โดยไม่พัง
+> [Source: generated — not verified against original document]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- **Atomic** = "ทั้งหมดหรือไม่เลย" → Transaction ทำเสร็จดี ๆ หรือล้มเสร็จดี ๆ ไม่มีสถานะกลาง
+- **Idempotent** = "ผลเท่าเดิม" → รัน 1 ครั้ง 2 ครั้ง 100 ครั้งผลลัพธ์เดียวกัน
+- **Race Condition** = เมื่อหลาย task เข้าถึง resource เดียวกันได้ปัญหา
+
+**ตัวอย่าง:**
+- ✅ **Atomic** — Write file: เขียน 0 byte หรือ 1000 byte ทั้งหมด ไม่ใช่ 500 byte (หมดน้ำหมึก)
+- ✅ **Idempotent** — Load ข้อมูล: `WRITE_TRUNCATE` (เขียนทับ) เมื่อรัน 2 ครั้ง ยังเป็น 1000 row (ไม่เพิ่มเป็น 2000)
+- ❌ "Load ข้อมูลด้วย `INSERT` (เพิ่มต่อท้าย)" — ถ้า rerun ก็ได้ 2000 row (ไม่ idempotent)
+- ❌ "Task แค่เขียน 500 จาก 1000 bytes แล้วหยุด" — ไม่ atomic (incomplete write)
+- **ต่างกันตรง:** Atomic = ความสมบูรณ์ต่อการ execute; Idempotent = ความสม่ำเสมอต่อการ rerun
+
+**อย่าสับสน:** "Atomic = ไม่ล้มเลย" — ไม่ใช่ Atomic = ถ้าล้ม ล้มเสร็จสิ้น (ไม่ incomplete). Idempotent = ล้มได้ rerun ได้โดยไม่พัง
+
+**เช็คความเข้าใจ:** Task ล้มตรงกลางการเขียนไฟล์ 100GB (เขียนไป 50GB แล้วหยุด) สั่ง rerun ได้ไหม?
+<details><summary>เฉลย</summary>
+
+**ตอบ: ได้ แต่ต้อง Atomic + Idempotent**
+
+**เหตุผล:**
+1. **ไม่ Atomic** — ยังเหลือ 50GB ที่เขียนค้างไว้ (incomplete)
+2. **Fix:** ใช้ Temporary file: เขียนไป `file.tmp`, เสร็จแล้วค่อย rename เป็น `file.parquet` (Atomic)
+3. **Fix Idempotent:** เช็ค file ที่จำเป็นก่อน รันใหม่ดูว่า complete หรือไม่ (ถ้า complete skip)
+
+ตัวอย่างจริง: GCS `generation_match_precondition=0` (สไลด์ CH3) ช่วยป้องกันการเขียนทับไฟล์ที่มีอยู่ (concurrency) แต่ต้องจัดการ skip เมื่อไฟล์มีแล้วจึงจะ idempotent
+
+</details>
 
 > **ทำไมสำคัญ:** Pipeline ล้มกลางทางเป็นเรื่องปกติ ถ้า Idempotent เราสั่ง rerun ได้อย่างมั่นใจโดยข้อมูลไม่ซ้ำ
 

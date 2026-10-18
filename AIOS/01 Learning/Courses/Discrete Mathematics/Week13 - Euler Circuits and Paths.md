@@ -66,7 +66,34 @@ _ต้นฉบับ: แผนที่ [p.2-5] และรูป multigraph
 * คำถาม Euler: เดินตาม edges เริ่มที่จุดยอดหนึ่งและกลับจุดเดิม โดยผ่านทุก edge พอดี 1 ครั้งได้หรือไม่ มี Euler circuit หรือไม่ ตอบได้ง่ายโดยดู degree ของจุดยอด [p.6]
 * คำถามคู่ขนาน: เดินแล้วกลับจุดเดิมโดยผ่านทุกจุดยอดพอดี 1 ครั้ง (Hamilton circuit) ยากสำหรับกราฟส่วนใหญ่ [p.6]
 
+> 💡 **Intuition:** Euler = "ผ่านทุก **edge** พอดี 1 ครั้ง" คิดเป็นการเดินข้ามสะพาน (edge) ทุกแห่ง แห่งละครั้งเดียว เหมือนปัญหาสะพาน Königsberg หรือ "วาดรูปโดยไม่ยกดินสอและไม่ลากเส้นซ้ำ" Euler circuit = ปิด (กลับจุดเริ่ม), Euler path = ไม่ต้องปิด
+> [Source: generated — not verified against original document]
+
 > **Definition 1:** **Euler circuit** ในกราฟ G คือ simple circuit ที่มีทุก edge ของ G **Euler path** ใน G คือ simple path ที่มีทุก edge ของ G โปรดจำว่า path หรือ circuit เป็น simple ถ้ามีแต่ละ edge พอดี 1 ครั้ง [p.7]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Euler = simple circuit/path ที่มี **ทุก edge**" → ต้องผ่าน edge ครบทุกเส้น และแต่ละเส้นพอดี 1 ครั้ง
+- "Simple = ไม่มี edge ซ้ำ" → แต่ละ edge ใช้ไม่เกิน 1 ครั้ง (รวมกับ "มีทุก edge" จึงได้พอดี 1 ครั้ง)
+- "Circuit = ปิด" → เริ่มและจบจุดเดียว, "Path = ไม่ต้องปิด"
+
+**ตัวอย่าง:**
+- ✅ กราฟสี่เหลี่ยมที่มีแค่ 4 edges a–b, b–c, c–d, d–a → circuit a, b, c, d, a เป็น Euler circuit
+- ✅ กราฟที่มีแค่ 3 edges a–b, b–c, c–d → path a, b, c, d เป็น Euler path (เริ่ม a จบ d, ไม่ปิด)
+- ❌ กราฟมี 5 edges แต่ path ผ่าน 4 → ไม่ Euler (ไม่ผ่านทุก edge)
+- **ต่างกันตรง:** Euler = ผ่านทุก **edge**, Hamilton = ผ่านทุก **จุดยอด**
+
+**อย่าสับสน:** "ผ่านทุก edge พอดี 1 ครั้ง" ไม่ห้ามผ่านจุดยอดซ้ำ → จุดยอดเดียวอาจผ่านหลายครั้ง
+
+**เช็คความเข้าใจ:** กราฟ 5 จุด {a,b,c,d,e} มี edges a–b, b–c, c–d, d–e, e–a, a–c (6 edges) มี Euler circuit ไหม ตรวจด้วย degree
+<details><summary>เฉลย</summary>
+
+1. degree: a (b, e, c) = 3, b = 2, c (b, d, a) = 3, d = 2, e = 2 → ผลรวม 12 = 2 × 6 ✓
+2. มีจุด degree คี่ (a, c) → ขัด Theorem 1 → **ไม่มี Euler circuit**
+3. กราฟ connected และมีจุดคี่พอดี 2 จุด → ตาม Theorem 2 มี **Euler path** ที่เริ่มที่จุดคี่จุดหนึ่งและจบที่อีกจุด เช่น a, b, c, d, e, a, c (ใช้ครบ 6 edges เส้นละครั้ง)
+
+</details>
 
 รูปใน p.7 วาด multigraph ของ Königsberg (จุด A, B, C, D)
 
@@ -170,7 +197,34 @@ _ต้นฉบับ: รูป H₁, H₂, H₃ [p.9]_
 
 เกณฑ์ง่ายๆ สำหรับตัดสินว่า multigraph มี Euler circuit หรือ path หรือไม่ เงื่อนไขจำเป็น: ทุกจุดยอดต้องมี degree เป็นเลขคู่ [p.10]
 
+> 💡 **Intuition:** ทุกครั้งที่เดินผ่านจุดยอดระหว่างทาง จะใช้ edge 1 เส้นเพื่อมาถึง และอีก 1 เส้นเพื่อเดินต่อ → edge ที่จุดนั้นถูกใช้ทีละคู่ ส่วนจุดเริ่มใช้ 1 เส้นตอนออกเดิน และ 1 เส้นตอนกลับมาจบ (circuit จบที่จุดเดิม) ซึ่งก็เป็นคู่เช่นกัน → เมื่อใช้ทุก edge พอดีครั้งเดียว ทุกจุดต้องมี degree เป็นเลขคู่
+> [Source: generated — not verified against original document]
+
 > **Theorem 1:** multigraph ที่ connected และมีจุดยอดตั้งแต่ 2 จุดขึ้นไป มี Euler circuit ก็ต่อเมื่อทุกจุดยอดมี degree เป็นเลขคู่ [p.10]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Connected" → ต้องมี path เชื่อมทุกจุด (ไม่มีชิ้นแยก)
+- "ก็ต่อเมื่อ (iff)" → เงื่อนไขนี้เป็นทั้งเงื่อนไขจำเป็นและเพียงพอ
+
+**ตัวอย่าง:**
+- ✅ สี่เหลี่ยม a–b–c–d–a ทุกจุด degree 2 → มี Euler circuit (เช่น a–b–c–d–a)
+- ✅ หกเหลี่ยม ทุกจุด degree 2 → มี Euler circuit
+- ❌ K₄ ทุกจุด degree 3 (คี่) → ไม่มี Euler circuit
+- ❌ สามเหลี่ยม 2 รูปที่แยกกัน (a–b–c–a และ d–e–f–d) ทุกจุด degree 2 แต่ไม่ connected → ไม่มี Euler circuit ที่ผ่านทุก edge
+- **ต่างกันตรง:** Theorem 1 ตรวจว่าทุกจุด degree คู่ (0 จุดคี่), Theorem 2 ตรวจว่ามีจุด degree คี่พอดี 2 จุด — ทั้งคู่ต้อง connected
+
+**อย่าสับสน:** "ทุกจุดยอดมี degree เป็นเลขคู่" = degree ของแต่ละจุดเป็นคู่ ไม่ใช่ "ผลรวม degree เป็นคู่" (ผลรวม degree เป็นคู่เสมออยู่แล้วตาม Handshaking)
+
+**เช็คความเข้าใจ:** กราฟมี 5 จุด ทุกจุด degree 4 มี Euler circuit ไหม
+<details><summary>เฉลย</summary>
+
+1. ทุกจุด degree 4 = เลขคู่ → ผ่านเงื่อนไข degree ของ Theorem 1
+2. ถ้าเป็น simple graph: 5 จุดที่ degree 4 ทุกจุดคือ K₅ ซึ่ง connected → **มี Euler circuit**
+3. ถ้าเป็น multigraph ต้องเช็ค connected เพิ่ม (multigraph ที่ degree เท่านี้อาจแยกเป็นหลายก้อนได้) ถ้า connected ก็มี Euler circuit
+
+</details>
 
 **Example 3 [p.11]:** ให้แผนผังอาคาร เป็นไปได้หรือไม่ที่จะเข้าอาคารจาก A และออกสู่ห้อง A โดยผ่านประตูทุกบานครั้งเดียว และต้องเข้าทุกห้อง สไลด์ไม่เฉลย
 
@@ -202,7 +256,33 @@ _ต้นฉบับ: รูปแผนผัง [p.11] (ประตูอ�
 
 ### 2.5 Necessary conditions สำหรับ Euler path [p.13-14]
 
+> 💡 **Intuition:** Euler path ไม่ต้องปิด → จุดเริ่มมี edge 1 เส้นที่ใช้ตอนออกเดินโดยไม่มีคู่ และจุดจบมี edge 1 เส้นที่ใช้ตอนมาถึงครั้งสุดท้ายโดยไม่มีคู่ → 2 จุดนี้มี degree คี่ ส่วนจุดระหว่างทางยังใช้ edge ทีละคู่ (มาถึง 1 เส้น เดินต่อ 1 เส้น) จึงมี degree คู่
+> [Source: generated — not verified against original document]
+
 > **Theorem 2:** multigraph ที่ connected มี Euler path แต่ไม่มี Euler circuit ก็ต่อเมื่อมีจุดยอดที่ degree เป็นเลขคี่พอดี 2 จุด [p.13]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Euler path แต่ไม่มี circuit" → 2 จุด degree คี่ (ถ้าไม่มี degree คี่เลย = circuit, ถ้า > 2 = ไม่มี Euler)
+- "พอดี 2 จุด" → นับจำนวนจุด degree คี่ให้ได้ 2 พอดี ถ้ามี 4 จุดขึ้นไป = ไม่มีทั้ง Euler path และ Euler circuit
+
+**ตัวอย่าง:**
+- ✅ Path a–b–c–d ที่มี 3 edges: deg(a) = 1, deg(b) = 2, deg(c) = 2, deg(d) = 1 → 2 จุด degree คี่ → มี Euler path (เริ่ม a จบ d)
+- ❌ สี่เหลี่ยม a–b–c–d–a ทั้งหมด degree 2 → 0 จุด degree คี่ → มี Euler circuit ไม่ใช่ path
+- ❌ K₄ ทุกจุด degree 3 → 4 จุด degree คี่ → ไม่มีทั้ง Euler path และ Euler circuit
+- **ต่างกันตรง:** Theorem 1 = 0 odd vertices, Theorem 2 = 2 odd vertices
+
+**อย่าสับสน:** "พอดี 2 จุด degree คี่" ไม่ได้บอก "degree คี่ต้องเป็น 1 หรือ 3" → อาจเป็น 1, 3, 5, ...
+
+**เช็คความเข้าใจ:** กราฟ 4 จุด {a,b,c,d} degree: 1, 3, 2, 2 มี Euler path ไหม
+<details><summary>เฉลย</summary>
+
+1. จุด degree คี่: a (1) และ b (3) → พอดี 2 จุด, c และ d degree 2 (คู่)
+2. ถ้ากราฟ connected → ตาม Theorem 2 **มี Euler path** (เริ่มที่ a หรือ b และจบที่อีกจุด) แต่ไม่มี Euler circuit
+3. ตัวอย่างกราฟที่ตรงเงื่อนไข: edges a–b, b–c, b–d, c–d (connected) → Euler path a, b, c, d, b
+
+</details>
 
 **Example (ไม่มีเลขใน p.13):** กราฟไหนมี Euler path (สไลด์ไม่เฉลย) edges อ่านจากรูป:
 * G₁: a–b, b–c, c–d, d–a, b–d
@@ -251,6 +331,30 @@ Euler path และ circuit ใช้แก้ปัญหาที่ต้อ
 * link ในเครือข่ายสื่อสาร
 
 การประยุกต์อื่นที่สไลด์ระบุ: การจัดวางวงจร, network multicasting และชีววิทยาโมเลกุลที่ใช้ Euler path ใน sequencing ของ DNA [p.15] รูปในสไลด์เป็นแผนภาพเส้นทางรถจากคลัง (Depot) ไปหาลูกค้า (Customers)
+
+#### 💡 เสริม: ทำไมจุดคี่ทำให้เดินไม่ครบ (เหตุผลเบื้องหลัง Königsberg)
+
+> 💡 **Intuition:** ทุกครั้งที่เดินเข้าแล้วออกจากจุดหนึ่ง จะใช้ edge 2 เส้น (เข้า 1 ออก 1) ดังนั้นจุดที่ผ่านระหว่างทางต้องมี edge เป็นจำนวนคู่ ถ้า edge มีจำนวนคี่ แปลว่าจุดนั้นต้องเป็นจุดเริ่มหรือจุดจบ และ Euler path มีจุดเริ่มกับจุดจบได้อย่างละ 1 จุดเท่านั้น (analogy ใช้ไม่ได้ตรงที่ในชีวิตจริงเราอาจข้ามสะพานเดิมซ้ำได้ แต่โจทย์ Euler ห้ามใช้ edge ซ้ำ จึงใช้ตรรกะ "เข้า-ออกเป็นคู่" ได้)
+> [Source: generated — not verified against original document]
+
+**แตกวลีสำคัญ:**
+- "degree" → จำนวน edge ที่ติดกับจุดนั้น (ในโจทย์ Königsberg คือจำนวนสะพานที่ต่อกับแต่ละพื้นที่)
+- "จุดคี่" → จุดที่ degree เป็นเลขคี่
+- "0 หรือ 2 จุดคี่" → เงื่อนไขที่กราฟต้องมีเพื่อให้มี Euler circuit หรือ Euler path (ตาม Theorem 1, 2)
+
+**ตัวอย่าง:**
+- ✅ กราฟ a–b, b–c, c–a, c–d: degree a = 2, b = 2, c = 3, d = 1 → จุดคี่ 2 จุด (c, d) → มี Euler path เช่น c–a–b–c–d ใช้ครบ 4 edges
+- ❌ Königsberg: จุดคี่ 4 จุด (A = 5, B = 3, C = 3, D = 3) → ไม่มีทั้ง Euler circuit และ Euler path
+- **ต่างกันตรง:** นับจำนวนจุดคี่: 0 จุด → มี circuit ได้; 2 จุด → มี path ได้ (แต่ไม่มี circuit); 4 จุดขึ้นไป → ไม่มีทั้งคู่
+
+**อย่าสับสน:** "จุดคี่" ≠ "จุดเริ่มต้นที่ต้องเลือก" — จุดคี่บอกแค่ว่าเป็นจุดเริ่มหรือจุดจบได้เท่านั้น การมี Euler path ยังต้องเช็คว่ากราฟ connected ด้วย
+
+**เช็คความเข้าใจ:** กราฟ a–b, b–c, c–d, d–a, a–c มี Euler path หรือไม่ ถ้ามี จุดเริ่มกับจุดจบคืออะไร (degree: a = 3, b = 2, c = 3, d = 2)
+<details><summary>เฉลย</summary>
+
+จุดคี่: a และ c → 2 จุด และกราฟ connected → มี Euler path ที่เริ่มที่ a หรือ c และจบที่อีกจุด (ไม่มี Euler circuit เพราะมีจุดคี่)
+ตัวอย่างเส้นทาง: a–b–c–d–a–c (ใช้ครบ 5 edges: ab, bc, cd, da, ac)
+</details>
 
 ---
 

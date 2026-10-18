@@ -78,6 +78,37 @@ small = pl.read_parquet("transactions.parquet", columns=["date", "thb_amount"])
 
 เชื่อมโยง: Parquet คือรูปแบบไฟล์ที่ใช้ใน Workshop 6 ([[Chapter 06 - Report & Dashboard with Looker Studio]]) และเชื่อมกับแนวคิด Columnar ใน [[Chapter 05 - Data Warehouse with BigQuery]]
 
+#### 💡 เสริม: Row-based vs Columnar File Format
+
+> 💡 **Intuition:** ลองนึกถึง **"ตู้เอกสาร"** สองแบบ — แบบ Row-based เก็บเอกสารทั้งใบ (ทุกช่องของลูกค้าหนึ่งคน) ไว้ด้วยกันในซอง ส่วนแบบ Columnar เก็บแยกเป็น **"ลิ้นชักตามหมวด"** (ลิ้นชักชื่อ, ลิ้นชักยอดเงิน) ถ้าต้องการแค่ "ยอดเงินรวม" ก็เปิดลิ้นชักยอดเงินลิ้นเดียวพอ ไม่ต้องรื้อทุกซอง จึงเป็นเหตุผลที่ Parquet/ORC เร็วกับงานวิเคราะห์ (จุดที่ analogy ไม่ตรง: ถ้าต้องการดึงทั้งแถวหรือเขียนทีละแถวบ่อย ๆ การเปิดหลายลิ้นชักกลับช้ากว่าการหยิบซองเดียว)
+> [Source: generated — not verified against original document]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Row-based" → เก็บทั้งแถวติดกัน เหมาะกับการอ่าน/เขียนทีละ record (CSV, Avro)
+- "Columnar" → เก็บค่าของแต่ละคอลัมน์ติดกัน ทำให้ query อ่านเฉพาะคอลัมน์ที่ใช้ได้ (Parquet, ORC)
+- "Schema ในไฟล์" → ไฟล์บอกชนิดข้อมูลของแต่ละคอลัมน์ไว้เอง (Avro, Parquet, ORC) ต่างจาก CSV ที่ต้องเดาจากข้อความ
+
+**ตัวอย่าง:**
+- ✅ ตาราง 50 คอลัมน์ 100 ล้านแถว แต่ report ใช้แค่ `date` กับ `thb_amount` — เก็บแบบ Columnar (Parquet) อ่านเฉพาะ 2 คอลัมน์ได้ ลดปริมาณข้อมูลที่อ่านจากดิสก์
+- ✅ Streaming ที่ส่งเหตุการณ์ทีละ record ไปเรื่อย ๆ — Avro (Row-based, มี schema ติดไฟล์) เหมาะกว่า
+- ❌ "Parquet ดีกว่า CSV ในทุกงาน" — ไม่จริง ถ้าต้องส่งไฟล์ให้คนที่เปิดด้วย Excel หรือต้องการอ่านด้วยสายตา CSV สะดวกกว่า
+- **ต่างกันตรง:** งานของคุณอ่าน "บางคอลัมน์จากหลายแถว" (Columnar) หรือ "ทั้งแถวทีละ record" (Row-based)
+
+**อย่าสับสน:** "Columnar = ต้องอยู่ในฐานข้อมูลเท่านั้น" — ไม่ใช่ Parquet/ORC บนไฟล์ใน Data Lake ก็เป็น Columnar ได้ "Columnar" หมายถึงวิธีจัดเรียงข้อมูลในไฟล์ ไม่ใช่ชนิดของระบบ
+
+**เช็คความเข้าใจ:** ตารางมี 50 คอลัมน์ 100 ล้านแถว แต่ทุก report ใช้แค่ 3 คอลัมน์ ควรเก็บเป็น Row-based หรือ Columnar และเพราะอะไร?
+<details><summary>เฉลย</summary>
+
+**ตอบ: Columnar (เช่น Parquet)**
+
+**เหตุผล:**
+1. Query อ่านเฉพาะ 3 คอลัมน์ที่ใช้ → Columnar ข้ามคอลัมน์ที่ไม่ได้ใช้ทั้งหมด (I/O น้อยลง)
+2. Row-based ต้องอ่านทั้ง 50 คอลัมน์ทุกแถว แม้ report จะใช้แค่ 3 คอลัมน์
+
+</details>
+
 ---
 
 ### 2.3 Networking, Data Governance, Security & Privacy
@@ -92,6 +123,39 @@ small = pl.read_parquet("transactions.parquet", columns=["date", "thb_amount"])
 
 * **เครื่องมือแนะนำในสไลด์:** Apache Atlas (เครื่องมือจัดการ metadata)
 * เชื่อมโยงกับ Data Dictionary/Catalog/Lineage ใน [[Chapter 02 - Data Cleansing with Spark]] และ Dataplex ใน [[Chapter 05 - Data Warehouse with BigQuery]]
+
+> 💡 **Intuition:** Data Governance เหมือน **"ระบบดูแลอาคาร"** — ต้องรู้ว่า "ใครเป็นเจ้าของห้องไหน?" "ห้องไหนให้เข้าเก็บอะไร?" "ข้อมูลแต่ละตัวมาจากไหน (Lineage)?" ถ้าเกิดปัญหาจะตามรอยไปห้องไหน? องค์กรใหญ่ที่ไม่มีกฎ ข้อมูลจะเละและเชื่อถือไม่ได้ Governance จึงเหมือนกฎอาคาร
+> [Source: generated — not verified against original document]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- **Metadata** = "ข้อมูลเกี่ยวกับข้อมูล" (ตัวอย่าง: ชื่อ column, ประเภท, ownership)
+- **Data Lineage** = ที่มา/เส้นทางของข้อมูล (ข้อมูลนี้มาจากไหน ผ่านขั้นไหนบ้าง)
+- **Data Catalog** = "สารบัญข้อมูล" (บันทึกว่าระบบมีตารางอะไรบ้าง)
+- **Data Quality** = "คุณภาพข้อมูล" (ถูกต้อง ครบถ้วน สม่ำเสมอ ทันเวลา ตามกฎที่ตกลง)
+
+**ตัวอย่าง:**
+- ✅ **Governance ดี** — ทุกตารางมี owner, description, schema ชัดเจน ใครต้องการข้อมูล search ได้เลย
+- ✅ **Lineage ชัด** — Sales table = Extract GCS → Clean → Load; ถ้า GCS มีปัญหา รู้ว่าส่วนไหนต้องแก้
+- ❌ "ปล่อยให้ DE สร้าง table เพิ่มเติมโดยไม่บันทึก" → คนต่อไปหา table ไม่เจอหรือเข้าใจผิด
+- **ต่างกันตรง:** Quality = ผลลัพธ์, Governance = กฎ บทบาท กระบวนการที่ทำให้ได้ Quality ต่อเนื่อง; Quality เป็นส่วนหนึ่งของ Governance
+
+**อย่าสับสน:** "Data Governance = การเข้ารหัส/ปกปิด" — ไม่ใช่ นั่นเป็น "Data Security" (ส่วนหนึ่งของ Governance แต่ไม่ใช่ทั้งหมด)
+
+**เช็คความเข้าใจ:** ธุรกิจขาดทุนเพราะใช้ยอดขาย "wrong number" ต่อเนื่อง 6 เดือน โจทย์: ควรตั้ง Governance อย่างไร ป้องกัน?
+<details><summary>เฉลย</summary>
+
+**ตอบ: ตั้ง Data Catalog + Lineage + Quality Check**
+
+**ขั้นตอน:**
+1. **Data Catalog** — บันทึก นิยาม sales = revenue ก่อน/หลังหัก refund และระบุ Data Owner ทุกคนอ้างอิงนิยามเดียว
+2. **Data Lineage** — ตาม "revenue table = Extract Point-of-Sale → Clean (remove refund) → Load" เมื่อ PoS ผิด รู้เลยว่า step ไหนต้องแก้
+3. **Quality Check** — test: "SUM(revenue) > 0 AND revenue < 1M per transaction" → alert ถ้า rule break
+
+ปัญหา: ไม่มี Governance → "ใครสร้าง? ทำไมต่างกับ month ที่แล้ว?" ไม่มีใครตอบได้
+
+</details>
 
 #### 2.3.3 Data Security & Privacy
 
@@ -113,6 +177,37 @@ small = pl.read_parquet("transactions.parquet", columns=["date", "thb_amount"])
 | ไม่เขียนรหัสผ่านลงโค้ด | ใช้ Secret Manager / Airflow Connection |
 
 > สไลด์อ้างอิง **Data Protection Guideline** จากหน่วยงานของสิงคโปร์ (Data Protection by Design) เป็นแหล่งศึกษาเพิ่ม
+
+#### 💡 เสริม: PII (Personally Identifiable Information)
+
+> 💡 **Intuition:** PII เหมือน **"ชื่อที่เขียนติดบนซองจดหมาย"** — เห็นแล้วรู้ทันทีว่าเป็นของใคร เช่น อีเมล เบอร์โทร เลขบัตรประชาชน ข้อมูลพวกนี้ต้องระวังมากกว่าข้อมูลทั่วไป เพราะรั่วไหลแล้วกระทบตัวบุคคลโดยตรง สิ่งที่คนมักพลาดคือ "ไม่มีชื่อ ≠ ไม่ใช่ PII": ข้อมูลหลายอย่างที่แยกดูเฉย ๆ ไม่ชี้ตัวคน แต่พอรวมกันแล้วระบุตัวได้ (จุดที่ analogy ไม่ตรง: PII ไม่ได้มีแค่ "ชื่อบนซอง" แต่ขึ้นกับการรวมข้อมูลด้วย)
+> [Source: generated — not verified against original document]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Personally Identifiable Information" → ข้อมูลที่ใช้ระบุตัวบุคคลได้ ทั้งโดยตรง (เช่น อีเมล) และเมื่อรวมกับข้อมูลอื่น
+- "GDPR" → กฎหมายคุ้มครองข้อมูลส่วนบุคคลของสหภาพยุโรป
+- "PDPA" → กฎหมายคุ้มครองข้อมูลส่วนบุคคลของไทย (เริ่มใช้งาน 1 มิถุนายน พ.ศ. 2565 ตามสไลด์)
+
+**ตัวอย่าง:**
+- ✅ คอลัมน์ `email` และ `phone` ของลูกค้า — เป็น PII โดยตรง ต้องจำกัดสิทธิ์หรือแฮชก่อนเข้า Warehouse
+- ✅ `birth_date` + `zip_code` + `gender` ที่รวมกันแล้วเหลือคนไม่กี่คน — ระบุตัวได้ จึงต้องพิจารณาเป็น PII ทั้งชุด
+- ❌ "ตารางไม่มีชื่อคน จึงไม่ใช่ PII" — ไม่จริง เพราะการรวมข้อมูลอาจระบุตัวได้
+- **ต่างกันตรง:** ข้อมูลชี้ตัวบุคคลได้โดยตรง หรือต้องอาศัยการรวมกับข้อมูลอื่นจึงชี้ได้
+
+**อย่าสับสน:** "PDPA = GDPR ฉบับไทย ใช้เหมือนกันทุกประการ" — ไม่ใช่ PDPA เป็นกฎหมายไทยที่อ้างอิงแนวทางคล้าย GDPR แต่ขอบเขตและรายละเอียดไม่เหมือนกัน ต้องอ่านข้อกำหนดของแต่ละฉบับ
+
+**เช็คความเข้าใจ:** ทีมต้องให้ Analyst เข้าถึง Warehouse เพื่อวิเคราะห์พฤติกรรมการซื้อ แต่ตารางมีคอลัมน์ `email` และ `phone` ควรจัดการอย่างไร?
+<details><summary>เฉลย</summary>
+
+**ตอบ:** ไม่ให้ Analyst เห็น `email` และ `phone` ตรง ๆ
+
+**ขั้นตอน:**
+1. ให้สิทธิ์เฉพาะ **View** ที่ตัดคอลัมน์ PII ออก หรือแฮชค่า `email` ก่อนเข้า Warehouse (Least Privilege)
+2. ถ้าต้องใช้ข้อมูลระดับบุคคลจริง ให้ตรวจสอบฐานทางกฎหมายตาม PDPA/GDPR ก่อนเปิดสิทธิ์
+
+</details>
 
 ---
 
@@ -139,7 +234,71 @@ small = pl.read_parquet("transactions.parquet", columns=["date", "thb_amount"])
 | **Apache Hudi** | (Hadoop Upserts Deletes and Incrementals) สไลด์ยกข่าว Notion ย้ายจาก Snowflake + Fivetran ไป Hudi ลดค่าใช้จ่ายได้มาก |
 | **Apache Iceberg** | ทำให้หลายระบบ เช่น Spark, Snowflake ทำงานบนข้อมูลชุดเดียวกันได้ |
 
+> 💡 **Intuition:** Data Lakehouse = **"Lake ที่ติดระบบทะเบียน (Table Format)"** — Data Lake = "market" (ทุกคนปล่อยข้อมูลดิบไว้), Data Warehouse = "ห้องเก็บที่จัดเรียบร้อย" (โครงสร้างเข้มงวด แต่ช้าจัดแถวใหม่). Lakehouse = เก็บดิบได้ถูกและยืดหยุ่น แต่รู้ว่าไฟล์ไหนเป็นเวอร์ชันล่าสุด แก้ไขได้ปลอดภัย (ACID) และ Query แบบ Warehouse
+> [Source: generated — not verified against original document]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- **Data Lake** = "เก็บข้อมูลดิบ" ยืดหยุ่น ข้อมูลจำนวนมาก คิดค่าเก็บถูก (storage only)
+- **Data Warehouse** = "เก็บข้อมูลสะอาด" โครงสร้างชัดเจน Query เร็ว (storage + compute)
+- **Data Lakehouse** = "Lake + Warehouse" เก็บดิบเหมือน Lake แต่Query โครงสร้างเหมือน Warehouse
+- **Table Format** = ชั้น Metadata/Transaction log บนไฟล์ Parquet ที่บอกว่าไฟล์ไหนประกอบเป็นตาราง version ล่าสุด (Delta/Hudi/Iceberg)
+- **Time Travel** = "ดูข้อมูลวันที่แล้ว" ทำได้ดีเพราะ versioning
+
+**ตัวอย่าง:**
+- ✅ **Lakehouse ดี** — Spark query GCS Parquet ตรง (ต้นทุน storage แบบ Lake) + ACID transaction (Warehouse quality) ผ่าน Delta Lake
+- ✅ **Time Travel** — `SELECT * FROM sales TIMESTAMP AS OF '2024-06-01'` → ดู data ของวันนั้น (debugging/audit)
+- ❌ "ต้องเลือกใช้ Warehouse เสมอเพราะ Lakehouse ยังใหม่" — ไม่ใช่ ขึ้นกับ workload: ข้อมูลหลากหลาย/ใหญ่/ใช้ ML ร่วม BI → Lakehouse; BI SQL บนข้อมูลโครงสร้างชัด → Warehouse ก็พอ
+- **ต่างกันตรง:** Lake = flexible/ถูก, Warehouse = organized/query fast, Lakehouse = ทั้งสอง
+
+**อย่าสับสน:** "Lakehouse = Lake + query engine" — ไม่ใช่ Lakehouse = Lake storage + Table Format (ACID, schema enforcement, Time Travel) + query engine; แค่ query engine อย่างเดียวไม่พอ
+
+**เช็คความเข้าใจ:** Data streaming ต่อเนื่อง เขียนทุกวินาที ต้องแก้ไขย้อนหลัง (update/delete record เก่า) ควรใช้ Lakehouse หรือ Warehouse?
+<details><summary>เฉลย</summary>
+
+**ตอบ: Lakehouse (Delta Lake / Apache Hudi)**
+
+**เหตุผล:**
+1. **Streaming write บ่อย** → Warehouse รับ streaming ได้ แต่การ update/delete ถี่ปริมาณมากมีต้นทุนและข้อจำกัด DML สูง
+2. **ต้อง update/delete ย้อนหลัง** → Apache Hudi ออกแบบมาสำหรับงานนี้โดยตรง (ย่อมาจาก Hadoop Upserts Deletes and Incrementals)
+3. **Cost** → แยก storage ราคาประหยัดบน Cloud Storage จาก compute ที่เปิดใช้งานเฉพาะเมื่อต้องการ
+4. **Query performance** → Open Table Format มี Metadata ช่วยทำ file pruning/data skipping ทำให้ query รวดเร็วขึ้น
+
+ตัวอย่างจริง: Notion ย้ายจาก Snowflake + Fivetran ไปใช้ Hudi บน Data Lake (S3) ลดค่าใช้จ่ายได้มหาศาล (ตามสไลด์)
+
+</details>
+
 **เครื่องมือดึงข้อมูลอัตโนมัติแบบไม่ต้องเขียนโค้ด:** **Fivetran**, **Airbyte** (ตรงกับ "Pre-built connectors" ใน CH1)
+
+#### 💡 เสริม: Managed Connector (Fivetran / Airbyte)
+
+> 💡 **Intuition:** Fivetran / Airbyte เหมือน **"ปลั๊กแปลงไฟสำเร็จรูป"** — เสียบต้นทาง (SaaS หรือ Database) เข้าปลายทาง (Warehouse) ได้เลยโดยไม่ต้องเขียนโค้ดดึงข้อมูลเอง แต่ปลั๊กมีรูปร่างตายตัวตามที่ผู้ผลิตทำไว้ ถ้าแหล่งข้อมูลไม่มีปลั๊กสำเร็จรูป หรือต้องการควบคุมการดึงละเอียดมาก ก็ยังต้องเขียนเอง (จุดที่ analogy ไม่ตรง: เครื่องมือเหล่านี้ดึงข้อมูลให้ แต่ไม่ได้แทนการออกแบบ Transform หรือ Data Quality)
+> [Source: generated — not verified against original document]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Connector" → โมดูลสำเร็จรูปที่รู้วิธีดึงข้อมูลจากแหล่งเฉพาะ (เช่น Salesforce, Database)
+- "Pre-built" → มีผู้ทำไว้แล้ว ผู้ใช้แค่ตั้งค่า (connection, schedule, ปลายทาง) ไม่ต้องเขียนโค้ด
+- "Managed" → ผู้ให้บริการดูแลการทำงานของ connector ให้ (เช่น จัดการการเชื่อมต่อใหม่เมื่อ API เปลี่ยน ตามเอกสารของผู้ให้บริการ)
+- "Pipeline ในแนว ELT" → ดึงข้อมูลดิบเข้า Warehouse ก่อน แล้วค่อยแปลงทีหลัง (อ้างอิง Chapter 00 และ Chapter 02)
+
+**ตัวอย่าง:**
+- ✅ ดึงข้อมูลจาก SaaS ที่มี connector สำเร็จรูปเข้า BigQuery ตามรอบ โดยไม่ต้องเขียนโค้ด
+- ✅ API ภายในบริษัทที่ไม่มี connector → เขียน extraction script เองแล้วใช้ Airflow สั่งงาน
+- ❌ "ใช้ Fivetran แล้วไม่ต้องทำ data quality หรือ transform อีก" — ไม่จริง ข้อมูลดิบที่ดึงมายังต้องตรวจสอบและแปลงให้ใช้งานได้
+- **ต่างกันตรง:** แหล่งข้อมูลมี connector สำเร็จรูปหรือไม่ และต้องการควบคุม logic การดึงมากแค่ไหน
+
+**อย่าสับสน:** "Fivetran = Orchestrator เต็มรูปแบบ" — ไม่ใช่ Fivetran ดึงข้อมูลเป็นหลัก ส่วนการจัดลำดับ DAG ที่ซับซ้อนหลายขั้นตอนเป็นหน้าที่ของ Orchestrator เช่น Airflow
+
+**เช็คความเข้าใจ:** ต้องดึงข้อมูลจาก API ภายในที่ไม่มี connector สำเร็จรูป และต้องจัดลำดับ 3 งาน (ดึง → ตรวจ → โหลด) ให้รันตามลำดับ ควรใช้อะไร?
+<details><summary>เฉลย</summary>
+
+1. ไม่มี connector สำเร็จรูป → เขียน **extraction script** ดึงจาก API เอง
+2. จัดลำดับ 3 งานที่ต้องรันตามลำดับ → ใช้ **Airflow** สร้าง DAG กำหนด dependency (ดึง → ตรวจ → โหลด)
+
+</details>
 
 ---
 
@@ -164,6 +323,35 @@ git push origin feature/new-dag                  # ส่งขึ้น remote 
 
 สไลด์ชี้ Extra Chapter: Advanced Git + CI/CD
 
+#### 💡 เสริม: Container (Docker) vs Virtual Machine
+
+> 💡 **Intuition:** Container เหมือน **"กล่องอาหารสำเร็จรูปที่มีวัตถุดิบและวิธีทำครบ"** — ไม่ว่าจะเปิดในครัวไหน รสชาติก็เหมือนเดิม ส่วน Virtual Machine (VM) เหมือน **"สร้างบ้านหลังเล็กทั้งหลังไว้ในบ้านใหญ่"** — มีระบบปฏิบัติการ (OS) ของตัวเองครบชุด จึงแยกตัวได้แข็งแรงแต่หนักและช้ากว่า ทำให้ DE ย้าย Airflow ไปเครื่องอื่นได้โดย environment ไม่เพี้ยน (จุดที่ analogy ไม่ตรง: Container ใช้ kernel ของเครื่องโฮสต์ร่วมกัน ไม่ได้แยกตัวแข็งแรงเท่า VM)
+> [Source: generated — not verified against original document]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "Container" → ชุดโปรแกรม + ไลบรารี + ค่า config ที่รันแยกจากกัน โดยใช้ kernel ของเครื่องโฮสต์ร่วมกัน
+- "Image" → แม่แบบ (blueprint) ที่ใช้สร้าง container ตัวใหม่ได้เหมือนกันทุกครั้ง
+- "Virtual Machine (VM)" → จำลองเครื่องทั้งเครื่องพร้อม OS เต็มชุด
+- "Kubernetes" → ระบบจัดการ container จำนวนมาก ให้รัน กระจายงาน และเปิดใหม่เมื่อตัวใดล้ม
+
+**ตัวอย่าง:**
+- ✅ ติดตั้ง Airflow ใน Docker image เดียวกัน นักพัฒนา 3 คนได้ environment เหมือนกันทุกเครื่อง
+- ✅ ระบบมี container 50 ตัวที่ต้องทำงานพร้อมกันและกู้ตัวเองเมื่อล้ม — ใช้ Kubernetes จัดการ
+- ❌ "ข้อมูลใน Docker container จะถูกเก็บถาวรไว้ในตัวมันเสมอ" — ไม่จริง เมื่อลบ container ข้อมูลภายในอาจหายไปด้วย ต้องใช้ volume แยกเก็บข้อมูล
+- **ต่างกันตรง:** VM แยก OS เต็มชุด, Container แชร์ kernel แต่เบาและเริ่มเร็วกว่า
+
+**อย่าสับสน:** "Kubernetes = Docker" — ไม่ใช่ Docker สร้างและรัน container ส่วน Kubernetes จัดการ container จำนวนมากให้ทำงานร่วมกันข้ามหลายเครื่อง
+
+**เช็คความเข้าใจ:** ต้องการรัน Airflow เวอร์ชันเดียวกันบนเครื่องนักพัฒนา 3 คน ให้ environment เหมือนกัน ควรใช้อะไร? และถ้าต้องรัน 50 container ใน production ที่ต้องกู้ตัวเอง ควรใช้อะไรเพิ่ม?
+<details><summary>เฉลย</summary>
+
+1. ใช้ **Docker** สร้าง image เดียวกันแล้วรันบนทุกเครื่อง
+2. รัน 50 container ใน production → ใช้ **Kubernetes** จัดการการรัน กระจายงาน และเปิดใหม่เมื่อล้ม
+
+</details>
+
 ---
 
 ### 2.6 Machine Learning Model & Data Engineer
@@ -180,6 +368,37 @@ git push origin feature/new-dag                  # ส่งขึ้น remote 
 * **ตำแหน่งของ DE:** เตรียมข้อมูลและสร้าง Pipeline ให้ Model ใช้งานได้
 * **AutoML:** บริการ ML + Data Engineering แบบตัวเดียวจบ สร้างโมเดลง่ายๆ (สไลด์ตัวอย่าง Google Vision AutoML)
 * **ต่อยอด:** สไลด์โปรโมตคอร์ส **Road to Machine Learning Engineer (R2MLE)** ของ DataTH `[เป็นเนื้อหาโฆษณาคอร์ส ไม่ใช่เนื้อหาวิชาการ]`
+
+#### 💡 เสริม: AI > ML > DL
+
+> 💡 **Intuition:** ลองนึกถึง **"ตุ๊กตารัสเซียซ้อนกัน"** — AI เป็นตุ๊กตาใหญ่สุดคือ "ทำให้เครื่องดูฉลาด" ซึ่งรวมวิธีที่เขียนกฎด้วยมือไว้ด้วย ML เป็นตุ๊กตาชั้นในที่ "ให้เครื่องเรียนรูปแบบจากข้อมูลแทนการเขียนกฎเอง" และ DL เป็นชั้นในสุดที่ใช้ neural network หลายชั้น ทำให้ DE รู้ว่าตัวเองต้องเตรียมข้อมูลให้ทั้ง ML และ DL ได้ (จุดที่ analogy ไม่ตรง: การซ้อนกันบอกเรื่องขอบเขต ไม่ได้บอกว่า AI ต้องมี DL เสมอ)
+> [Source: generated — not verified against original document]
+
+**🧭 ทำความเข้าใจ** _[Source: generated — not verified against original document]_
+
+**แตกวลีสำคัญ:**
+- "AI (Artificial Intelligence)" → ระบบที่แสดงพฤติกรรมฉลาด ไม่ว่าจะด้วยกฎที่เขียนไว้หรือการเรียนรู้จากข้อมูล
+- "ML (Machine Learning)" → อัลกอริทึมที่เรียนรูปแบบจากข้อมูลแล้วใช้ทำนายหรือจัดกลุ่ม
+- "DL (Deep Learning)" → ML ที่ใช้ neural network หลายชั้นเรียนรู้ฟีเจอร์เอง
+
+**ตัวอย่าง:**
+- ✅ ระบบ "ถ้ายอดคืนสินค้าเกิน 3 ครั้ง ให้ flag" ที่คนเขียนกฎเอง — อยู่ในกลุ่ม AI (rule-based) แต่ไม่ใช่ ML เพราะไม่ได้เรียนจากข้อมูล
+- ✅ โมเดลที่เรียนจากยอดขายย้อนหลังแล้วทำนายยอดเดือนหน้า — เป็น ML
+- ❌ "Deep Learning ไม่ใช่ ML เพราะซับซ้อนกว่า" — ไม่จริง DL เป็นส่วนหนึ่งของ ML เพียงแต่ใช้ neural network หลายชั้น
+- **ต่างกันตรง:** คนเขียนกฎเอง (AI แบบ rule-based) หรือให้เครื่องเรียนจากข้อมูล (ML/DL)
+
+**อย่าสับสน:** "AI = ChatGPT" — ไม่ใช่ ChatGPT เป็นตัวอย่างหนึ่งของระบบที่ใช้ DL ซึ่งอยู่ภายใต้ AI โดยรวม AI มีขอบเขตกว้างกว่ามาก
+
+**เช็คความเข้าใจ:** ระบบให้ส่วนลด 10% เมื่อลูกค้าซื้อครบ 3 ครั้ง โดยคนกำหนดเงื่อนไขเอง จัดอยู่ในกลุ่มไหน และเพราะอะไร?
+<details><summary>เฉลย</summary>
+
+**ตอบ:** อยู่ในกลุ่ม **AI (แบบ rule-based)** แต่ **ไม่ใช่ ML**
+
+**เหตุผล:**
+1. เงื่อนไข "ซื้อครบ 3 ครั้ง → ลด 10%" คนเขียนเองทั้งหมด
+2. ML ต้องเรียนรูปแบบจากข้อมูลเพื่อหาเงื่อนไขเอง ระบบนี้ไม่ได้เรียนจากข้อมูล
+
+</details>
 
 ---
 
