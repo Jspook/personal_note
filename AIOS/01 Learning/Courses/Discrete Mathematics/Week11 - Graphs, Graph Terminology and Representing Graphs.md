@@ -8,7 +8,7 @@
 
 ## Part 1: Macro Architecture & Overview
 
-**กราฟ (Graph)** คือโครงสร้างที่ใช้แทน "ความเชื่อมโยงระหว่างวัตถุ" เช่น ความรู้จักกันระหว่างคน, การทำงานร่วมกัน, ลิงก์ระหว่างเว็บไซต์, เครือข่ายคอมพิวเตอร์/อินเทอร์เน็ต, เครือข่ายถนนและรถไฟ บทนี้ปูพื้นตั้งแต่นิยามของกราฟ, ประเภทของกราฟ (จำแนกด้วย 3 คำถาม), ศัพท์ (adjacent, degree, neighborhood), ทฤษฎีบท Handshaking, กราฟพิเศษ (K<sub>n</sub>, C<sub>n</sub>, W<sub>n</sub>, Q<sub>n</sub>, Bipartite) และวิธีแทนกราฟในคอมพิวเตอร์ (Adjacency List / Adjacency Matrix / Incidence Matrix)
+**กราฟ (Graph)** คือโครงสร้างที่ใช้แทน "<mark style="background:#affad1">ความเชื่อมโยงระหว่างวัตถุ</mark>" เช่น ความรู้จักกันระหว่างคน, การทำงานร่วมกัน, ลิงก์ระหว่างเว็บไซต์, เครือข่ายคอมพิวเตอร์/อินเทอร์เน็ต, เครือข่ายถนนและรถไฟ บทนี้ปูพื้นตั้งแต่นิยามของกราฟ, ประเภทของกราฟ (จำแนกด้วย 3 คำถาม), ศัพท์ (adjacent, degree, neighborhood), ทฤษฎีบท Handshaking, กราฟพิเศษ (K<sub>n</sub>, C<sub>n</sub>, W<sub>n</sub>, Q<sub>n</sub>, Bipartite) และวิธีแทนกราฟในคอมพิวเตอร์ (Adjacency List / Adjacency Matrix / Incidence Matrix)
 
 ภาพรวมของบท Graphs ทั้งหมด (Chapter Summary):
 
@@ -370,13 +370,13 @@ a เชื่อมกับ edges: {a,b} (นับ 1), {a,c} (นับ 1), {
 
 **ตัวอย่าง:** ใช้ Directed multigraph ในหัวข้อ 2.2 (a→b ×2, b→c, c→d, d→a, c→a, loop ที่ c)
 
-| Vertex | deg⁻ (in) | deg⁺ (out) |
-| :--- | :--- | :--- |
-| a | 2 (d→a, c→a) | 2 |
-| b | 2 | 1 |
-| c | 2 (b→c, loop) | 3 (c→d, c→a, loop) |
-| d | 1 | 1 |
-| **รวม** | **7** | **7** = \|E\| ✔ |
+| Vertex  | deg⁻ (in)     | deg⁺ (out)         |
+| :------ | :------------ | :----------------- |
+| a       | 2 (d→a, c→a)  | 2                  |
+| b       | 2             | 1                  |
+| c       | 2 (b→c, loop) | 3 (c→d, c→a, loop) |
+| d       | 1             | 1                  |
+| **รวม** | **7**         | **7** = \|E\| ✔    |
 
 > **Theorem 3:** ถ้า G = (V, E) เป็นกราฟมีทิศ แล้ว
 > $$\sum_{v \in V}\deg^-(v) = \sum_{v \in V}\deg^+(v) = |E|$$
