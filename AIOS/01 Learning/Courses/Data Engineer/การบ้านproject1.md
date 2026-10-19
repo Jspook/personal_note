@@ -65,26 +65,26 @@ erDiagram
 ### 2.1 สิ่งที่เข้าใจแล้ว
 
 * **Container vs Volume:** container คือกล่องที่รัน (running process) ส่วน **volume** คือที่เก็บข้อมูล `docker compose down` ไม่ลบ volume แต่ `down -v` ลบ
-* **Object storage:** ไม่มีโฟลเดอร์จริง key ที่มี `/` เป็นแค่ชื่อ
-* **Airflow:** เป็น **Orchestrator** ไม่ประมวลผลข้อมูลเอง **DAG** คือกราฟของ task และ dependency
+* **Object storage:** ไม่มีโฟลเดอร์จริง key ที่มี `/` เป็นแค่ชื่อ `**Obj Storage คืออะไร`
+* **Airflow:** เป็น **Orchestrator** ไม่ประมวลผลข้อมูลเอง **DAG** คือกราฟของ task และ dependency `**orchestrator คืออะไร ` 
 * **เหตุผลแยก task:** รู้จุดล้มเหลว รันซ้ำเฉพาะขั้นนั้นได้ ขั้นนั้นต้องรันซ้ำได้อย่างปลอดภัย
-* **Replace vs Ledger:** replace รันซ้ำปลอดภัยแต่ไม่เก็บประวัติ ซึ่งขัดกับเป้าหมาย Bronze ส่วน **ledger** ใช้กันโหลดซ้ำได้
+	* **Replace vs Ledger:** replace รันซ้ำปลอดภัยแต่ไม่เก็บประวัติ ซึ่งขัดกับเป้าหมาย Bronze ส่วน **ledger** ใช้กันโหลดซ้ำได้ `**ledger คืออะไร`
 
-| เคยคิด | ความจริง |
-| :--- | :--- |
+| เคยคิด                                   | ความจริง                                             |
+| :--------------------------------------- | :--------------------------------------------------- |
 | `up -d` หลัง `down -v` โหลดข้อมูลกลับเอง | สร้างแค่ container + volume ว่าง ต้องรัน loader ใหม่ |
-| มี CSV แล้วไม่ต้องรัน loader | CSV เป็นข้อมูลนำเข้า ไม่ใช่ตัวทำงาน |
-| PROJECT_INSTRUCTION มีโค้ดครบแล้ว | `validate_raw_data` ยังไม่มีโค้ด |
+| มี CSV แล้วไม่ต้องรัน loader             | CSV เป็นข้อมูลนำเข้า ไม่ใช่ตัวทำงาน                  |
+| PROJECT_INSTRUCTION มีโค้ดครบแล้ว        | `validate_raw_data` ยังไม่มีโค้ด                     |
 
-**Decisions ที่ตัดสินแล้ว:** ADR 008 Regenerate over Backup (ข้อมูลสร้างซ้ำได้ จึงไม่ backup ออกนอกเครื่อง, ยังไม่ commit), Bronze เปลี่ยนจาก replace เป็นแบบเก็บประวัติ, Idempotency ด้วย ledger
+**Decisions ที่ตัดสินแล้ว:** ADR 008 Regenerate over Backup (ข้อมูลสร้างซ้ำได้ จึงไม่ backup ออกนอกเครื่อง, ยังไม่ commit), Bronze เปลี่ยนจาก replace เป็นแบบเก็บประวัติ, Idempotency ด้วย ledger `**loaderคืออะไร` `**idempotencyคืออะไร`
 
 ---
 
-### 2.2 Open #1: Batch key แยก `orders.csv` initial กับ incremental
+### 2.2 Open #1: Batch key แยก `orders.csv` initial กับ incremental `**incremental คือ`
 
 > ไฟล์ชื่อเหมือนกัน ledger จึงใช้ชื่อไฟล์เป็นกุญแจไม่ได้ ไม่งั้น incremental จะถูกมองว่า "เคยโหลดแล้ว" แล้วถูกข้าม
-
-**แนวคิด:** batch key ต้องเป็น "ค่าที่ต่างกันจริงระหว่างสองชุด" ตัวเลือก:
+`**leadgerทำงานอย่างไร`
+**แนวคิด:** batch key ต้องเป็น "ค่าที่ต่างกันจริงระหว่างสองชุด" ตัวเลือก: `**batch key คืออะไร`
 
 | ตัวเลือก | ตัวอย่าง | จุดอ่อน |
 | :--- | :--- | :--- |
@@ -92,7 +92,7 @@ erDiagram
 | ช่วงเวลาข้อมูล | min/max `order_date` | batch ซ้อนช่วงกันได้ |
 | Hash ของเนื้อไฟล์ | `sha256(file)` | ไฟล์เดียวกันแก้นิดเดียว hash เปลี่ยน |
 | Run id / logical date ของ Airflow | `ds` | ผูกกับ scheduler |
-
+`Hash คืออะไร และ run id / logical date ของ airflow คือ
 ```sql
 -- ตัวอย่าง ledger: batch_key ต้องไม่ซ้ำ (กันโหลดซ้ำด้วย constraint)
 CREATE TABLE bronze.load_ledger (
