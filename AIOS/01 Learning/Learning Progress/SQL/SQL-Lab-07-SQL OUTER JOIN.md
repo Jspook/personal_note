@@ -405,6 +405,8 @@ WHERE p.customerNumber IS NULL;
 ---
 
 ## เอกสารเชื่อมโยง (Backlinks)
+* **แบบทดสอบที่เกี่ยวข้อง:**
+  * [[SQL-Mock-Quiz-03-Lab5-9-DML]] (ชุดข้อสอบรวมจาก Lab 5-9 และ DML)
 * **เนื้อหาอ้างอิงบทเรียน:**
   * [[LAB 7 - SQL OUTER JOIN (Left, Right, Full)]] (สรุปคำสั่ง Left/Right Outer Join และกรณี Unmatched Records)
   * [[LAB 6 - SQL JOIN (Inner, Cross, Natural, Self)]] (เปรียบเทียบ Inner Join vs Outer Join)

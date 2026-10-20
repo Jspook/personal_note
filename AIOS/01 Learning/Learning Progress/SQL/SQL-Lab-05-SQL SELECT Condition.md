@@ -542,6 +542,8 @@ where Tradename like '%2.5!%' escape '!';
 ---
 
 ## เอกสารเชื่อมโยง (Backlinks)
+* **แบบทดสอบที่เกี่ยวข้อง:**
+  * [[SQL-Mock-Quiz-03-Lab5-9-DML]] (ชุดข้อสอบรวมจาก Lab 5-9 และ DML)
 * **เนื้อหาอ้างอิงบทเรียน:**
   * [[LAB 5 - SQL SELECT with Conditions (WHERE, Operators, LIKE, NULL, ORDER BY)]] (สรุปคำสั่ง WHERE, Operators, LIKE, NULL)
   * [[SQL-Lab-04-SQL SELECT]] (พื้นฐานคำสั่ง SELECT)

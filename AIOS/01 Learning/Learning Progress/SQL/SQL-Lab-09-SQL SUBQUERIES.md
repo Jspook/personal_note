@@ -473,6 +473,9 @@ Subquery Placement & Logic
 
 ## เอกสารเชื่อมโยง (Wiki-Style Backlinks)
 
+* **แบบทดสอบที่เกี่ยวข้อง:**
+  * [[SQL-Mock-Quiz-03-Lab5-9-DML]] (ชุดข้อสอบรวมจาก Lab 5-9 และ DML)
+
 * **วิชาและหัวข้อที่เกี่ยวข้อง:**
   * [[SQL-Lab-08-SQL AGGREGATE FUNCTION]] (บทก่อนหน้า: การใช้งาน Aggregate Functions, GROUP BY และ HAVING)
   * [[SQL-Lab-07-SQL OUTER JOIN]] (บทก่อนหน้า: การเชื่อมโยงตารางแบบ LEFT / RIGHT OUTER JOIN)

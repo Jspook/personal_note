@@ -456,5 +456,8 @@ WHERE a.employee_id < b.employee_id;  -- < ป้องกันคู่ซ้�
   - [[LAB 9 - SQL Subqueries]] (Subquery เป็นอีกวิธีที่ทำสิ่งเดียวกับ JOIN ได้บางกรณี)
   - [[Chapter 01 Introduction to Database System & Relational Model]] (พื้นฐาน Relational Model ที่ทำให้ JOIN มีความหมาย)
 
+- **แบบทดสอบที่เกี่ยวข้อง:**
+  - [[SQL-Mock-Quiz-03-Lab5-9-DML]] (ชุดข้อสอบรวมจาก Lab 5-9 และ DML)
+
 - **แหล่งข้อมูล:**
   - Source: `Resources/Books/Database/lab DB/DB66-LAB 6-Join (1).pdf`

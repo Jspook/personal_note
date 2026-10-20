@@ -618,6 +618,9 @@ WHERE job_id LIKE 'SA%'
   - [[LAB 8 - SQL GROUP BY and Aggregate Functions]] (WHERE กรองแถวก่อน GROUP BY เสมอ)
   - [[LAB 9 - SQL Subqueries]] (Subquery ใช้ Operators เหล่านี้ใน WHERE ของ Inner Query ด้วย)
 
+- **แบบทดสอบที่เกี่ยวข้อง:**
+  - [[SQL-Mock-Quiz-03-Lab5-9-DML]] (ชุดข้อสอบรวมจาก Lab 5-9 และ DML)
+
 - **แหล่งข้อมูล:**
   - Source: `Resources/Books/Database/lab DB/DB66-LAB 5-SQL-Select conditions (1).pdf`
   - ⚠️ **[Source: generated — not verified against original document]**

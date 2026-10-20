@@ -513,5 +513,8 @@ WHERE department_id IS NOT NULL;
   - [[LAB 9 - SQL Subqueries]] (Subquery สามารถใช้แทน HAVING ได้ในบางกรณี)
   - [[LAB 4 - SQL SELECT]] (SELECT พื้นฐานก่อนเรียน GROUP BY)
 
+- **แบบทดสอบที่เกี่ยวข้อง:**
+  - [[SQL-Mock-Quiz-03-Lab5-9-DML]] (ชุดข้อสอบรวมจาก Lab 5-9 และ DML)
+
 - **แหล่งข้อมูล:**
   - Source: `Resources/Books/Database/lab DB/DB66-LAB 8-Group By Function.pdf`

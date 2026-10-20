@@ -486,5 +486,8 @@ GROUP BY d.department_name;
   - [[LAB 8 - SQL GROUP BY and Aggregate Functions]] (GROUP BY มักใช้ร่วมกับ OUTER JOIN เพื่อ Reporting)
   - [[LAB 9 - SQL Subqueries]] (Subquery เป็นอีกวิธีหา unmatched records)
 
+- **แบบทดสอบที่เกี่ยวข้อง:**
+  - [[SQL-Mock-Quiz-03-Lab5-9-DML]] (ชุดข้อสอบรวมจาก Lab 5-9 และ DML)
+
 - **แหล่งข้อมูล:**
   - Source: `Resources/Books/Database/lab DB/DB66-LAB 7-Outer Join.pdf`

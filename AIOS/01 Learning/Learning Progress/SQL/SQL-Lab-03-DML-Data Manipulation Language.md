@@ -270,6 +270,8 @@ WHERE salary < 1200;
 ---
 
 ## เอกสารเชื่อมโยง (Backlinks)
+* **แบบทดสอบที่เกี่ยวข้อง:**
+  * [[SQL-Mock-Quiz-03-Lab5-9-DML]] (ชุดข้อสอบรวมจาก Lab 5-9 และ DML)
 * **เนื้อหาอ้างอิงบทเรียน:**
   * [[Chapter 01 Introduction to Database System & Relational Model]] (ข้อมูลและการจัดการข้อมูลในตาราง)
   * [[SQL-Lab-01-DDL-Creating and Managing Tables]] (ตารางเป้าหมายที่ใช้จัดการข้อมูล)

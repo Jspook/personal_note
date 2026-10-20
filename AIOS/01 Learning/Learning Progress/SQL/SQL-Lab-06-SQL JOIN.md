@@ -405,5 +405,7 @@ WHERE c.country_name LIKE 'U%';
 ---
 
 ## เอกสารเชื่อมโยง (Backlinks)
+* **แบบทดสอบที่เกี่ยวข้อง:**
+  * [[SQL-Mock-Quiz-03-Lab5-9-DML]] (ชุดข้อสอบรวมจาก Lab 5-9 และ DML)
 * **เนื้อหาอ้างอิงบทเรียน:**
   * [[LAB 6 - SQL JOIN (Inner, Cross, Natural, Self)]] (สรุปคำสั่ง Inner Join, Self Join, Multi-table Joins)

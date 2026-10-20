@@ -744,6 +744,7 @@ FROM t1
 
 ## Part 4: Backlinks
 
+* [[SQL-Mock-Quiz-03-Lab5-9-DML]] ← ชุดข้อสอบรวมจาก Lab 5-9 และ DML
 * [[SQL-Lab-07-SQL OUTER JOIN]] ← บทก่อนหน้า: OUTER JOIN
 * [[SQL-Lab-06-SQL JOIN]] ← INNER JOIN
 * [[SQL-Lab-05-SQL SELECT Condition]] ← WHERE, LIKE, BETWEEN

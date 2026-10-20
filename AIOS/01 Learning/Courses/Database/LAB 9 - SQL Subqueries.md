@@ -535,5 +535,8 @@ WHERE NOT EXISTS (
   - [[LAB 8 - SQL GROUP BY and Aggregate Functions]] (Single-Row Subquery มักใช้ Aggregate เช่น AVG, MAX)
   - [[LAB 5 - SQL SELECT with Conditions]] (WHERE + Operators พื้นฐานก่อนเรียน Subquery)
 
+- **แบบทดสอบที่เกี่ยวข้อง:**
+  - [[SQL-Mock-Quiz-03-Lab5-9-DML]] (ชุดข้อสอบรวมจาก Lab 5-9 และ DML)
+
 - **แหล่งข้อมูล:**
   - Source: `Resources/Books/Database/lab DB/DB66-LAB 9-Subqueries.pdf`
