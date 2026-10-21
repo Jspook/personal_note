@@ -30,15 +30,15 @@ erDiagram
     products ||--o{ orderdetails : "productCode"
 ```
 
-| Table | Columns |
-| :--- | :--- |
-| `customers` | customerNumber, customerName, contactLastName, contactFirstName, city, state, country, salesRepEmployeeNumber, creditLimit |
-| `employees` | employeeNumber, lastName, firstName, officeCode, reportsTo, jobTitle |
-| `offices` | officeCode, city, state, country, territory |
-| `orderdetails` | orderNumber, productCode, quantityOrdered, priceEach |
-| `orders` | orderNumber, orderDate, shippedDate, status, comments, customerNumber |
-| `payments` | customerNumber, checkNumber, paymentDate, amount |
-| `products` | productCode, productName, productLine, productScale, productVendor, quantityInStock, buyPrice |
+| Table          | Columns                                                                                                                    |
+| :------------- | :------------------------------------------------------------------------------------------------------------------------- |
+| `customers`    | customerNumber, customerName, contactLastName, contactFirstName, city, state, country, salesRepEmployeeNumber, creditLimit |
+| `employees`    | employeeNumber, lastName, firstName, officeCode, reportsTo, jobTitle                                                       |
+| `offices`      | officeCode, city, state, country, territory                                                                                |
+| `orderdetails` | orderNumber, productCode, quantityOrdered, priceEach                                                                       |
+| `orders`       | orderNumber, orderDate, shippedDate, status, comments, customerNumber                                                      |
+| `payments`     | customerNumber, checkNumber, paymentDate, amount                                                                           |
+| `products`     | productCode, productName, productLine, productScale, productVendor, quantityInStock, buyPrice                              |
 
 ---
 
@@ -78,7 +78,12 @@ erDiagram
 
 **คำตอบของฉัน:**
 ```sql
-
+select customerName , city , creditLimit
+from customer c
+where state is null 
+and country not in ('USA','Canada' , 'France')
+and creditLimit is between 50000 and 100000
+order by creditLimit desc , customerName asc
 ```
 
 > [!INFO] เฉลย
@@ -101,7 +106,13 @@ erDiagram
 
 **คำตอบของฉัน:**
 ```sql
-
+select o.customerName , ord.orderNumber , ord.quantityOrdered , ord.priceEach , p.productName
+from orderdetails ord
+join orders o on ord.orderNumber = o.orderNumber
+join products p on p.productCode = ord.productCode
+where productLine = 'Planes'
+and o.orderDate >= '2004-1-1'
+order by orderNumber asc
 ```
 
 > [!INFO] เฉลย
@@ -132,7 +143,8 @@ erDiagram
 
 **คำตอบของฉัน:**
 ```sql
-
+insert (103,'ZZ99999','2026-10-20',25000.50)
+into payments
 ```
 
 > [!INFO] เฉลย
@@ -153,7 +165,11 @@ erDiagram
 
 **คำตอบของฉัน:**
 ```sql
-
+select p.productCode , p.productName , p.productLine
+from products p
+LEFT JOIN orderdetails ord on p.productCode = ord.productCode
+where ord.orderNumber is null
+order by  productLine asc , productName asc
 ```
 
 > [!INFO] เฉลย
@@ -176,7 +192,10 @@ erDiagram
 
 **คำตอบของฉัน:**
 ```sql
-
+select employeeNumber , firstName , lastName , jobTitle 
+from employees
+where employeeNumber not in (select salesRepEmployeeNumber from customers 
+where salesRepEmployeeNumber is not null)
 ```
 
 > [!INFO] เฉลย
@@ -200,7 +219,16 @@ erDiagram
 
 **คำตอบของฉัน:**
 ```sql
-
+select 
+concat(e.firstName , ' ' ,e.lastName) as 'Employee' ,
+oe.city as 'Employee City' ,
+concat(m.firstName , ' ' ,m.lastName) as 'Manager' ,
+om.city as 'Manager City'
+from employees e
+inner join employees m on m.employeeNumber = e.reportsTo
+join offices oe on e.officeCode = oe.officeCode
+join offices om on om.officeCode = m.officeCode
+where e.officeCode <> m.officeCode
 ```
 
 > [!INFO] เฉลย
@@ -230,7 +258,8 @@ erDiagram
 
 **คำตอบของฉัน:**
 ```sql
-
+create table vip_customers (
+customerNumber int primary)
 ```
 
 > [!INFO] เฉลย
