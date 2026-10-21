@@ -6,7 +6,7 @@
 * **วันที่สร้าง:** 2026-10-21
 * **Database อ้างอิง:** 5 ตาราง (`PropertyForRent`, `Client`, `Interesting`, `PrivateOwner`, `Staff`) จากไฟล์ `Quiz1_Schema_Sec4-rev.pdf`
 * **SQL Dialect:** MySQL (ใช้ backtick, `LIMIT`, ไม่มี `FULL OUTER JOIN`)
-* **วิธีใช้:** เขียนคำตอบเองก่อน แล้วค่อยเปิด `<details>` เทียบ ข้อที่ผิดเชิงแนวคิดให้ลงใน `Mistake Log`
+* **วิธีใช้:** เขียนคำตอบเองก่อน แล้วค่อยกดเปิดกล่อง "เฉลย" เทียบ ข้อที่ผิดเชิงแนวคิดให้ลงใน `Mistake Log`
 
 > [!NOTE] ข้อกำหนดของข้อสอบแนวนี้
 > - ถ้าโจทย์ระบุ `ON` / `USING` / `BETWEEN` / Alias / `AND`/`OR` / `ESCAPE` ต้องใช้ตามที่กำหนด
@@ -123,7 +123,7 @@ erDiagram
 | 15 | `LIKE` + `ESCAPE` (`%` เป็นตัวอักษรจริง) | `Interesting` | ⭐⭐⭐ | |
 | 16 | `WHERE` เท่ากับ | `Client` | ⭐ | |
 | 17 | `LIKE` ขึ้นต้น/ลงท้าย | `PropertyForRent` | ⭐ | |
-| 18 | `LIKE` ขึ้นต้น/ลงท้าย (โจทย์ซ้ำกับข้อ 17) | `PropertyForRent` | ⭐ | |
+| 18 | `IS NULL` (FK ว่าง) | `PropertyForRent` | ⭐ | |
 
 ---
 
@@ -136,21 +136,20 @@ erDiagram
 
 **คำตอบของฉัน:**
 ```sql
-
+select s.Position , s.Salary , pr.PropStreet , pr.PropCity
+from staff s
+join propertyforrent pr on pr.StaffNo = s.StaffNo
 ```
 
-<details>
-<summary>เฉลย</summary>
-
-```sql
-SELECT s.Position, s.Salary, p.PropStreet, p.PropCity
-FROM Staff s
-JOIN PropertyForRent p ON s.StaffNo = p.StaffNo;
-```
-
-- ตารางต่อกันด้วย FK `PropertyForRent.StaffNo` → `Staff.StaffNo`
-- `JOIN` เฉยๆ = `INNER JOIN` แสดงเฉพาะพนักงานที่ดูแลอสังหาฯ อย่างน้อย 1 แห่ง
-</details>
+> [!INFO]- เฉลย
+> ```sql
+> SELECT s.Position, s.Salary, p.PropStreet, p.PropCity
+> FROM Staff s
+> JOIN PropertyForRent p ON s.StaffNo = p.StaffNo;
+> ```
+>
+> - ตารางต่อกันด้วย FK `PropertyForRent.StaffNo` → `Staff.StaffNo`
+> - `JOIN` เฉยๆ = `INNER JOIN` แสดงเฉพาะพนักงานที่ดูแลอสังหาฯ อย่างน้อย 1 แห่ง
 
 ---
 
@@ -159,23 +158,22 @@ JOIN PropertyForRent p ON s.StaffNo = p.StaffNo;
 
 **คำตอบของฉัน:**
 ```sql
-
+select PropNo , Type , Rent 
+from propertyforrent prf
+where Rent < some(select Rent from propertyforrent where Type = 'condo')
 ```
 
-<details>
-<summary>เฉลย</summary>
-
-```sql
-SELECT PropNo, Type, Rent
-FROM PropertyForRent
-WHERE Rent < ANY (SELECT Rent
-                  FROM PropertyForRent
-                  WHERE Type = 'condo');
-```
-
-- "บางแห่ง" = `ANY` (`< ANY` เทียบกับค่าสูงสุดของ condo: `Rent < MAX(condo)`)
-- ถ้าโจทย์ใช้คำว่า "ทุกแห่ง" ต้องเปลี่ยนเป็น `ALL`
-</details>
+> [!INFO]- เฉลย
+> ```sql
+> SELECT PropNo, Type, Rent
+> FROM PropertyForRent
+> WHERE Rent < ANY (SELECT Rent
+>                   FROM PropertyForRent
+>                   WHERE Type = 'condo');
+> ```
+>
+> - "บางแห่ง" = `ANY` (`< ANY` เทียบกับค่าสูงสุดของ condo: `Rent < MAX(condo)`)
+> - ถ้าโจทย์ใช้คำว่า "ทุกแห่ง" ต้องเปลี่ยนเป็น `ALL`
 
 ---
 
@@ -187,21 +185,18 @@ WHERE Rent < ANY (SELECT Rent
 
 ```
 
-<details>
-<summary>เฉลย</summary>
-
-```sql
-SELECT sFirstName, sLastName, Salary
-FROM Staff
-WHERE Position = (SELECT Position
-                  FROM Staff
-                  WHERE StaffNo = 400021)
-  AND StaffNo <> 400021;
-```
-
-- `StaffNo` เป็น PK → Subquery คืนแถวเดียว ใช้ `=` ได้
-- ไม่ใช้ `SET @pos = ...` ตามที่โจทย์ห้าม
-</details>
+> [!INFO]- เฉลย
+> ```sql
+> SELECT sFirstName, sLastName, Salary
+> FROM Staff
+> WHERE Position = (SELECT Position
+>                   FROM Staff
+>                   WHERE StaffNo = 400021)
+>   AND StaffNo <> 400021;
+> ```
+>
+> - `StaffNo` เป็น PK → Subquery คืนแถวเดียว ใช้ `=` ได้
+> - ไม่ใช้ `SET @pos = ...` ตามที่โจทย์ห้าม
 
 ---
 
@@ -213,19 +208,16 @@ WHERE Position = (SELECT Position
 
 ```
 
-<details>
-<summary>เฉลย</summary>
-
-```sql
-SELECT PropNo, COUNT(Comment) AS AmountOfComment
-FROM Interesting
-GROUP BY PropNo
-HAVING COUNT(Comment) > 1;
-```
-
-- เงื่อนไขบน Aggregate ต้องอยู่ใน `HAVING` (ใช้ `WHERE` ไม่ได้)
-- `COUNT(Comment)` ไม่นับแถวที่ `Comment` เป็น NULL ส่วน `COUNT(*)` นับทุกแถว
-</details>
+> [!INFO]- เฉลย
+> ```sql
+> SELECT PropNo, COUNT(Comment) AS AmountOfComment
+> FROM Interesting
+> GROUP BY PropNo
+> HAVING COUNT(Comment) > 1;
+> ```
+>
+> - เงื่อนไขบน Aggregate ต้องอยู่ใน `HAVING` (ใช้ `WHERE` ไม่ได้)
+> - `COUNT(Comment)` ไม่นับแถวที่ `Comment` เป็น NULL ส่วน `COUNT(*)` นับทุกแถว
 
 ---
 
@@ -237,17 +229,14 @@ HAVING COUNT(Comment) > 1;
 
 ```
 
-<details>
-<summary>เฉลย</summary>
-
-```sql
-SELECT OwnerNo, COUNT(DISTINCT StaffNo) AS AmountOfStaff
-FROM PropertyForRent
-GROUP BY OwnerNo;
-```
-
-- เจ้าของ 1 คนมีได้หลายอสังหาฯ และพนักงานคนเดียวอาจดูแลหลายแห่งของเจ้าของคนเดียวกัน → ต้อง `COUNT(DISTINCT StaffNo)` ไม่เช่นนั้นจะนับซ้ำ
-</details>
+> [!INFO]- เฉลย
+> ```sql
+> SELECT OwnerNo, COUNT(DISTINCT StaffNo) AS AmountOfStaff
+> FROM PropertyForRent
+> GROUP BY OwnerNo;
+> ```
+>
+> - เจ้าของ 1 คนมีได้หลายอสังหาฯ และพนักงานคนเดียวอาจดูแลหลายแห่งของเจ้าของคนเดียวกัน → ต้อง `COUNT(DISTINCT StaffNo)` ไม่เช่นนั้นจะนับซ้ำ
 
 ---
 
@@ -259,17 +248,14 @@ GROUP BY OwnerNo;
 
 ```
 
-<details>
-<summary>เฉลย</summary>
-
-```sql
-SELECT AVG(Salary) AS AverageSalary
-FROM Staff;
-```
-
-- `AVG` ข้ามค่า NULL อัตโนมัติ จึงตรงกับ "ทุกคนที่ได้รับเงินเดือน"
-- เขียน `WHERE Salary IS NOT NULL` เพิ่มได้ ผลลัพธ์เท่ากัน
-</details>
+> [!INFO]- เฉลย
+> ```sql
+> SELECT AVG(Salary) AS AverageSalary
+> FROM Staff;
+> ```
+>
+> - `AVG` ข้ามค่า NULL อัตโนมัติ จึงตรงกับ "ทุกคนที่ได้รับเงินเดือน"
+> - เขียน `WHERE Salary IS NOT NULL` เพิ่มได้ ผลลัพธ์เท่ากัน
 
 ---
 
@@ -281,19 +267,16 @@ FROM Staff;
 
 ```
 
-<details>
-<summary>เฉลย</summary>
-
-```sql
-SELECT o.oFirstName, o.oLastName, o.OwnerTel
-FROM PrivateOwner o
-LEFT JOIN PropertyForRent p ON o.OwnerNo = p.OwnerNo
-WHERE p.PropNo IS NULL;
-```
-
-- Pattern "หาที่ไม่มีคู่": `LEFT JOIN` + `WHERE <PK ของตารางขวา> IS NULL`
-- ต้องเช็ค PK (`PropNo`) เพราะเป็นคอลัมน์ที่ไม่มีทางเป็น NULL ถ้ามีคู่
-</details>
+> [!INFO]- เฉลย
+> ```sql
+> SELECT o.oFirstName, o.oLastName, o.OwnerTel
+> FROM PrivateOwner o
+> LEFT JOIN PropertyForRent p ON o.OwnerNo = p.OwnerNo
+> WHERE p.PropNo IS NULL;
+> ```
+>
+> - Pattern "หาที่ไม่มีคู่": `LEFT JOIN` + `WHERE <PK ของตารางขวา> IS NULL`
+> - ต้องเช็ค PK (`PropNo`) เพราะเป็นคอลัมน์ที่ไม่มีทางเป็น NULL ถ้ามีคู่
 
 ---
 
@@ -305,18 +288,15 @@ WHERE p.PropNo IS NULL;
 
 ```
 
-<details>
-<summary>เฉลย</summary>
-
-```sql
-SELECT o.oFirstName, o.oLastName, o.OwnerTel, p.PropNo
-FROM PrivateOwner o
-LEFT JOIN PropertyForRent p ON o.OwnerNo = p.OwnerNo;
-```
-
-- เจ้าของที่ไม่มีอสังหาฯ จะได้ `PropNo = NULL`
-- ตารางที่ต้องแสดงครบทุกแถวต้องอยู่ฝั่งซ้ายของ `LEFT JOIN` (`PrivateOwner`)
-</details>
+> [!INFO]- เฉลย
+> ```sql
+> SELECT o.oFirstName, o.oLastName, o.OwnerTel, p.PropNo
+> FROM PrivateOwner o
+> LEFT JOIN PropertyForRent p ON o.OwnerNo = p.OwnerNo;
+> ```
+>
+> - เจ้าของที่ไม่มีอสังหาฯ จะได้ `PropNo = NULL`
+> - ตารางที่ต้องแสดงครบทุกแถวต้องอยู่ฝั่งซ้ายของ `LEFT JOIN` (`PrivateOwner`)
 
 ---
 
@@ -328,21 +308,18 @@ LEFT JOIN PropertyForRent p ON o.OwnerNo = p.OwnerNo;
 
 ```
 
-<details>
-<summary>เฉลย</summary>
-
-```sql
-SELECT PropCity, PropPostcode, Rent, oFirstName, OwnerTel
-FROM PropertyForRent
-JOIN PrivateOwner USING (OwnerNo)
-WHERE PropStreet LIKE '%Ap%';
-```
-
-- `USING (OwnerNo)` ใช้ได้เพราะสองตารางมีคอลัมน์ชื่อเดียวกัน
-- คอลัมน์ที่อยู่ใน `USING` ห้ามใส่ table prefix ถ้าจะ SELECT
-- "อยู่ในชื่อถนน" = ตำแหน่งใดก็ได้ → `%Ap%`
-- โจทย์ขอ "ชื่อเจ้าของ" → ใช้ `oFirstName` (เพิ่ม `oLastName` ได้ถ้าต้องการชื่อเต็ม)
-</details>
+> [!INFO]- เฉลย
+> ```sql
+> SELECT PropCity, PropPostcode, Rent, oFirstName, OwnerTel
+> FROM PropertyForRent
+> JOIN PrivateOwner USING (OwnerNo)
+> WHERE PropStreet LIKE '%Ap%';
+> ```
+>
+> - `USING (OwnerNo)` ใช้ได้เพราะสองตารางมีคอลัมน์ชื่อเดียวกัน
+> - คอลัมน์ที่อยู่ใน `USING` ห้ามใส่ table prefix ถ้าจะ SELECT
+> - "อยู่ในชื่อถนน" = ตำแหน่งใดก็ได้ → `%Ap%`
+> - โจทย์ขอ "ชื่อเจ้าของ" → ใช้ `oFirstName` (เพิ่ม `oLastName` ได้ถ้าต้องการชื่อเต็ม)
 
 ---
 
@@ -354,18 +331,15 @@ WHERE PropStreet LIKE '%Ap%';
 
 ```
 
-<details>
-<summary>เฉลย</summary>
-
-```sql
-SELECT cFirstName, ClientTel, PrefType
-FROM Client
-WHERE MaxRent BETWEEN 5000 AND 10000;
-```
-
-- `BETWEEN` รวมค่าปลายทั้งสอง (5000 และ 10000 ติดมาด้วย)
-- ใส่ตัวเลขไม่มีเครื่องหมายจุลภาค (`5000` ไม่ใช่ `5,000`)
-</details>
+> [!INFO]- เฉลย
+> ```sql
+> SELECT cFirstName, ClientTel, PrefType
+> FROM Client
+> WHERE MaxRent BETWEEN 5000 AND 10000;
+> ```
+>
+> - `BETWEEN` รวมค่าปลายทั้งสอง (5000 และ 10000 ติดมาด้วย)
+> - ใส่ตัวเลขไม่มีเครื่องหมายจุลภาค (`5000` ไม่ใช่ `5,000`)
 
 ---
 
@@ -379,18 +353,15 @@ WHERE MaxRent BETWEEN 5000 AND 10000;
 
 ```
 
-<details>
-<summary>เฉลย</summary>
-
-```sql
-SELECT c.cFirstName, c.cLastName, i.InterestDate, i.Comment
-FROM Client c, Interesting i
-WHERE c.ClientNo = i.ClientNo;
-```
-
-- Equijoin = Join ด้วยเงื่อนไข `=` เขียนแบบเก่า (คั่นตารางด้วยจุลภาค + เงื่อนไขใน `WHERE`)
-- ลืมเงื่อนไข `WHERE` จะได้ Cartesian Product
-</details>
+> [!INFO]- เฉลย
+> ```sql
+> SELECT c.cFirstName, c.cLastName, i.InterestDate, i.Comment
+> FROM Client c, Interesting i
+> WHERE c.ClientNo = i.ClientNo;
+> ```
+>
+> - Equijoin = Join ด้วยเงื่อนไข `=` เขียนแบบเก่า (คั่นตารางด้วยจุลภาค + เงื่อนไขใน `WHERE`)
+> - ลืมเงื่อนไข `WHERE` จะได้ Cartesian Product
 
 ---
 
@@ -402,19 +373,16 @@ WHERE c.ClientNo = i.ClientNo;
 
 ```
 
-<details>
-<summary>เฉลย</summary>
-
-```sql
-SELECT sFirstName, sLastName
-FROM Staff
-WHERE Sex = 'F'
-  AND DOB = '2002-11-21';
-```
-
-- วันที่ใน MySQL ใช้รูปแบบ `'YYYY-MM-DD'` และ ค.ศ. (2002 ไม่ใช่ 2545)
-- "และ" = `AND` (ไม่ใช้ `OR`)
-</details>
+> [!INFO]- เฉลย
+> ```sql
+> SELECT sFirstName, sLastName
+> FROM Staff
+> WHERE Sex = 'F'
+>   AND DOB = '2002-11-21';
+> ```
+>
+> - วันที่ใน MySQL ใช้รูปแบบ `'YYYY-MM-DD'` และ ค.ศ. (2002 ไม่ใช่ 2545)
+> - "และ" = `AND` (ไม่ใช้ `OR`)
 
 ---
 
@@ -426,18 +394,15 @@ WHERE Sex = 'F'
 
 ```
 
-<details>
-<summary>เฉลย</summary>
-
-```sql
-SELECT ClientNo, ClientTel
-FROM Client
-WHERE PrefType = 'townhouse'
-ORDER BY MaxRent DESC;
-```
-
-- `ORDER BY` เรียงด้วยคอลัมน์ที่ไม่ได้อยู่ใน `SELECT` ได้
-</details>
+> [!INFO]- เฉลย
+> ```sql
+> SELECT ClientNo, ClientTel
+> FROM Client
+> WHERE PrefType = 'townhouse'
+> ORDER BY MaxRent DESC;
+> ```
+>
+> - `ORDER BY` เรียงด้วยคอลัมน์ที่ไม่ได้อยู่ใน `SELECT` ได้
 
 ---
 
@@ -451,19 +416,16 @@ ORDER BY MaxRent DESC;
 
 ```
 
-<details>
-<summary>เฉลย</summary>
-
-```sql
-SELECT PropNo, Rent * 0.5 AS `discount rent`
-FROM PropertyForRent
-WHERE Type = 'condo'
-ORDER BY `discount rent` ASC;
-```
-
-- Alias ที่มีช่องว่างต้องครอบด้วย backtick
-- `ORDER BY` อ้าง alias ได้ (ทำงานหลัง `SELECT`) แต่ `WHERE` อ้างไม่ได้
-</details>
+> [!INFO]- เฉลย
+> ```sql
+> SELECT PropNo, Rent * 0.5 AS `discount rent`
+> FROM PropertyForRent
+> WHERE Type = 'condo'
+> ORDER BY `discount rent` ASC;
+> ```
+>
+> - Alias ที่มีช่องว่างต้องครอบด้วย backtick
+> - `ORDER BY` อ้าง alias ได้ (ทำงานหลัง `SELECT`) แต่ `WHERE` อ้างไม่ได้
 
 ---
 
@@ -475,27 +437,24 @@ ORDER BY `discount rent` ASC;
 
 ```
 
-<details>
-<summary>เฉลย</summary>
-
-```sql
-SELECT PropNo, Comment
-FROM Interesting
-WHERE Comment LIKE '%2\%%';
-```
-
-หรือกำหนดตัวอักษร Escape เอง:
-
-```sql
-SELECT PropNo, Comment
-FROM Interesting
-WHERE Comment LIKE '%2|%%' ESCAPE '|';
-```
-
-- `%` ใน `LIKE` เป็น Wildcard ถ้าต้องการหาเครื่องหมาย `%` จริงต้อง Escape ด้วย `\%`
-- `'%2\%%'` อ่านว่า: อะไรก็ได้ + `2` + `%` จริง + อะไรก็ได้
-- `\` เป็น Escape เริ่มต้นของ MySQL; `ESCAPE '|'` ใช้กำหนดตัวอื่นแทน
-</details>
+> [!INFO]- เฉลย
+> ```sql
+> SELECT PropNo, Comment
+> FROM Interesting
+> WHERE Comment LIKE '%2\%%';
+> ```
+>
+> หรือกำหนดตัวอักษร Escape เอง:
+>
+> ```sql
+> SELECT PropNo, Comment
+> FROM Interesting
+> WHERE Comment LIKE '%2|%%' ESCAPE '|';
+> ```
+>
+> - `%` ใน `LIKE` เป็น Wildcard ถ้าต้องการหาเครื่องหมาย `%` จริงต้อง Escape ด้วย `\%`
+> - `'%2\%%'` อ่านว่า: อะไรก็ได้ + `2` + `%` จริง + อะไรก็ได้
+> - `\` เป็น Escape เริ่มต้นของ MySQL; `ESCAPE '|'` ใช้กำหนดตัวอื่นแทน
 
 ---
 
@@ -507,18 +466,15 @@ WHERE Comment LIKE '%2|%%' ESCAPE '|';
 
 ```
 
-<details>
-<summary>เฉลย</summary>
-
-```sql
-SELECT cFirstName, cLastName
-FROM Client
-WHERE MaxRent = 50000;
-```
-
-- ตีความ "ค่าเช่าสูงสุด 50000" เป็นค่าของคอลัมน์ `MaxRent` เท่ากับ 50000 พอดี
-- ถ้าหมายถึง "ไม่เกิน 50000" ให้ใช้ `MaxRent <= 50000`
-</details>
+> [!INFO]- เฉลย
+> ```sql
+> SELECT cFirstName, cLastName
+> FROM Client
+> WHERE MaxRent = 50000;
+> ```
+>
+> - ตีความ "ค่าเช่าสูงสุด 50000" เป็นค่าของคอลัมน์ `MaxRent` เท่ากับ 50000 พอดี
+> - ถ้าหมายถึง "ไม่เกิน 50000" ให้ใช้ `MaxRent <= 50000`
 
 ---
 
@@ -530,44 +486,33 @@ WHERE MaxRent = 50000;
 
 ```
 
-<details>
-<summary>เฉลย</summary>
-
-```sql
-SELECT PropCity, Type
-FROM PropertyForRent
-WHERE PropPostcode LIKE '4%4';
-```
-
-- `%` = ตัวอักษรกี่ตัวก็ได้ (รวม 0 ตัว) ดังนั้น `'44'` ก็ผ่านเงื่อนไข
-- `PropPostcode` เป็น `Varchar` จึง `LIKE` ได้ตรงๆ
-</details>
+> [!INFO]- เฉลย
+> ```sql
+> SELECT PropCity, Type
+> FROM PropertyForRent
+> WHERE PropPostcode LIKE '4%4';
+> ```
+>
+> - `%` = ตัวอักษรกี่ตัวก็ได้ (รวม 0 ตัว) ดังนั้น `'44'` ก็ผ่านเงื่อนไข
+> - `PropPostcode` เป็น `Varchar` จึง `LIKE` ได้ตรงๆ
 
 ---
 
 ### ข้อ 18 ⭐
-แสดงชื่อเมืองของอสังหาริมทรัพย์และประเภทอสังหาริมทรัพย์ จากข้อมูลอสังหาริมทรัพย์สำหรับให้เช่า (`PropertyForRent`) ที่มีรหัสไปรษณีย์ (`PropPostcode`) **ขึ้นต้นด้วย 4 ลงท้ายด้วย 4**
-
-> [!WARNING] โจทย์ซ้ำ
-> ข้อ 18 ซ้ำกับข้อ 17 ทุกตัวอักษร ถ้าเจตนาให้เป็นข้อต่างกัน (เช่น ความยาว 5 หลักพอดี → `'4___4'`) ต้องแก้โจทย์
+เขียน SQL statement แสดงชื่อถนนและชื่อเมืองของอสังหาริมทรัพย์สำหรับให้เช่า (`PropertyForRent`) ที่ **ไม่มีเจ้าของ** (`OwnerNo`)
 
 **คำตอบของฉัน:**
 ```sql
 
 ```
 
-<details>
-<summary>เฉลย</summary>
-
-```sql
-SELECT PropCity, Type
-FROM PropertyForRent
-WHERE PropPostcode LIKE '4%4';
-```
-
-ตัวแปรถ้าต้องการรหัสไปรษณีย์ 5 หลักพอดี (ใช้ `_` แทน 1 ตัวอักษร):
-
-```sql
-WHERE PropPostcode LIKE '4___4';
-```
-</details>
+> [!INFO]- เฉลย
+> ```sql
+> SELECT PropStreet, PropCity
+> FROM PropertyForRent
+> WHERE OwnerNo IS NULL;
+> ```
+>
+> - "ไม่มีค่า" ต้องใช้ `IS NULL` ห้ามใช้ `= NULL` (ผลเป็น UNKNOWN จึงไม่ได้แถวใดเลย)
+> - กับตัวอย่างข้อมูลชุดนี้ได้ **0 แถว** เพราะอสังหาฯ ทุกแห่งมี `OwnerNo`
+> - คนละโจทย์กับข้อ 7: ข้อ 7 หา **เจ้าของ** ที่ไม่มีอสังหาฯ (ต้อง `LEFT JOIN`) ส่วนข้อนี้หา **อสังหาฯ** ที่ไม่มีเจ้าของ (ดู FK ในตารางเดียวพอ)
