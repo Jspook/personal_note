@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World's Most Popular Foods</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f5f5f5; margin: 20px; }
+        h1 { margin-bottom: 20px; font-size: 24px;}
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 900px; }
+        .card { background-color: white; border: 1px solid #ccc; padding: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
+        .card img { width: 100%; aspect-ratio: 3/2; object-fit: cover; display: block; border: 1px solid #ddd; margin-bottom: 10px; }
+        .card a { display: block; color: indigo; font-weight: bold; text-decoration: underline; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <h1>World's Most Popular Foods</h1>
+    <div class="grid" id="food-grid">
+        <!-- Data will be loaded here via JS -->
+    </div>
+
+    <script>
+        fetch('/api/foods')
+            .then(res => res.json())
+            .then(foods => {
+                const grid = document.getElementById('food-grid');
+                foods.forEach(food => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <img src="${food.image}" alt="${food.name}">
+                        <a href="/food/${food.id}">${food.name}</a>
+                    `;
+                    grid.appendChild(card);
+                });
+            })
+            .catch(err => console.error('Error fetching foods:', err));
+    </script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUNTIE-AUN Restaurant - Menu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            min-height: 100vh;
+        }
+
+        /* Top Green Navbar */
+        .navbar {
+            background-color: #16a34a;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .navbar a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.05rem;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+
+        .main-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .restaurant-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 30px;
+        }
+
+        /* Menu Grid */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .food-card {
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+
+        .food-img-wrapper {
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+            background-color: #f1f5f9;
+        }
+
+        .food-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .food-details {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+
+        .food-name {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 6px;
+        }
+
+        .food-desc {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 16px;
+            line-height: 1.4;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: auto;
+        }
+
+        .food-price {
+            color: #dc2626;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .btn-add {
+            background-color: #0284c7;
+            color: #ffffff;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color 0.2s, box-shadow 0.2s;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="/menu">Menu</a>
+        <a href="/cart">Cart (<%= cartCount %>)</a>
+    </nav>
+
+    <div class="main-container">
+        <h1 class="restaurant-title">AUNTIE-AUN Restaurant</h1>
+
+        <div class="menu-grid">
+            <% if (items && items.length > 0) { %>
+                <% items.forEach(item => { %>
+                    <div class="food-card">
+                        <div class="food-img-wrapper">
+                            <img src="<%= item.image_url %>" alt="<%= item.name %>" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x180?text=Food+Image';">
+                        </div>
+                        <div class="food-details">
+                            <div>
+                                <h2 class="food-name"><%= item.name %></h2>
+                                <p class="food-desc"><%= item.description %></p>
+                            </div>
+                            <div class="card-footer">
+                                <span class="food-price"><%= item.price %> THB</span>
+                                <a href="/add-to-cart/<%= item.product_id %>" class="btn-add">Add to Cart</a>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p style="text-align: center; grid-column: 1 / -1; color: #64748b;">No food items available at this moment.</p>
+            <% } %>
+        </div>
+    </div>
+
+</body>
+</html>

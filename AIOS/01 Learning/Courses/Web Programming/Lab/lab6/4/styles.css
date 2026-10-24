@@ -1,0 +1,200 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Google Sans', sans-serif;
+    background: #f9f9f9;
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-container {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    padding: 40px;
+    max-width: 500px;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.main-container h2 {
+    color: #333;
+    font-size: 1.8em;
+    margin-bottom: 30px;
+    text-align: center;
+    font-weight: 600;
+}
+
+/* Form Styling */
+#dictionaryForm {
+    display: flex;
+    flex-direction: column;
+}
+
+#dictionaryForm label {
+    color: #555;
+    font-weight: 600;
+    font-size: 0.95em;
+    margin-top: 15px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+#dictionaryForm label:first-child {
+    margin-top: 0;
+}
+
+#dictionaryForm input[type="text"] {
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1em;
+    font-family: 'Google Sans', sans-serif;
+    transition: all 0.3s ease;
+    background: #f9f9f9;
+    margin-bottom: 15px;
+}
+
+#dictionaryForm input[type="text"]:focus {
+    outline: 2px solid rgb(38, 178, 224);
+    border-radius: 4px
+}
+
+#dictionaryForm input[type="text"]::placeholder {
+    color: #bbb;
+}
+
+/* Submit Button */
+#dictionaryForm button {
+    background: #667eea;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* Dictionary Container */
+.dictionary-container {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    padding: 40px;
+    max-width: 500px;
+    width: 100%;
+}
+
+.dictionary-container h2 {
+    color: #333;
+    font-size: 1.8em;
+    margin-bottom: 25px;
+    text-align: center;
+    font-weight: 600;
+}
+
+/* Dictionary List */
+#dictionaryList {
+    min-height: 200px;
+}
+
+.vocabulary-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Empty State */
+#dictionaryList > p {
+    text-align: center;
+    color: #999;
+    font-size: 1.05em;
+    padding: 40px 20px;
+}
+
+/* Vocabulary Item */
+.vocabulary-item {
+    background: #f5f7fa;
+    border-left: 4px solid #667eea;
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Vocabulary Content */
+.vocabulary-content {
+    flex: 1;
+}
+
+.word {
+    font-weight: 700;
+    color: #333;
+    font-size: 1.15em;
+    margin-bottom: 5px;
+}
+
+.meaning {
+    color: #666;
+    font-size: 0.95em;
+}
+
+/* Delete Button */
+.btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.btn-delete {
+    background: #ff6b6b;
+    color: white;
+}
+
+
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    .main-container,
+    .dictionary-container {
+        padding: 25px;
+        max-width: 100%;
+    }
+
+    .main-container h2,
+    .dictionary-container h2 {
+        font-size: 1.5em;
+    }
+
+    #dictionaryForm label {
+        margin-top: 12px;
+    }
+
+    .vocabulary-item {
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        margin-left: 0;
+        margin-top: 10px;
+        flex-grow: 1;
+    }
+}

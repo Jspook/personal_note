@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบคลังสินค้าไอที (IT Inventory)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .add-form-container {
+            margin-bottom: 30px;
+        }
+        .add-form-container h4 {
+            margin-bottom: 10px;
+            color: #666;
+            font-weight: normal;
+        }
+        .add-form {
+            display: flex;
+            gap: 10px;
+        }
+        .form-control {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            flex: 1;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #0d6efd;
+        }
+        .btn-primary:hover {
+            background-color: #0b5ed7;
+        }
+        .btn-edit {
+            background-color: #f8f9fa;
+            color: #333;
+            border: 1px solid #ddd;
+            text-decoration: none;
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+        .btn-danger {
+            background-color: #ffe6e6;
+            color: #dc3545;
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 15px 10px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+        th {
+            color: #666;
+            font-weight: bold;
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        form {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>💻 ระบบคลังสินค้าไอที (IT Inventory)</h2>
+    
+    <div class="add-form-container">
+        <h4>เพิ่มสินค้าใหม่</h4>
+        <form action="/add" method="POST" class="add-form">
+            <input type="text" name="name" class="form-control" placeholder="ชื่อสินค้า" required>
+            <input type="text" name="category" class="form-control" placeholder="หมวดหมู่" required>
+            <input type="number" name="price" class="form-control" placeholder="ราคา (บาท)" required>
+            <button type="submit" class="btn btn-primary">บันทึกสินค้า</button>
+        </form>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>ชื่อสินค้า</th>
+                <th>หมวดหมู่</th>
+                <th>ราคา (บาท)</th>
+                <th>จัดการ</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% products.forEach(product => { %>
+                <tr>
+                    <td><%= product.id %></td>
+                    <td><%= product.name %></td>
+                    <td><%= product.category %></td>
+                    <td><%= product.price.toLocaleString() %></td>
+                    <td>
+                        <div class="actions">
+                            <a href="/edit/<%= product.id %>" class="btn btn-edit">แก้ไข</a>
+                            <form action="/delete/<%= product.id %>" method="POST">
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('ยืนยันการลบสินค้านี้?');">ลบ</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

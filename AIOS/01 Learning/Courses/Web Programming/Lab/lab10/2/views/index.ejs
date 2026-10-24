@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Store</title>
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <h1 class="page-title">Book Store</h1>
+        
+        <% if (typeof error !== 'undefined') { %>
+            <p style="color: red; text-align: center;"><%= error %></p>
+        <% } %>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Book name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (books && books.length > 0) { %>
+                        <% books.forEach(function(book) { %>
+                            <tr>
+                                <td><%= book.id %></td>
+                                <td><%= book.name %></td>
+                                <td><%= book.description %></td>
+                                <td><%= book.price %></td>
+                                <td><%= book.amount %></td>
+                            </tr>
+                        <% }); %>
+                    <% } else if (typeof error === 'undefined') { %>
+                        <tr>
+                            <td colspan="5" style="text-align: center;">No books found</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

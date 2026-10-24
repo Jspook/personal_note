@@ -1,0 +1,12 @@
+id,Brand,Model,ReleaseYear,Display,Processor,RAM,Storage,RearCamera,FrontCamera,Battery,OS,Price
+Samsung,Galaxy S25,2025,6.8-inch AMOLED,QSnap 8 Gen 3,12GB,256GB,200MP+12MP+10MP,32MP,5000mAh,Android 15,1199
+Apple,iPhone 16 Pro,2025,6.7-inch OLED,A18 Bionic,8GB,256GB,48MP+12MP+12MP,24MP,4500mAh,iOS 19,1299
+Google,Pixel 9 Pro,2025,6.6-inch OLED,Tensor G4,12GB,512GB,50MP+48MP+12MP,20MP,4800mAh,Android 15,1099
+Xiaomi,Mi 14 Ultra,2025,6.73-inch AMOLED,Snapdragon 8 Gen 3,16GB,512GB,200MP+50MP+50MP,32MP,5200mAh,Android 15,999
+OnePlus,12T Pro,2025,6.7-inch AMOLED,Snapdragon 8 Gen 3,12GB,256GB,64MP+50MP+8MP,32MP,5000mAh,Android 15,899
+Oppo,Find X7 Pro,2025,6.8-inch AMOLED,Dimensity 9400,16GB,512GB,100MP+50MP+50MP,32MP,4800mAh,Android 15,999
+Vivo,X100 Pro+,2025,6.78-inch AMOLED,Dimensity 9400,16GB,1TB,200MP+50MP+12MP,32MP,5000mAh,Android 15,1099
+Sony,Xperia 1 VI,2025,6.5-inch OLED,Snapdragon 8 Gen 3,12GB,256GB,48MP+12MP+12MP,24MP,4500mAh,Android 15,1199
+Huawei,P70 Pro,2025,6.7-inch OLED,Kirin 9100,12GB,512GB,100MP+50MP+12MP,32MP,4800mAh,HarmonyOS 5,1099
+Realme,GT Neo 6,2025,6.7-inch AMOLED,Snapdragon 8 Gen 3,12GB,256GB,64MP+8MP+2MP,16MP,5000mAh,Android 15,699
+Motorola,Edge 50 Pro,2025,6.67-inch OLED,Snapdragon 8 Gen 3,12GB,256GB,50MP+50MP+12MP,32MP,4700mAh,Android 15,799

@@ -1,0 +1,139 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Google Sans", sans-serif;
+    background-color: #f3f4f6;
+    color: #333;
+    padding: 40px 20px;
+}
+
+.main-box {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto 30px;
+    padding: 30px;
+    background-color: white;
+    border-radius: 12px;
+}
+
+.main-box h2 {
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+
+#loginform p,
+#loginform label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+#loginform input,
+#loginform select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+
+    border: 1px solid #ccc;
+    border-radius: 6px;
+
+    font-size: 16px;
+}
+
+#loginform button {
+    padding: 10px 20px;
+    margin-top: 10px;
+    margin-right: 8px;
+
+    border: none;
+    border-radius: 6px;
+
+    background-color: #333;
+    color: white;
+    font-size: 15px;
+}
+
+#list_employees {
+    width: 100%;
+    max-width: 700px;
+    margin: auto;
+}
+
+.employees-display {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.employee-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 20px;
+
+    background-color: white;
+    border-radius: 10px;
+}
+
+.employee-content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.employee-content .name {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.employee-content .address,
+.employee-content .phone,
+.employee-content .job {
+    color: #666;
+}
+
+.btn-delete {
+    padding: 8px 15px;
+
+    border: none;
+    border-radius: 6px;
+
+    background-color: #dc3545;
+    color: white;
+
+}
+
+
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 20px 10px;
+    }
+
+    #main-box {
+        padding: 20px;
+    }
+
+    .employee-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .btn-delete {
+        width: 100%;
+    }
+
+    #loginform button {
+        width: 100%;
+        margin-right: 0;
+    }
+}

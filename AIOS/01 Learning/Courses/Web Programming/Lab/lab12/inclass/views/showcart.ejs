@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <style>
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: sans-serif; 
+        }
+        body { 
+            background: #f4f6f8; 
+            color: #333; 
+            padding: 30px 20px; 
+        }
+        .cart-card { 
+            max-width: 650px; 
+            margin: 0 auto; 
+            background: #fff; 
+            padding: 25px; 
+            border-radius: 12px;
+        }
+        h1 { 
+            margin-bottom: 20px; 
+            font-size: 1.5rem; 
+            border-bottom: 2px solid #eee; 
+            padding-bottom: 10px; 
+        }
+        .cart-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .cart-table th, 
+        .cart-table td {
+            padding: 12px 10px;
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .cart-table th {
+            background-color: #f8f9fa;
+            color: #555;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .cart-table td.text-center,
+        .cart-table th.text-center {
+            text-align: center;
+        }
+        .cart-table td.text-right,
+        .cart-table th.text-right {
+            text-align: right;
+        }
+        
+        .price { 
+            font-weight: bold; 
+            color: #28a745; 
+        }
+        .qty-badge { 
+            color: #007bff; 
+            font-weight: bold; 
+            padding: 4px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+
+        .total-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .actions { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-top: 20px; 
+        }
+        .btn { 
+            text-decoration: none; 
+            padding: 10px 16px; 
+            border-radius: 6px; 
+            font-weight: 600; 
+            font-size: 0.9rem; 
+        }
+        .btn-shop { background: #007bff; color: #fff; }
+        .btn-clear { background: #dc3545; color: #fff; }
+        .empty { text-align: center; color: #777; margin: 20px 0; }
+    </style>
+</head>
+<body>
+
+    <div class="cart-card">
+        <h1>ตะกร้าสินค้าของคุณ</h1>
+
+        <% if (data && data.length > 0) { %>
+            <table class="cart-table">
+                <thead>
+                    <tr>
+                        <th>ลำดับ</th>
+                        <th>สินค้า (Name)</th>
+                        <th class="text-center">จำนวน</th>
+                        <th class="text-right">ราคา/ชิ้น</th>
+                        <th class="text-right">รวม</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% data.forEach((item,i) => { %>
+                        <tr>
+                            <td><%=(i+1)%></td>
+                            <td><strong><%= item.name %></strong></td>
+                            <td class="text-center"><span class="qty-badge"><%= item.quantity %></span></td>
+                            <td class="text-right">$<%= item.price %></td>
+                            <td class="text-right price">$<%= item.subtotal %></td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+
+            <div class="total-box">
+                <span>ราคารวมทั้งหมด:</span>
+                <span class="price" style="font-size: 1.25rem;">$<%= totalPrice %></span>
+            </div>
+
+            <div class="actions">
+                <a href="/menu" class="btn btn-shop">← เลือกสินค้าต่อ</a>
+                <a href="/clear-cart" class="btn btn-clear">ล้างตะกร้า</a>
+            </div>
+        <% } else { %>
+            <p class="empty">ไม่มีสินค้าในตะกร้า</p>
+            <div class="actions" style="justify-content: center;">
+                <a href="/menu" class="btn btn-shop">← กลับไปเลือกสินค้า</a>
+            </div>
+        <% } %>
+    </div>
+
+</body>
+</html>

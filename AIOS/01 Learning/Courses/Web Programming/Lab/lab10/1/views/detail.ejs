@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail</title>
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Detail View -->
+        <div id="detail-view">
+            <h2 class="detail-title">Product <%= product.product_id %> Detail</h2>
+            <img src="<%= product.image_url %>" alt="<%= product.name %>" class="detail-img" onerror="this.src='https://via.placeholder.com/600x400?text=No+Image'">
+            <h3 class="detail-name"><%= product.name %></h3>
+            <p class="detail-desc">Description : <%= product.description %></p>
+            <p class="detail-price">Price : <%= product.price %></p>
+            <p class="detail-amount">Amount : <%= product.quantity %></p>
+            <div class="detail-actions">
+                <a href="/" class="btn btn-back">Go Back</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

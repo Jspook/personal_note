@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <style>
+        body {
+            font-family: serif; /* Looks like a serif font in the image */
+            margin: 20px;
+        }
+        .container {
+            display: flex;
+            gap: 40px;
+        }
+        .left-panel {
+            flex: 2;
+        }
+        .right-panel {
+            flex: 1;
+            padding: 20px;
+        }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f9f9f9;
+        }
+        .btn {
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea.form-control {
+            height: 100px;
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="left-panel">
+        <div class="header-container">
+            <h2>Todos List</h2>
+            <button class="btn" onclick="window.location.href='/add'">Add Todo</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Deadline</th>
+                    <th>Completed</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% todos.forEach(todo => { %>
+                    <tr>
+                        <td><%= todo.id %></td>
+                        <td><%= todo.title %></td>
+                        <td><%= todo.deadline %></td>
+                        <td>
+                            <form action="/toggle/<%= todo.id %>" method="POST" style="margin:0;">
+                                <input type="hidden" name="completed" value="<%= todo.completed ? 0 : 1 %>">
+                                <input type="checkbox" <%= todo.completed ? 'checked' : '' %> onchange="this.form.submit()">
+                            </form>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,74 @@
+[
+  {
+    "id": "1",
+    "Gender": "Female",
+    "LastName": "Davolio",
+    "FirstName": "Nancy",
+    "Position": "Sales Representative",
+    "Address": "507-20th Ave. E. Apt. 2A"
+  },
+  {
+    "id": "2",
+    "Gender": "Male",
+    "LastName": "Fuller",
+    "FirstName": "Andrew",
+    "Position": "Vice President",
+    "Address": "908 W. Capital Way"
+  },
+  {
+    "id": "3",
+    "Gender": "Female",
+    "LastName": "Leverling",
+    "FirstName": "Janet",
+    "Position": "Sales Representative",
+    "Address": "722 Moss Bay Blvd."
+  },
+  {
+    "id": "4",
+    "Gender": "Female",
+    "LastName": "Peacock",
+    "FirstName": " Margaret",
+    "Position": "Sales Representative",
+    "Address": "4110 0 ld Redmond Rd."
+  },
+  {
+    "id": "5",
+    "Gender": "Male",
+    "LastName": "Buchanan",
+    "FirstName": "Steven",
+    "Position": "Sales Manager",
+    "Address": "14 Garrett Hill"
+  },
+  {
+    "id": "6",
+    "Gender": "Male",
+    "LastName": "Suyama ",
+    "FirstName": "Michael ",
+    "Position": "Sales Representative",
+    "Address": "Coventry House Miner Rd."
+  },
+  {
+    "id": "7",
+    "Gender": "Male",
+    "LastName": "King",
+    "FirstName": " Robert",
+    "Position": "Sales Representative",
+    "Address": "Edgeham Hollow Winchester Way"
+  },
+  {
+    "id": "8",
+    "Gender": "Female",
+    "LastName": "Callahan",
+    "FirstName": "Laura",
+    "Position": "Inside Sales Coordinator",
+    "Address": "4726-11th Ave. N.E."
+  },
+  {
+    "id": "9",
+    "Gender": "Female",
+    "LastName": "Dodsworth",
+    "FirstName": " Anne",
+    "Position": "Sales Representative",
+    "Address": "7 Houndstooth Rd."
+  }
+]

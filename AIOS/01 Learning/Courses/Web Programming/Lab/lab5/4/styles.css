@@ -1,0 +1,202 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:"Google Sans",sans-serif;
+    background:#f4f4f4;
+    color:#333;
+    line-height:1.6;
+}
+
+nav{
+    position:sticky;
+    top:0;
+    z-index:1000;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:18px 8%;
+
+    background:#222;
+}
+
+.logo{
+    color:white;
+    font-size:1.5rem;
+    font-weight:bold;
+}
+
+.menu{
+    display:flex;
+    list-style:none;
+    gap:30px;
+}
+
+.menu a{
+    color:white;
+    text-decoration:none;
+    transition:.3s;
+}
+
+
+.hero-section{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+}
+
+.section-container{
+
+    width:90%;
+    max-width:1000px;
+    margin:auto;
+
+}
+
+.hero-content{
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap: 120px;
+
+}
+
+.hero-img{
+
+    width:230px;
+    height:230px;
+    border-radius:50%;
+    object-fit:cover;
+    border:6px solid #0d6efd;
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+
+}
+
+.hero-text h1{
+    font-size:3rem;
+    margin-bottom:10px;
+}
+
+.hero-text p{
+    font-size:1.1rem;
+    color:#555;
+}
+
+section{
+    width:90%;
+    max-width:1200px;
+    margin:50px auto;
+}
+
+section h2{
+    color:#0d6efd;
+    margin-bottom:20px;
+}
+
+.about p, #about p{
+    font-size:18px;
+}
+
+
+.skills{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:25px;
+}
+
+.card{
+    background:white;
+    padding:30px;
+    border-radius:12px;
+    text-align:center;
+    box-shadow:0 5px 15px rgba(0,0,0,.12);
+    transition:.3s;
+}
+
+.card h3{
+    margin-bottom:10px;
+    color:#0d6efd;
+}
+
+
+footer{
+    background:#222;
+    color:white;
+    text-align:center;
+    padding:40px 20px;
+}
+
+footer a{
+    color:#4dabff;
+    text-decoration:none;
+}
+
+
+@media(max-width:992px){
+
+    .skills{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .hero-content{
+        flex-direction:column;
+        text-align:center;
+    }
+
+}
+
+
+@media(max-width:768px){
+
+    nav{
+        flex-direction:column;
+        gap:15px;
+    }
+
+    .menu{
+        flex-wrap:wrap;
+        justify-content:center;
+        gap:15px;
+
+    }
+
+    .hero-img{
+        width:180px;
+        height:180px;
+    }
+
+    .hero-text h1{
+        font-size:2.2rem;
+    }
+
+}
+
+@media(max-width:600px){
+
+    .skills{
+        grid-template-columns:1fr;
+    }
+
+    section{
+        width:95%;
+    }
+
+    .hero-text h1{
+        font-size:1.8rem;
+    }
+
+    .hero-text p{
+        font-size:1rem;
+    }
+
+}

@@ -1,0 +1,81 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Google Sans', sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.table-container {
+    background-color: #ffffff;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 700px;
+    padding: 24px;
+}
+
+.scorebar {
+    width: 400px;
+}
+
+.power-bar98 {
+    background-color: #f0e2c3;
+    border-radius: 15px;
+    overflow: hidden;
+    text-decoration: none;
+    color: black;
+    max-width: 1000px;
+    width: 98%;
+    display: block;
+    padding: 10px 15px;
+}
+
+.power-bar85 {
+    background-color: #dcece9;
+    border-radius: 15px;
+    overflow: hidden;
+    text-decoration: none;
+    color: black;
+    max-width: 1000px;
+    width: 85%;
+    padding: 10px 15px;
+}
+
+.power-bar65 {
+    background-color: #f2eae0;
+    border-radius: 15px;
+    overflow: hidden;
+    text-decoration: none;
+    color: black;
+    max-width: 1000px;
+    width: 65%;
+    padding: 10px 15px;
+}
+
+.power-bar72 {
+    background-color: #f6c7b3;
+    border-radius: 15px;
+    overflow: hidden;
+    text-decoration: none;
+    color: black;
+    max-width: 1000px;
+    width: 72%;
+    padding: 10px 15px;
+}
+
+.power-bar69 {
+    background-color: #c3dedd;
+    border-radius: 15px;
+    overflow: hidden;
+    text-decoration: none;
+    color: black;
+    max-width: 1000px;
+    width: 69%;
+    padding: 10px 15px;
+}

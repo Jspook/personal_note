@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUNTIE-AUN Restaurant - Cart</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            min-height: 100vh;
+        }
+
+        /* Top Green Navbar */
+        .navbar {
+            background-color: #16a34a;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .navbar a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.05rem;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+
+        .navbar a:hover {
+            opacity: 0.85;
+            text-decoration: underline;
+        }
+
+        .main-container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .cart-title {
+            text-align: center;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 24px;
+        }
+
+        .notification {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            text-align: center;
+            font-weight: 600;
+            background-color: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        /* Items Table */
+        .cart-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .cart-table th {
+            background-color: #f1f5f9;
+            color: #334155;
+            font-weight: 700;
+            padding: 12px 16px;
+            border-bottom: 2px solid #cbd5e1;
+            font-size: 0.95rem;
+        }
+
+        .cart-table th:first-child,
+        .cart-table td:first-child {
+            width: 60px;
+            text-align: center;
+        }
+
+        .cart-table th:nth-child(2),
+        .cart-table td:nth-child(2) {
+            text-align: left;
+        }
+
+        .cart-table th:nth-child(3),
+        .cart-table td:nth-child(3) {
+            width: 80px;
+            text-align: center;
+        }
+
+        .cart-table th:nth-child(4),
+        .cart-table td:nth-child(4) {
+            width: 100px;
+            text-align: right;
+        }
+
+        .cart-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+            color: #1e293b;
+        }
+
+        .cart-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .cart-table tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        .empty-cart-row td {
+            text-align: center !important;
+            padding: 30px;
+            color: #64748b;
+        }
+
+        /* Total Section */
+        .total-section {
+            text-align: center;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 28px 0 20px 0;
+        }
+
+        .button-wrapper {
+            text-align: center;
+        }
+
+        .btn-confirm {
+            background-color: #c01265;
+            color: #ffffff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .btn-confirm:hover {
+            background-color: #9d0d52;
+            transform: scale(1.02);
+        }
+
+        .btn-confirm:disabled {
+            background-color: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="/menu">Menu</a>
+        <a href="/cart">Cart (<%= cart ? cart.length : 0 %>)</a>
+    </nav>
+
+    <div class="main-container">
+        <h1 class="cart-title">List of items</h1>
+
+        <% if (locals.message) { %>
+            <div class="notification">
+                <%= message %>
+            </div>
+        <% } %>
+
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Item</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (cart && cart.length > 0) { %>
+                    <% cart.forEach((item, index) => { %>
+                        <tr>
+                            <td><%= index + 1 %></td>
+                            <td><%= item.name %></td>
+                            <td><%= item.qty || 1 %></td>
+                            <td><%= item.price %></td>
+                        </tr>
+                    <% }); %>
+                <% } else { %>
+                    <tr class="empty-cart-row">
+                        <td colspan="4">Your cart is currently empty. <a href="/menu" style="color: #16a34a; font-weight: 600; text-decoration: underline;">Browse Menu</a></td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+
+        <div class="total-section">
+            total price : <%= totalPrice %> THB
+        </div>
+
+        <div class="button-wrapper">
+            <% if (cart && cart.length > 0) { %>
+                <form action="/confirm" method="POST" style="display: inline;">
+                    <button type="submit" class="btn-confirm">Confirm Order</button>
+                </form>
+            <% } else { %>
+                <a href="/menu" class="btn-confirm" style="background-color: #16a34a;">Back to Menu</a>
+            <% } %>
+        </div>
+    </div>
+
+</body>
+</html>

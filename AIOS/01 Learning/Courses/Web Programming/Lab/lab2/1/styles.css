@@ -1,0 +1,61 @@
+body {
+    font-family: 'Google Sans', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 40px 20px;
+    color: #333;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+header h1 {
+    color: #111;
+    margin-bottom: 10px;
+}
+
+header p {
+    color: #666;
+}
+
+
+.Food-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+
+.Food-card {
+    background-color: #1a1a1a;
+    border-radius: 15px;
+    overflow: hidden;
+    text-decoration: none;
+    color: #ffffff;
+}
+
+
+
+.Food-img {
+    width: 100%;
+    aspect-ratio: 5 / 6;
+    object-fit: cover;
+    border-bottom: 3px solid #ff6b6b;
+}
+
+
+.Food-info {
+    padding: 20px;
+    text-align: center;
+}
+
+.Food-info h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}

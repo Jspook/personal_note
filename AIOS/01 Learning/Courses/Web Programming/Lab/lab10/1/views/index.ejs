@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Products</title>
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- List View -->
+        <div id="list-view">
+            <h1 class="page-title">My Products</h1>
+            
+            <% if (typeof error !== 'undefined') { %>
+                <p style="color: red; text-align: center;"><%= error %></p>
+            <% } %>
+
+            <div class="grid-container">
+                <% products.forEach(function(product) { %>
+                    <div class="card">
+                        <img src="<%= product.image_url %>" alt="<%= product.name %>" class="card-img-top" onerror="this.src='https://via.placeholder.com/250x200?text=No+Image'">
+                        <div class="card-body">
+                            <h3 class="card-title"><%= product.name %></h3>
+                            <p class="card-text"><%= product.description %></p>
+                            <a href="/detail/<%= product.product_id %>" class="btn">Detail</a>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

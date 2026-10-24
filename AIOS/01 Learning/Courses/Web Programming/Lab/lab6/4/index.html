@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
+    <title>Lab6.4</title>
+</head>
+<body>
+    <div class ="main-container">
+        <h2>สมุดจดคำศัพท์</h2>
+        <form id="dictionaryForm">
+        <label for="word">คำศัพท์(Word):</label><br>
+        <input type="text" id="word" name="word" placeholder="เช่น Apple"><br>
+        <label for="definition">คำแปล(Meaning):</label><br>
+        <input type="text" id="definition" name="definition" placeholder="เช่น แอปเปิ้ล"><br>
+        <button type="submit" value="Add Word" >บันทึกข้อมูล</button>
+        </form>
+    </div>
+    <div class="dictionary-container">
+        <h2>รายการคำศัพท์</h2>
+        <div id="dictionaryList"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

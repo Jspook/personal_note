@@ -1,0 +1,204 @@
+{
+    "songs": [
+        {
+            "id": 1,
+            "title": "One Love",
+            "artist": "Arashi",
+            "album": "Dream \"A\"live",
+            "release_year": 2008,
+            "label": "J Storm"
+        },
+        {
+            "id": 2,
+            "title": "Heavy Rotation",
+            "artist": "AKB48",
+            "album": "Kamikyokutachi",
+            "release_year": 2010,
+            "label": "King Records"
+        },
+        {
+            "id": 3,
+            "title": "Automatic",
+            "artist": "Utada Hikaru",
+            "album": "First Love",
+            "release_year": 1998,
+            "label": "Toshiba EMI"
+        },
+        {
+            "id": 4,
+            "title": "Polyrhythm",
+            "artist": "Perfume",
+            "album": "GAME",
+            "release_year": 2007,
+            "label": "Tokuma Japan Communications"
+        },
+        {
+            "id": 5,
+            "title": "PonPonPon",
+            "artist": "Kyary Pamyu Pamyu",
+            "album": "Moshi Moshi Harajuku",
+            "release_year": 2011,
+            "label": "Warner Music Japan"
+        },
+        {
+            "id": 6,
+            "title": "Gurenge",
+            "artist": "LiSA",
+            "album": "LEO-NiNE",
+            "release_year": 2019,
+            "label": "Sacra Music"
+        },
+        {
+            "id": 7,
+            "title": "Pretender",
+            "artist": "Official Hige Dandism",
+            "album": "Traveler",
+            "release_year": 2019,
+            "label": "Pony Canyon"
+        },
+        {
+            "id": 8,
+            "title": "Good Bye",
+            "artist": "Sho Hirano (King & Prince)",
+            "album": "L&",
+            "release_year": 2020,
+            "label": "Johnnys' Universe"
+        },
+        {
+            "id": 9,
+            "title": "Shukumei",
+            "artist": "Official Hige Dandism",
+            "album": "Traveler",
+            "release_year": 2019,
+            "label": "Pony Canyon"
+        },
+        {
+            "id": 10,
+            "title": "Gunjo",
+            "artist": "YOASOBI",
+            "album": "E-SIDE",
+            "release_year": 2021,
+            "label": "Sony Music Japan"
+        },
+        {
+            "id": 11,
+            "title": "Lemon",
+            "artist": "Kenshi Yonezu",
+            "album": "Bootleg",
+            "release_year": 2018,
+            "label": "Sony Music Records"
+        },
+        {
+            "id": 12,
+            "title": "Zankyou Sanka",
+            "artist": "Aimer",
+            "album": "Walpurgis",
+            "release_year": 2021,
+            "label": "Sacra Music"
+        },
+        {
+            "id": 13,
+            "title": "SAKURA",
+            "artist": "Ikimono-gakari",
+            "album": "My song Your song",
+            "release_year": 2008,
+            "label": "Epic Records Japan"
+        },
+        {
+            "id": 14,
+            "title": "Marigold",
+            "artist": "Aimyon",
+            "album": "Shunkanteki Sixth Sense",
+            "release_year": 2018,
+            "label": "unBORDE"
+        },
+        {
+            "id": 15,
+            "title": "Kimagure Romantic",
+            "artist": "Ikimono-gakari",
+            "album": "My song Your song",
+            "release_year": 2008,
+            "label": "Epic Records Japan"
+        },
+        {
+            "id": 16,
+            "title": "Love so sweet",
+            "artist": "Arashi",
+            "album": "Time",
+            "release_year": 2007,
+            "label": "J Storm"
+        },
+        {
+            "id": 17,
+            "title": "Koi Suru Fortune Cookie",
+            "artist": "AKB48",
+            "album": "Tsugi no Ashiato",
+            "release_year": 2013,
+            "label": "King Records"
+        },
+        {
+            "id": 18,
+            "title": "Sayonara Crawl",
+            "artist": "AKB48",
+            "album": "Tsugi no Ashiato",
+            "release_year": 2013,
+            "label": "King Records"
+        },
+        {
+            "id": 19,
+            "title": "Shin Takarajima",
+            "artist": "Sakanaction",
+            "album": "Sakanaction",
+            "release_year": 2013,
+            "label": "Victor Entertainment"
+        },
+        {
+            "id": 20,
+            "title": "Hero",
+            "artist": "Namie Amuro",
+            "album": "Finally",
+            "release_year": 2016,
+            "label": "Avex Trax"
+        },
+        {
+            "id": 21,
+            "title": "Yoru ni Kakeru",
+            "artist": "YOASOBI",
+            "album": "THE BOOK",
+            "release_year": 2019,
+            "label": "Sony Music Japan"
+        },
+        {
+            "id": 22,
+            "title": "Uchiage Hanabi",
+            "artist": "DAOKO x Kenshi Yonezu",
+            "album": "FIREWORKS Soundtrack",
+            "release_year": 2017,
+            "label": "TOY'S FACTORY"
+        },
+        {
+            "id": 23,
+            "title": "Kataomoi",
+            "artist": "Aimer",
+            "album": "Daydream",
+            "release_year": 2016,
+            "label": "SME Records"
+        },
+        {
+            "id": 24,
+            "title": "Datte Atashi no Hero",
+            "artist": "LiSA",
+            "album": "Little Devil Parade",
+            "release_year": 2017,
+            "label": "Aniplex"
+        },
+        {
+            "id": 25,
+            "title": "Blue Bird",
+            "artist": "Ikimono-gakari",
+            "album": "Life Album",
+            "release_year": 2008,
+            "label": "Epic Records Japan"
+        }
+    ]
+}

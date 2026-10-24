@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Models Interactive Benchmark & Subagent Cost Calculator</title>
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background-color: #0f172a; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
+    .card { background-color: #1e293b; border: 1px solid #334155; border-radius: 0.75rem; }
+  </style>
+</head>
+<body class="p-6 max-w-7xl mx-auto space-y-6">
+
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-700 pb-4">
+    <div>
+      <h1 class="text-2xl font-bold text-white">AI Models Performance & Cost Interactive Dashboard</h1>
+      <p class="text-slate-400 text-sm mt-1">เปรียบเทียบประสิทธิภาพความเก่งแต่ละด้าน ต้นทุน API และการจำลองงบประมาณสำหรับ Coding Subagent</p>
+    </div>
+    <div class="mt-3 md:mt-0 flex gap-2">
+      <span class="px-3 py-1 bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 rounded-full text-xs font-semibold">★ Best Coding Subagent: DeepSeek V4.1 Flash</span>
+      <span class="px-3 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-full text-xs font-semibold">⚡ Best Fast Router: Haiku 5.5</span>
+    </div>
+  </div>
+
+  <!-- Charts Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Scatter Plot -->
+    <div class="card p-4">
+      <h2 class="text-lg font-semibold mb-1 text-slate-200">1. Cost vs. Coding Performance (Hover เพื่อดูข้อมูล)</h2>
+      <p class="text-xs text-slate-400 mb-3">แกนนอน: ราคาเฉลี่ยต่อ 1M Tokens (ยิ่งซ้ายยิ่งถูก) | แกนตั้ง: ความเก่งด้านโค้ด (ยิ่งสูงยิ่งเก่ง) | ขนาดวงกลม: ความเร็ว (TPS)</p>
+      <div id="scatterChart" class="w-full h-[420px]"></div>
+    </div>
+
+    <!-- Radar Chart -->
+    <div class="card p-4">
+      <h2 class="text-lg font-semibold mb-1 text-slate-200">2. ความถนัด 5 มิติของแต่ละโมเดล (คลิกชื่อรุ่นเพื่อซ่อน/แสดง)</h2>
+      <p class="text-xs text-slate-400 mb-3">เปรียบเทียบจุดแข็ง: Coding, Architecture/Reasoning, Security/Factuality, Speed และความประหยัด</p>
+      <div id="radarChart" class="w-full h-[420px]"></div>
+    </div>
+  </div>
+
+  <!-- Interactive Subagent Cost Simulator -->
+  <div class="card p-6">
+    <h2 class="text-xl font-bold text-white mb-2">3. เครื่องคำนวณงบประมาณ Subagent แบบเรียลไทม์ (Agent Loop Cost Simulator)</h2>
+    <p class="text-sm text-slate-400 mb-6">ลองเลื่อนปรับปริมาณการใช้งานของ Subagent เพื่อดูต้นทุนจริงต่อวัน (คำนวณรวมส่วนลด Prompt Caching แล้ว)</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+      <div class="bg-slate-800/70 p-4 rounded-lg border border-slate-700">
+        <label class="block text-sm font-medium text-slate-300 mb-2">Input Tokens ต่อวัน (ล้านโทเคน): <span id="inVal" class="text-cyan-400 font-bold">5.0M</span></label>
+        <input id="inSlider" type="range" min="0.5" max="50" step="0.5" value="5" class="w-full accent-cyan-400 cursor-pointer">
+        <p class="text-xs text-slate-400 mt-1">การอ่านไฟล์โค้ดและ Error Log ในลูป</p>
+      </div>
+
+      <div class="bg-slate-800/70 p-4 rounded-lg border border-slate-700">
+        <label class="block text-sm font-medium text-slate-300 mb-2">Output Tokens ต่อวัน (ล้านโทเคน): <span id="outVal" class="text-cyan-400 font-bold">1.0M</span></label>
+        <input id="outSlider" type="range" min="0.1" max="10" step="0.1" value="1" class="w-full accent-cyan-400 cursor-pointer">
+        <p class="text-xs text-slate-400 mt-1">การเขียนโค้ดและรันคำสั่ง Terminal</p>
+      </div>
+
+      <div class="bg-slate-800/70 p-4 rounded-lg border border-slate-700">
+        <label class="block text-sm font-medium text-slate-300 mb-2">สัดส่วน Cache Hit (%): <span id="cacheVal" class="text-emerald-400 font-bold">75%</span></label>
+        <input id="cacheSlider" type="range" min="0" max="95" step="5" value="75" class="w-full accent-emerald-400 cursor-pointer">
+        <p class="text-xs text-slate-400 mt-1">งาน Subagent ปกติจะมี Cache Hit 70-85%</p>
+      </div>
+    </div>
+
+    <div id="costBarChart" class="w-full h-[320px]"></div>
+  </div>
+
+  <script>
+    const models = [
+      {
+        name: "Opus 5.5",
+        input: 4.00, cache: 0.40, output: 20.00,
+        coding: 96, reasoning: 98, security: 94, speed_score: 55, cost_score: 30, tps: 65,
+        role: "Main Orchestrator / งานสถาปัตยกรรมระบบซับซ้อน",
+        color: "#a855f7"
+      },
+      {
+        name: "Sonnet 5.5",
+        input: 2.00, cache: 0.20, output: 10.00,
+        coding: 92, reasoning: 91, security: 90, speed_score: 78, cost_score: 60, tps: 110,
+        role: "Everyday Coding Driver / แก้บั๊กทั่วไป",
+        color: "#6366f1"
+      },
+      {
+        name: "GPT-6-sol",
+        input: 2.00, cache: 0.20, output: 10.00,
+        coding: 91, reasoning: 92, security: 96, speed_score: 75, cost_score: 60, tps: 105,
+        role: "Security Audit / Factuality & Codex",
+        color: "#f59e0b"
+      },
+      {
+        name: "DeepSeek V4.1 Flash",
+        input: 0.30, cache: 0.006, output: 1.20,
+        coding: 89, reasoning: 86, security: 85, speed_score: 94, cost_score: 98, tps: 214,
+        role: "★ อันดับ 1 Coding Subagent (Cache ถูกมาก $0.006)",
+        color: "#06b6d4"
+      },
+      {
+        name: "Haiku 5.5 (<100k)",
+        input: 0.10, cache: 0.01, output: 0.50,
+        coding: 81, reasoning: 76, security: 80, speed_score: 99, cost_score: 99, tps: 260,
+        role: "★ อันดับ 1 Fast Sidekick / ค้นหาไฟล์ & จัดการงานย่อย",
+        color: "#10b981"
+      },
+      {
+        name: "DeepSeek V4 Pro",
+        input: 1.32, cache: 0.13, output: 2.50,
+        coding: 84, reasoning: 85, security: 82, speed_score: 60, cost_score: 72, tps: 75,
+        role: "Deprecated (ควรเปลี่ยนไปใช้ V4.1 Flash แทน)",
+        color: "#94a3b8"
+      },
+      {
+        name: "GPT-5.5",
+        input: 5.00, cache: 0.50, output: 30.00,
+        coding: 86, reasoning: 88, security: 87, speed_score: 50, cost_score: 15, tps: 60,
+        role: "Outdated (แพงและช้ากว่ารุ่นใหม่)",
+        color: "#ef4444"
+      }
+    ];
+
+    // 1. Render Scatter Chart
+    const scatterTraces = models.map(m => {
+      const blended = (m.input * 0.75 + m.output * 0.25).toFixed(2);
+      return {
+        x: [blended],
+        y: [m.coding],
+        mode: 'markers+text',
+        name: m.name,
+        text: [m.name],
+        textposition: m.name === 'GPT-6-sol' ? 'bottom center' : 'top center',
+        textfont: { color: '#f8fafc', size: 11 },
+        marker: {
+          size: [m.tps / 4.2],
+          color: m.color,
+          opacity: 0.9,
+          line: { color: '#ffffff', width: 1.5 }
+        },
+        hovertemplate:
+          `<b>${m.name}</b><br>` +
+          `บทบาท: ${m.role}<br>` +
+          `คะแนน Coding: <b>${m.coding}/100</b><br>` +
+          `ความเร็ว: <b>${m.tps} TPS</b><br>` +
+          `Input: $${m.input}/1M | Cache Hit: $${m.cache}/1M<br>` +
+          `Output: $${m.output}/1M<extra></extra>`
+      };
+    });
+
+    const scatterLayout = {
+      paper_bgcolor: 'rgba(0,0,0,0)',
+      plot_bgcolor: '#0f172a',
+      margin: { t: 20, r: 20, b: 50, l: 50 },
+      xaxis: {
+        title: 'ราคาเฉลี่ยต่อ 1M Tokens (USD - Log Scale)',
+        type: 'log',
+        gridcolor: '#334155',
+        color: '#cbd5e1'
+      },
+      yaxis: {
+        title: 'คะแนนด้าน Coding & Agentic (เต็ม 100)',
+        range: [76, 100],
+        gridcolor: '#334155',
+        color: '#cbd5e1'
+      },
+      showlegend: false,
+      shapes: [{
+        type: 'rect',
+        x0: 0.12, x1: 0.85, y0: 78, y1: 93,
+        fillcolor: 'rgba(16, 185, 129, 0.12)',
+        line: { color: '#10b981', width: 1, dash: 'dot' }
+      }],
+      annotations: [{
+        x: Math.log10(0.32), y: 92,
+        xref: 'x', yref: 'y',
+        text: '★ Subagent Sweet Spot',
+        showarrow: false,
+        font: { color: '#34d399', size: 12, weight: 'bold' }
+      }]
+    };
+
+    Plotly.newPlot('scatterChart', scatterTraces, scatterLayout, { responsive: true });
+
+    // 2. Render Radar Chart
+    const categories = ['Coding & Debug', 'Architecture & Plan', 'Security & Accuracy', 'Speed (TPS)', 'Cost Efficiency'];
+    const radarTraces = models.map(m => ({
+      type: 'scatterpolar',
+      r: [m.coding, m.reasoning, m.security, m.speed_score, m.cost_score, m.coding],
+      theta: [...categories, categories[0]],
+      fill: 'toself',
+      name: m.name,
+      line: { color: m.color, width: 2 },
+       visible: ['Opus 5.5', 'Sonnet 5.5', 'DeepSeek V4.1 Flash', 'Haiku 5.5 (<100k)'].includes(m.name) ? true : 'legendonly'
+    }));
+
+    const radarLayout = {
+      paper_bgcolor: 'rgba(0,0,0,0)',
+      plot_bgcolor: 'rgba(0,0,0,0)',
+      margin: { t: 30, r: 40, b: 30, l: 40 },
+      polar: {
+        bgcolor: '#0f172a',
+        radialaxis: { visible: true, range: [0, 100], color: '#94a3b8', gridcolor: '#334155' },
+        angularaxis: { color: '#e2e8f0', gridcolor: '#334155' }
+      },
+      legend: { font: { color: '#e2e8f0', size: 11 }, orientation: 'h', y: -0.15 }
+    };
+
+    Plotly.newPlot('radarChart', radarTraces, radarLayout, { responsive: true });
+
+    // 3. Cost Calculator Logic
+    function updateCostChart() {
+      const inTokens = parseFloat(document.getElementById('inSlider').value);
+      const outTokens = parseFloat(document.getElementById('outSlider').value);
+      const cacheRate = parseFloat(document.getElementById('cacheSlider').value) / 100;
+
+      document.getElementById('inVal').innerText = inTokens.toFixed(1) + 'M';
+      document.getElementById('outVal').innerText = outTokens.toFixed(1) + 'M';
+      document.getElementById('cacheVal').innerText = Math.round(cacheRate * 100) + '%';
+
+      const costs = models.map(m => {
+        const uncachedIn = inTokens * (1 - cacheRate) * m.input;
+        const cachedIn = inTokens * cacheRate * m.cache;
+        const outCost = outTokens * m.output;
+        return +(uncachedIn + cachedIn + outCost).toFixed(2);
+      });
+
+      const barTrace = [{
+        x: costs,
+        y: models.map(m => m.name),
+        type: 'bar',
+        orientation: 'h',
+        marker: { color: models.map(m => m.color) },
+        text: costs.map(c => `$${c.toFixed(2)} / วัน ($${(c*30).toFixed(0)}/เดือน)`),
+        textposition: 'auto',
+        hovertemplate: '<b>%{y}</b><br>ค่าใช้จ่าย: <b>$%{x:.2f} / วัน</b><extra></extra>'
+      }];
+
+      const barLayout = {
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        plot_bgcolor: '#0f172a',
+        margin: { t: 10, r: 40, b: 40, l: 140 },
+        xaxis: { title: 'ค่าใช้จ่ายรวมต่อวัน (USD)', gridcolor: '#334155', color: '#cbd5e1' },
+        yaxis: { color: '#f8fafc', autorange: 'reversed' }
+      };
+
+      Plotly.react('costBarChart', barTrace, barLayout, { responsive: true });
+    }
+
+    document.getElementById('inSlider').addEventListener('input', updateCostChart);
+    document.getElementById('outSlider').addEventListener('input', updateCostChart);
+    document.getElementById('cacheSlider').addEventListener('input', updateCostChart);
+    updateCostChart();
+  </script>
+</body>
+</html>

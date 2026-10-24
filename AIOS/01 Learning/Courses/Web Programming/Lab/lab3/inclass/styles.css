@@ -1,0 +1,75 @@
+
+body {
+    font-family: 'Google Sans', sans-serif;
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    background-color: #f9f9f9;
+}
+
+header h1 {
+    text-align: left;
+    color: #2c3e50;
+    margin-bottom: 30px;
+}
+
+.moodeng-img {
+    max-width: 1000px;
+    width: 100%;
+    height: 500px;
+    border-radius: 15px;
+    object-fit: cover;
+}
+
+/* จัดดีไซน์ข้อความทั่วไป */
+.content-container h3, .table-container h3 {
+    color: #2c3e50;
+    margin-top: 30px;
+    padding-left: 10px;
+}
+
+/* จัดกรอบสีเทาครอบข้อความ Background ให้กว้างและสวยขึ้น */
+.background-box {
+    background-color: #eaeded;
+    border-radius: 12px;
+    padding: 25px 30px; /* เพิ่มพื้นที่ว่างข้างใน (Padding) ให้กว้างขึ้น */
+    margin: 20px 0;
+}
+
+.background-box p {
+    margin: 0;
+}
+
+/* จัดรูปแบบรายการ (List) ให้สวยงาม */
+ul {
+    padding-left: 25px;
+}
+
+ul li {
+    margin-bottom: 8px;
+    padding: 2px;
+}
+
+/* จัดการตารางให้สวยงามเป็นระเบียบ */
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.schedule-table th, .schedule-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.schedule-table th {
+    background-color: white;
+    color: black;
+    font-weight: 600;
+}

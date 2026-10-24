@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Todo</title>
+    <style>
+        body {
+            font-family: serif; 
+            margin: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .btn {
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .btn-secondary {
+            background-color: #ccc;
+            color: black;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-left: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea.form-control {
+            height: 100px;
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h3>Create a New Todo</h3>
+    <form action="/add" method="POST">
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" class="form-control" placeholder="Enter title" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" class="form-control" placeholder="Enter description"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="deadline">Deadline:</label>
+            <input type="date" id="deadline" name="deadline" class="form-control">
+        </div>
+        <button type="submit" class="btn">Create Todo</button>
+        <a href="/" class="btn-secondary">Cancel</a>
+    </form>
+</div>
+
+</body>
+</html>

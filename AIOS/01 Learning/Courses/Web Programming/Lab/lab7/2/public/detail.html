@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Detail</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f5f5f5; margin: 20px; max-width: 800px; }
+        h1 { margin-bottom: 20px; font-size: 28px;}
+        .content { display: flex; gap: 30px; }
+        .image-col { flex: 1; }
+        .image-col img { width: 100%; max-width: 400px; border: 3px solid white; box-shadow: 2px 2px 5px rgba(0,0,0,0.2); }
+        .info-col { flex: 1; }
+        h3 { margin-top: 0; font-size: 16px; margin-bottom: 10px; }
+        ul { margin-bottom: 20px; padding-left: 20px; margin-top: 0; }
+        li { margin-bottom: 5px; font-size: 14px; }
+        .back-link { display: inline-block; margin-top: 20px; color: indigo; font-weight: bold; text-decoration: underline; font-size: 18px; }
+    </style>
+</head>
+<body>
+    <h1 id="food-name">Loading...</h1>
+    <div class="content" id="food-content" style="display: none;">
+        <div class="image-col">
+            <img id="food-image" src="" alt="">
+        </div>
+        <div class="info-col">
+            <h3>Ingredients:</h3>
+            <ul id="food-ingredients"></ul>
+
+            <h3>Nutrition Facts:</h3>
+            <ul id="food-nutrition"></ul>
+
+            <h3>availability:</h3>
+            <ul id="food-availability"></ul>
+        </div>
+    </div>
+    <div id="error-message" style="display: none; color: red;">Food not found</div>
+    <br>
+    <a href="/" class="back-link">Back to home</a>
+
+    <script>
+        // Extract the food ID from the URL path
+        const id = window.location.pathname.split('/').pop();
+        
+        fetch(`/api/foods/${id}`)
+            .then(res => {
+                if (!res.ok) throw new Error('Not found');
+                return res.json();
+            })
+            .then(food => {
+                document.title = food.name;
+                document.getElementById('food-name').textContent = food.name;
+                document.getElementById('food-image').src = food.image;
+                document.getElementById('food-image').alt = food.name;
+                
+                const ingredientsList = document.getElementById('food-ingredients');
+                food.ingredients.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    ingredientsList.appendChild(li);
+                });
+
+                const nutritionList = document.getElementById('food-nutrition');
+                nutritionList.innerHTML = `
+                    <li>Calories: ${food.nutrition.calories}</li>
+                    <li>protein: ${food.nutrition.protein}</li>
+                    <li>carbohydrates: ${food.nutrition.carbohydrates}</li>
+                    <li>fat: ${food.nutrition.fat}</li>
+                `;
+
+                const availabilityList = document.getElementById('food-availability');
+                food.availability.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    availabilityList.appendChild(li);
+                });
+
+                document.getElementById('food-content').style.display = 'flex';
+            })
+            .catch(err => {
+                document.getElementById('food-name').textContent = 'Error';
+                document.getElementById('error-message').style.display = 'block';
+                console.error(err);
+            });
+    </script>
+</body>
+</html>

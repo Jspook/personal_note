@@ -1,0 +1,40 @@
+*{
+    box-sizing: border-box;
+}
+
+body{
+    font-family: "google Sans" , sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0 auto;
+    max-width: 1000px;
+}
+
+table{
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th , td{
+    padding: 12px;
+    text-align: left;
+}
+
+th{
+    background-color: gray;
+    color: #fafcf8;
+}
+tr:nth-child(even){
+    background-color: #fafcf8;
+}
+
+tr:nth-child(odd){
+    background-color: #ffffff;
+}
+

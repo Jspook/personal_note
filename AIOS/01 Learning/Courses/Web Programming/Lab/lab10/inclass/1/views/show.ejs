@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smartphone Store</title>
+    <!-- Google Fonts: Prompt -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #f7f2eb;
+            --card-bg: #ffffff;
+            --border-color: #e5dec9;
+            --text-main: #2d3748;
+            --text-sub: #718096;
+            --primary: #6b7c52;
+            --price: #2e7d32;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            padding: 2.5rem 1rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        header h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #1a202c;
+        }
+
+        header p {
+            color: var(--text-sub);
+            font-size: 0.95rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+
+        .card-header {
+            margin-bottom: 1rem;
+        }
+
+        .brand {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .model {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-top: 0.2rem;
+        }
+
+        .price-tag {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--price);
+            margin-top: 0.5rem;
+        }
+
+        .tags {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background-color: #f1ebd9;
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.375rem;
+        }
+
+        .specs-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin: 1.25rem 0;
+            font-size: 0.85rem;
+        }
+
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed #e2e8f0;
+            padding-bottom: 0.4rem;
+        }
+
+        .spec-label {
+            color: var(--text-sub);
+        }
+
+        .spec-value {
+            color: var(--text-main);
+            font-weight: 500;
+            text-align: right;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 1rem;
+            background-color: var(--card-bg);
+            border-radius: 1rem;
+            border: 1px solid var(--border-color);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>📱 Smartphones Store</h1>
+            <p>รายการและสเปกสมาร์ตโฟนทั้งหมดในระบบ</p>
+        </header>
+
+        <% if (data && data.length > 0) { %>
+            <div class="grid">
+                <% data.forEach((item) => { 
+                    const brand = item.Brand || item.brand || '';
+                    const model = item.Model || item.model || item.name || 'ไม่ระบุชื่อรุ่น';
+                    const price = item.Price || item.price;
+                    const ram = item.RAM || item.ram;
+                    const storage = item.Storage || item.storage;
+                    const display = item.Display || item.display;
+                    const processor = item.Processor || item.processor;
+                    const rearCam = item.RearCamera || item.rearCamera;
+                    const frontCam = item.FrontCamera || item.frontCamera;
+                    const battery = item.Battery || item.battery;
+                    const os = item.OS || item.os;
+                    const year = item.ReleaseYear || item.releaseYear;
+                %>
+                    <div class="card">
+                        <div>
+                            <div class="card-header">
+                                <span class="brand"><%= brand %></span>
+                                <h2 class="model"><%= model %></h2>
+                                <% if (price) { %>
+                                    <div class="price-tag">$<%= price %></div>
+                                <% } %>
+                            </div>
+
+                            <div class="tags">
+                                <% if (ram && storage) { %>
+                                    <span class="tag"><%= ram %> / <%= storage %></span>
+                                <% } %>
+                                <% if (os) { %>
+                                    <span class="tag"><%= os %></span>
+                                <% } %>
+                                <% if (year) { %>
+                                    <span class="tag">ปี <%= year %></span>
+                                <% } %>
+                            </div>
+
+                            <div class="specs-list">
+                                <% if (processor) { %>
+                                    <div class="spec-item">
+                                        <span class="spec-label">ชิปเซ็ต</span>
+                                        <span class="spec-value"><%= processor %></span>
+                                    </div>
+                                <% } %>
+                                <% if (display) { %>
+                                    <div class="spec-item">
+                                        <span class="spec-label">หน้าจอ</span>
+                                        <span class="spec-value"><%= display %></span>
+                                    </div>
+                                <% } %>
+                                <% if (rearCam) { %>
+                                    <div class="spec-item">
+                                        <span class="spec-label">กล้องหลัง</span>
+                                        <span class="spec-value"><%= rearCam %></span>
+                                    </div>
+                                <% } %>
+                                <% if (frontCam) { %>
+                                    <div class="spec-item">
+                                        <span class="spec-label">กล้องหน้า</span>
+                                        <span class="spec-value"><%= frontCam %></span>
+                                    </div>
+                                <% } %>
+                                <% if (battery) { %>
+                                    <div class="spec-item">
+                                        <span class="spec-label">แบตเตอรี่</span>
+                                        <span class="spec-value"><%= battery %></span>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <div class="empty-state">
+                <p>ไม่พบข้อมูลสมาร์ตโฟน</p>
+            </div>
+        <% } %>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="style.css" rel = "stylesheet">
+    <title>Mock2</title>
+</head>
+<body>
+    <div class="main-box">
+        <h2>Employees Data</h2>
+        <form id="loginform">
+            <p>คำนำหน้า</p>
+            <select class="dropdown" id="prefix">
+                <option value="นาย">นาย</option>
+                <option value="นาง">นาง</option>
+                <option value="นางสาว">นางสาว</option>
+            </select><br>
+            <label for="fname">ชื่อ</label><br>
+            <input type="text" id="fname" name="fname"><br>
+
+            <label for="lname">นามสกุล</label><br>
+            <input type="text" id="lname" name="lname"><br>
+
+            <label for="address">ที่อยู่</label><br>
+            <input type="text" id="address" name="address"><br>
+
+            <label for="phone">เบอร์โทร</label><br>
+            <input type="text" id="phone" name="phone"><br>
+
+            <label for="่job">อาชีพ</label><br>
+            <input type="text" id="job" name="job"><br>
+
+            <button type="submit">save</button>
+            <button type="button" onclick="displayemplyees()">view</button>
+        </form>
+    </div>
+
+    <div id="list_employees"></div>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popular Albums</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 40px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin-bottom: 30px;
+            color: #000;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
+        }
+
+        .card-content {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .song-title {
+            font-size: 1.4rem;
+            font-weight: 900;
+            margin: 0 0 15px 0;
+        }
+
+        .info-row {
+            margin-bottom: 10px;
+            font-size: 1rem;
+            color: #555;
+        }
+
+        @media (max-width: 900px) {
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .loading {
+            text-align: center;
+            font-size: 1.2rem;
+            grid-column: 1 / -1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>The most popular albums</h1>
+        
+        <div class="grid-container" id="albumsGrid">
+            <div class="loading">Loading albums...</div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchAlbums() {
+            try {
+                const response = await fetch('/api/albums');
+                if (!response.ok) throw new Error('Failed to fetch data');
+                
+                const albums = await response.json();
+                renderAlbums(albums);
+            } catch (error) {
+                document.getElementById('albumsGrid').innerHTML = '<div style="grid-column: 1 / -1; color: red;">Error loading albums data.</div>';
+                console.error(error);
+            }
+        }
+
+        function renderAlbums(albums) {
+            const grid = document.getElementById('albumsGrid');
+            
+            if (albums.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1 / -1;">No albums found.</div>';
+                return;
+            }
+
+            const html = albums.map(album => `
+                <div class="card">
+                    <img src="${album.album_cover}" alt="${album.album} cover" class="card-image" onerror="this.src='https://via.placeholder.com/400?text=No+Cover'">
+                    <div class="card-content">
+                        <h2 class="song-title">${album.song}</h2>
+                        <div class="info-row">Album: ${album.album} (${album.year})</div>
+                        <div class="info-row">Artist: ${album.artist}</div>
+                        <div class="info-row">Genre: ${album.genre}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            grid.innerHTML = html;
+        }
+
+        // Initialize fetching on page load
+        fetchAlbums();
+    </script>
+</body>
+</html>

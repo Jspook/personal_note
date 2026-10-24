@@ -1,0 +1,48 @@
+body {
+    font-family: 'Google Sans', sans-serif;
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-container{
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 350px;
+}
+
+h2{
+    text-align: center;
+    color: gray;
+}
+
+input{
+    width: 90%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+input:focus{
+    outline: 2px solid rgb(38, 178, 224);
+    border-radius: 4px
+}
+
+button{
+    width: 97%;
+    padding: 12px;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    margin-top: 10px;
+}

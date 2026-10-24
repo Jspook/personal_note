@@ -1,0 +1,19 @@
+{
+  "name": "lab12-1",
+  "version": "1.0.0",
+  "description": "Lab 12 Part 1 - Employee Information with Cookies and SQLite",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "ejs": "^6.0.1",
+    "express": "^5.2.1",
+    "sqlite3": "^6.0.1"
+  }
+}

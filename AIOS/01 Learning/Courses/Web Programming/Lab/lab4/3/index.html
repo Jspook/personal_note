@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">\
+    <link href="styles.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
+    <title>Lab4.3</title>
+</head>
+<body>
+    <div class="main_container">
+        <h1>Income and Expense Table</h1>
+        <h3>Balance</h3>
+        <div id="display_balance"></div>
+        <div id="input_container">
+            <input type="text" id="list" name="list" placeholder="รายการ">
+            <input type="number" id="amount" name="amount" placeholder="จำนวนเงิน">
+            <select class="dropdown" id="typeSelect" onchange="transaction()">
+                <option value="expense">รายจ่าย</option>
+                <option value = "income">รายรับ</option>
+            </select>
+            <input type="date" id="date" name="date">
+            <button type="button" value="Add" id="Add" >เพิ่มรายการ</button>
+        </div>
+        <div id="display_table"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

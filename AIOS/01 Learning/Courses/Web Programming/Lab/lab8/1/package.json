@@ -1,0 +1,19 @@
+{
+  "name": "bookstore-management",
+  "version": "1.0.0",
+  "description": "Bookstore Management System with Node.js and MySQL",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "init-db": "node init_db.js",
+    "dev": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^4.22.2",
+    "mysql2": "^3.14.1"
+  }
+}
