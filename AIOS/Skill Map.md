@@ -7,7 +7,7 @@ Maps user intents to specific AIOS agent skills.
 | Skill Name | Trigger / Intent | Target Folder | Purpose |
 |---|---|---|---|
 | AIOS Manager | "จัดการ", "ภาพรวม", (Default Router) | `.agents/agents/` | Routes tasks, protects knowledge, coordinates skills |
-| Learning Tutor | "ช่วยสอน", "เรียน", "ทบทวน" | `AIOS/01 Learning/` | Explains topics and manages mistake logs |
+| Learning Tutor | "ช่วยสอน", "เรียน", "ทบทวน", "พาทำ", "จับมือทำ", "ไม่รู้จะเริ่มยังไง", "ช่วยทำการบ้าน" | `AIOS/01 Learning/` | Explains topics and manages mistake logs; Mode F walks through homework / mock exams / project code step by step with a log in `progress/`. Global skill: `~/.claude/skills/learning-tutor` (not stored in this repo) |
 | Personal Coach | "ออกกำลังกาย", "นิสัย", "ติดตามผล" | `AIOS/02 Personal Development/` | Tracks workouts and daily habits |
 | Project Builder | "ทำโปรเจกต์", "เขียนโค้ด", "ออกแบบระบบ" | `AIOS/03 Projects/` | Scaffolds architecture and development workflows |
 | Career Builder | "หางาน", "Resume", "Portfolio" | `AIOS/04 Career & Income/` | Tracks skills and internship opportunities |

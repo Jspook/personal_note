@@ -14,9 +14,34 @@
 </head>
 <body>
     <h1>Panda Keepers</h1>
-    <%# TODO 6: <select> of zoos (GET form to /), keep the selected one %>
+    <form method="GET" action="/">
+        <select name = "zoo">
+            <option value = "">All zoos</option>
+            <% zoos.forEach(function(z) { %>
+                <option value = "<%= z %>" <%= z === zoo ? 'selected' : '' %>><%= z %></option>
+            <% }); %>
+        </select>
+        <button type = "submit">Filter</button>
+    </form>
     <p><a href="/add">+ Add keeper</a></p>
-    <%# TODO 1: table of keepers with Edit link and Delete form (POST, confirm()) per row %>
-    <%# TODO 1: "Total salary: N" %>
+    <table>
+        <tr><th>ID</th><th>Name</th><th>Zoo</th><th>Role</th><th>Salary</th><th></th></tr>
+        <% keepers.forEach(function(k) { %>
+            <tr>
+                <td><%= k.id %></td>
+                <td><%= k.name %></td>
+                <td><%= k.zoo %></td>
+                <td><%= k.role %></td>
+                <td><%= k.salary %></td>
+                <td class="actions">
+                    <a href="/edit/<%= k.id %>">Edit</a>
+                    <form method = "post" action="/delete/<%= k.id %>" onsubmit = "return confirm('Delete <%= k.name %>?')">
+                        <button type = "submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        <% }); %>
+    </table>
+    <p>Total salary: <%= total %></p>
 </body>
 </html>

@@ -4,7 +4,13 @@
 <style>body{font-family:system-ui,sans-serif;max-width:480px;margin:24px auto;padding:0 16px}label{display:block;margin-top:12px}input{width:100%;padding:6px}</style></head>
 <body>
     <h1>Edit keeper</h1>
-    <%# TODO 3: form method POST action /edit/<id> prefilled from keeper %>
+    <form method = "POST" action = "/edit/<%= keeper.id %>">
+        <label>Name <input type = "text" name = "name" value = "<%= keeper.name || '' %>"></label>
+        <label>Zoo <input type = "text" name = "zoo" value = "<%= keeper.zoo || '' %>"></label>
+        <label>Role <input type = "text" name = "role" value = "<%= keeper.role || '' %>"></label>
+        <label>Salary <input type = "number" name = "salary" value = "<%= keeper.salary || '' %>" min="0" step="0.01"></label>
+        <button type = "submit">Save</button>
+    </form>
     <p><a href="/">Back</a></p>
 </body>
 </html>

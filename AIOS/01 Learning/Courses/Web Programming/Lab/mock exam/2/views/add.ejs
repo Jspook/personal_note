@@ -5,7 +5,13 @@
 <body>
     <h1>Add keeper</h1>
     <% if (error) { %><div class="error"><%= error %></div><% } %>
-    <%# TODO 2: form method POST action /add with name, zoo, role, salary (number); refill from form on error %>
+    <form method = "POST" action = "/add">
+        <label>Name <input type = "text" name = "name" value = "<%= form.name || '' %>"></label>
+        <label>Zoo <input type = "text" name = "zoo" value = "<%= form.zoo || '' %>"></label>
+        <label>Role <input type = "text" name = "role" value = "<%= form.role || '' %>"></label>
+        <label>Salary <input type = "number" name = "salary" value = "<%= form.salary || '' %>" min="0" step="0.01"></label>
+        <button type = "submit">Save</button>
+    </form>
     <p><a href="/">Back</a></p>
 </body>
 </html>

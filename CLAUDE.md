@@ -10,7 +10,8 @@ Context files (read when relevant, do not invent beyond them):
 ## Vault layout
 - `AIOS/` — processed knowledge: `00 Dashboard`, `01 Learning`, `02 Personal Development`, `03 Projects`, `04 Career & Income`, `Scripts`
 - `Resources/` — source material (Books, References, Attachments). Sources for questions about documents; AIOS notes for questions about the user's existing knowledge.
-- `.claude/skills/` — skills (course-pipeline, learning-tutor, how-to-write-note, aios-humanize, personal-coach, project-builder, career-builder); `.claude/agents/course-verifier.md` = read-only verifier for course-pipeline
+- `.claude/skills/` — skills (course-pipeline, how-to-write-note, aios-humanize, personal-coach, project-builder, career-builder); `.claude/agents/course-verifier.md` = read-only verifier for course-pipeline
+- `learning-tutor` is a **global** skill (`~/.claude/skills/learning-tutor/`, not in this repo); it also provides Mode F guided walkthroughs and the `progress/` logs/profile (Web Programming only for now)
 - `.agents/` — legacy pre-Claude setup, kept as backup. Do not edit.
 
 ## Working rules
