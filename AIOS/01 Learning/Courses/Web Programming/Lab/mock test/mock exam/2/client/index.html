@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>CORS client</title>
+<style>body{font-family:system-ui,sans-serif;max-width:700px;margin:24px auto}td,th{border:1px solid #ccc;padding:6px 10px}table{border-collapse:collapse}</style></head>
+<body>
+    <h1>Keepers (fetched from another origin)</h1>
+    <p id="status">Loading...</p>
+    <table><thead><tr><th>ID</th><th>Name</th><th>Zoo</th><th>Role</th></tr></thead><tbody id="rows"></tbody></table>
+    <script>
+        fetch('http://localhost:3002/api/keepers')
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('status').textContent = data.length + ' keepers';
+                const tbody = document.getElementById('rows');
+                data.forEach(k => {
+                    const tr = document.createElement('tr');
+                    [k.id, k.name, k.zoo, k.role].forEach(v => {
+                        const td = document.createElement('td');
+                        td.textContent = v;
+                        tr.appendChild(td);
+                    });
+                    tbody.appendChild(tr);
+                });
+            })
+            .catch(err => { document.getElementById('status').textContent = 'Failed: ' + err.message; });
+    </script>
+</body>
+</html>

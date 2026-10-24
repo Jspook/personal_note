@@ -1,0 +1,10 @@
+[
+  { "id": 1, "name": "Lin Hui", "species": "Giant", "age": 7, "weight_kg": 105, "zoo": "Chiang Mai Zoo", "diet": "Bamboo", "description": "Calm and loves climbing. Usually naps after lunch.", "image_url": "https://placehold.co/480x320/e2e8f0/0f172a?text=Lin+Hui" },
+  { "id": 2, "name": "Chuang Chuang", "species": "Giant", "age": 12, "weight_kg": 118, "zoo": "Chiang Mai Zoo", "diet": "Bamboo", "description": "The oldest panda in the zoo. Eats 12 kg of bamboo a day.", "image_url": "https://placehold.co/480x320/e2e8f0/0f172a?text=Chuang+Chuang" },
+  { "id": 3, "name": "Mei Xiang", "species": "Giant", "age": 5, "weight_kg": 92, "zoo": "Bangkok Safari", "diet": "Bamboo, apple", "description": "Playful. Rolls down the hill every morning.", "image_url": "https://placehold.co/480x320/e2e8f0/0f172a?text=Mei+Xiang" },
+  { "id": 4, "name": "Rusty", "species": "Red", "age": 4, "weight_kg": 5, "zoo": "Bangkok Safari", "diet": "Bamboo, fruit", "description": "A red panda. Shy but very curious about visitors.", "image_url": "https://placehold.co/480x320/fecaca/7f1d1d?text=Rusty" },
+  { "id": 5, "name": "Ember", "species": "Red", "age": 2, "weight_kg": 4, "zoo": "Khao Kheow Zoo", "diet": "Bamboo, egg", "description": "Youngest red panda. Active at dusk.", "image_url": "https://placehold.co/480x320/fecaca/7f1d1d?text=Ember" },
+  { "id": 6, "name": "Bao Bao", "species": "Giant", "age": 3, "weight_kg": 70, "zoo": "Khao Kheow Zoo", "diet": "Bamboo", "description": "Born in the zoo. Learning to climb trees.", "image_url": "https://placehold.co/480x320/e2e8f0/0f172a?text=Bao+Bao" },
+  { "id": 7, "name": "Maple", "species": "Red", "age": 8, "weight_kg": 6, "zoo": "Chiang Mai Zoo", "diet": "Bamboo, fruit", "description": "Likes to sleep high in the tree.", "image_url": "https://placehold.co/480x320/fecaca/7f1d1d?text=Maple" },
+  { "id": 8, "name": "Tian Tian", "species": "Giant", "age": 15, "weight_kg": 125, "zoo": "Bangkok Safari", "diet": "Bamboo", "description": "Heaviest panda. Gentle with keepers.", "image_url": "https://placehold.co/480x320/e2e8f0/0f172a?text=Tian+Tian" }
+]

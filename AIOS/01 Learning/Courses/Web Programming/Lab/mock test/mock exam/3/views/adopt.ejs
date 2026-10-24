@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>My adoptions</title>
+<style>body{font-family:system-ui,sans-serif;max-width:640px;margin:24px auto;padding:0 16px}nav{display:flex;gap:16px;margin-bottom:16px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #cbd5e1;padding:8px 12px;text-align:left}.ok{background:#ecfdf5;color:#065f46;padding:8px 12px;border-radius:6px}</style></head>
+<body>
+    <nav><a href="/dashboard">Dashboard</a><a href="/adopt">My adoptions</a><a href="/logout">Logout</a></nav>
+    <h1>My adoptions</h1>
+    <% if (confirmed) { %><div class="ok">Adoption confirmed! Your list has been reset.</div><% } %>
+    <%# TODO 6: table of adopted pandas (id, name, species, weight_kg), total weight, Confirm form (POST /adopt/confirm); empty list -> "No pandas yet" %>
+</body>
+</html>

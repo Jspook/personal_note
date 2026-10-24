@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body { font-family: system-ui, sans-serif; background: #f1f5f9; display: grid; place-items: center; min-height: 100vh; margin: 0; }
+        form { background: #fff; padding: 28px; border-radius: 12px; width: 320px; box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+        label { display: block; margin-top: 12px; font-size: .9rem; }
+        input[type=text], input[type=password] { width: 100%; padding: 8px; margin-top: 4px; }
+        button { margin-top: 16px; width: 100%; padding: 10px; }
+        .error { background: #fee2e2; color: #991b1b; padding: 8px 12px; border-radius: 6px; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Panda Adoption</h1>
+        <% if (error) { %><div class="error"><%= error %></div><% } %>
+        <%# TODO 1: form method POST action /login: username (prefilled), password, remember checkbox (checked when remember), submit %>
+    </div>
+</body>
+</html>
