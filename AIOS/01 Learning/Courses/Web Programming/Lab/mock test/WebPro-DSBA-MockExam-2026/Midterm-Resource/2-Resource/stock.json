@@ -1,0 +1,92 @@
+[
+  {
+    "id": "P001",
+    "sku": "ELEC-001",
+    "name": "หูฟังไร้สาย",
+    "category": "Electronics",
+    "stock": 45,
+    "cost": 1200,
+    "price": 1990
+  },
+  {
+    "id": "P002",
+    "sku": "ELEC-002",
+    "name": "สมาร์ตวอตช์",
+    "category": "Electronics",
+    "stock": 20,
+    "cost": 1500,
+    "price": 2990
+  },
+  {
+    "id": "P003",
+    "sku": "HOME-001",
+    "name": "เครื่องฟอกอากาศ",
+    "category": "Home",
+    "stock": 12,
+    "cost": 2200,
+    "price": 3490
+  },
+  {
+    "id": "P004",
+    "sku": "HOME-002",
+    "name": "หุ่นยนต์ดูดฝุ่น",
+    "category": "Home",
+    "stock": 8,
+    "cost": 5500,
+    "price": 8990
+  },
+  {
+    "id": "P005",
+    "sku": "FASH-001",
+    "name": "กระเป๋าเป้",
+    "category": "Fashion",
+    "stock": 80,
+    "cost": 350,
+    "price": 790
+  },
+  {
+    "id": "P006",
+    "sku": "BEAU-001",
+    "name": "เซรั่มบำรุงหน้า",
+    "category": "Beauty",
+    "stock": 150,
+    "cost": 180,
+    "price": 490
+  },
+  {
+    "id": "P007",
+    "sku": "BEAU-002",
+    "name": "ครีมกันแดด",
+    "category": "Beauty",
+    "stock": 120,
+    "cost": 120,
+    "price": 350
+  },
+  {
+    "id": "P008",
+    "sku": "GADT-001",
+    "name": "พาวเวอร์แบงก์",
+    "category": "Gadgets",
+    "stock": 60,
+    "cost": 400,
+    "price": 690
+  },
+  {
+    "id": "P009",
+    "sku": "GADT-002",
+    "name": "คีย์บอร์ดไร้สาย",
+    "category": "Gadgets",
+    "stock": 25,
+    "cost": 950,
+    "price": 1890
+  },
+  {
+    "id": "P010",
+    "sku": "SPRT-001",
+    "name": "เสื่อโยคะ",
+    "category": "Sports",
+    "stock": 90,
+    "cost": 150,
+    "price": 390
+  }
+]
