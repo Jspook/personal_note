@@ -41,8 +41,8 @@ erDiagram
 
 **`Client`** (5 แถว)
 
-| ClientNo | cFirstName | cLastName | ClientTel     | PrefType  | MaxRent |
-| :------- | :--------- | :-------- | :------------ | :-------- | ------: |
+| ClientNo | cFirstName | cLastName | ClientTel      | PrefType  | MaxRent |
+| :------- | :--------- | :-------- | :------------- | :-------- | ------: |
 | 20010    | Winson     | Roger     | 1-111-548-9841 | townhouse |    2753 |
 | 20011    | Rose       | Leona     | 1-386-347-0911 | townhouse |    5000 |
 | 20012    | Smith      | Laura     | 1-118-610-0801 | condo     |   10000 |
@@ -51,15 +51,15 @@ erDiagram
 
 **`Interesting`** (7 แถว)
 
-| ClientNo | PropNo | InterestDate | Comment                                   |
-| :------- | :----- | :----------- | :---------------------------------------- |
-| 20010    | 10011  | 2002-11-21   | ligula. Nullam feugiat 2% placerat        |
-| 20010    | 10014  | 2027-01-21   | dolor. Nulla semper tellus id nunc interdum |
-| 20011    | 10013  | 2023-11-20   | lorem tristique aliquet. Phasellus fermentum |
-| 20011    | 10022  | 2015-09-20   | quis, pede. Praesent eu dui. Cum          |
+| ClientNo | PropNo | InterestDate | Comment                                           |
+| :------- | :----- | :----------- | :------------------------------------------------ |
+| 20010    | 10011  | 2002-11-21   | ligula. Nullam feugiat 2% placerat                |
+| 20010    | 10014  | 2027-01-21   | dolor. Nulla semper tellus id nunc interdum       |
+| 20011    | 10013  | 2023-11-20   | lorem tristique aliquet. Phasellus fermentum      |
+| 20011    | 10022  | 2015-09-20   | quis, pede. Praesent eu dui. Cum                  |
 | 20012    | 10018  | 2012-08-21   | Praesent eu nulla at sem molestie sodales. Mauris |
-| 20013    | 10018  | 2026-09-20   | in aliquet lobortis, 2% of nisi nibh lacinia |
-| 20014    | 10016  | 2006-11-21   | ornare placerat, orci lacus               |
+| 20013    | 10018  | 2026-09-20   | in aliquet lobortis, 2% of nisi nibh lacinia      |
+| 20014    | 10016  | 2006-11-21   | ornare placerat, orci lacus                       |
 
 **`PrivateOwner`** (10 แถว)
 
@@ -78,18 +78,18 @@ erDiagram
 
 **`PropertyForRent`** (10 แถว)
 
-| PropNo | PropStreet                       | PropCity     | PropPostcode | Type      | Rooms | Rent | OwnerNo | StaffNo |
-| :----- | :------------------------------- | :----------- | :----------- | :-------- | ----: | ---: | :------ | :------ |
-| 10010  | 591-9236 Ipsum Av.               | Duluth       | 10273        | condo     |     1 | 2753 | 30015   | 400023  |
-| 10011  | Ap #661-9022 Eget St.            | Rakitnoye    | 42034        | townhouse |     4 | 3989 | 30010   | 400020  |
-| 10012  | 5927 Mattis Street               | Verzegnis    | 72569        | townhouse |     5 | 3965 | 30010   | 400020  |
-| 10013  | Ap #559-6508 Adipiscing Rd.      | Mostazal     | 66856        | condo     |     2 | 4171 | 30011   | 400020  |
-| 10014  | Ap #641-9968 Fusce Street        | Mayerthorpe  | 68271        | townhouse |     9 | 2202 | 30014   | 400022  |
-| 10015  | 634-9929 Eget St.                | Rathenow     | 42915        | townhouse |     9 | 4072 | 30016   | 400023  |
-| 10016  | P.O. Box 526, 8201 Non, St.      | Smithers     | 55977        | townhouse |     8 |  371 | 30012   | 400021  |
-| 10018  | 2021 At, Ave                     | Eastbourne   | 15439        | townhouse |     1 | 4741 | 30012   | 400021  |
-| 10019  | 270-4405 Donec Av.               | Northampton  | 97058        | townhouse |     9 | 1926 | 30013   | 400022  |
-| 10022  | P.O. Box 717, 3605 Pellentesque. Road | Shillong | 86005        | townhouse |     6 | 4802 | 30010   | 400021  |
+| PropNo | PropStreet                            | PropCity    | PropPostcode | Type      | Rooms | Rent | OwnerNo | StaffNo |
+| :----- | :------------------------------------ | :---------- | :----------- | :-------- | ----: | ---: | :------ | :------ |
+| 10010  | 591-9236 Ipsum Av.                    | Duluth      | 10273        | condo     |     1 | 2753 | 30015   | 400023  |
+| 10011  | Ap #661-9022 Eget St.                 | Rakitnoye   | 42034        | townhouse |     4 | 3989 | 30010   | 400020  |
+| 10012  | 5927 Mattis Street                    | Verzegnis   | 72569        | townhouse |     5 | 3965 | 30010   | 400020  |
+| 10013  | Ap #559-6508 Adipiscing Rd.           | Mostazal    | 66856        | condo     |     2 | 4171 | 30011   | 400020  |
+| 10014  | Ap #641-9968 Fusce Street             | Mayerthorpe | 68271        | townhouse |     9 | 2202 | 30014   | 400022  |
+| 10015  | 634-9929 Eget St.                     | Rathenow    | 42915        | townhouse |     9 | 4072 | 30016   | 400023  |
+| 10016  | P.O. Box 526, 8201 Non, St.           | Smithers    | 55977        | townhouse |     8 |  371 | 30012   | 400021  |
+| 10018  | 2021 At, Ave                          | Eastbourne  | 15439        | townhouse |     1 | 4741 | 30012   | 400021  |
+| 10019  | 270-4405 Donec Av.                    | Northampton | 97058        | townhouse |     9 | 1926 | 30013   | 400022  |
+| 10022  | P.O. Box 717, 3605 Pellentesque. Road | Shillong    | 86005        | townhouse |     6 | 4802 | 30010   | 400021  |
 
 **`Staff`** (4 แถว)
 
@@ -104,26 +104,26 @@ erDiagram
 
 ## Skills Matrix
 
-| ข้อ | หัวข้อหลัก | ตารางที่ใช้ | ยาก | ทำได้ |
-|:---:|:---|:---|:---:|:---:|
-| 1 | INNER JOIN `ON` + Alias | `Staff`, `PropertyForRent` | ⭐ | |
-| 2 | Subquery + `< ANY` | `PropertyForRent` | ⭐⭐ | |
-| 3 | Single-row Subquery (ห้ามตัวแปร) + `<>` | `Staff` | ⭐⭐ | |
-| 4 | `GROUP BY` + `HAVING COUNT` + Alias | `Interesting` | ⭐⭐ | |
-| 5 | `GROUP BY` + `COUNT(DISTINCT)` | `PropertyForRent` | ⭐⭐ | |
-| 6 | `AVG` + Alias | `Staff` | ⭐ | |
-| 7 | `LEFT JOIN` + `IS NULL` (แทน Subquery) | `PrivateOwner`, `PropertyForRent` | ⭐⭐ | |
-| 8 | `LEFT JOIN` (แทน Subquery) | `PrivateOwner`, `PropertyForRent` | ⭐⭐ | |
-| 9 | JOIN `USING` + `LIKE` | `PropertyForRent`, `PrivateOwner` | ⭐⭐ | |
-| 10 | `BETWEEN` | `Client` | ⭐ | |
-| 11 | Equijoin (WHERE) + Alias | `Client`, `Interesting` | ⭐⭐ | |
-| 12 | `AND`/`OR` + Date | `Staff` | ⭐ | |
-| 13 | `WHERE` + `ORDER BY DESC` | `Client` | ⭐ | |
-| 14 | Expression + Alias backtick + `ORDER BY` | `PropertyForRent` | ⭐⭐ | |
-| 15 | `LIKE` + `ESCAPE` (`%` เป็นตัวอักษรจริง) | `Interesting` | ⭐⭐⭐ | |
-| 16 | `WHERE` เท่ากับ | `Client` | ⭐ | |
-| 17 | `LIKE` ขึ้นต้น/ลงท้าย | `PropertyForRent` | ⭐ | |
-| 18 | `IS NULL` (FK ว่าง) | `PropertyForRent` | ⭐ | |
+| ข้อ | หัวข้อหลัก                               | ตารางที่ใช้                       | ยาก | ทำได้ |
+| :-: | :--------------------------------------- | :-------------------------------- | :-: | :---: |
+|  1  | INNER JOIN `ON` + Alias                  | `Staff`, `PropertyForRent`        |  ⭐  |       |
+|  2  | Subquery + `< ANY`                       | `PropertyForRent`                 | ⭐⭐  |       |
+|  3  | Single-row Subquery (ห้ามตัวแปร) + `<>`  | `Staff`                           | ⭐⭐  |       |
+|  4  | `GROUP BY` + `HAVING COUNT` + Alias      | `Interesting`                     | ⭐⭐  |       |
+|  5  | `GROUP BY` + `COUNT(DISTINCT)`           | `PropertyForRent`                 | ⭐⭐  |       |
+|  6  | `AVG` + Alias                            | `Staff`                           |  ⭐  |       |
+|  7  | `LEFT JOIN` + `IS NULL` (แทน Subquery)   | `PrivateOwner`, `PropertyForRent` | ⭐⭐  |       |
+|  8  | `LEFT JOIN` (แทน Subquery)               | `PrivateOwner`, `PropertyForRent` | ⭐⭐  |       |
+|  9  | JOIN `USING` + `LIKE`                    | `PropertyForRent`, `PrivateOwner` | ⭐⭐  |       |
+| 10  | `BETWEEN`                                | `Client`                          |  ⭐  |       |
+| 11  | Equijoin (WHERE) + Alias                 | `Client`, `Interesting`           | ⭐⭐  |       |
+| 12  | `AND`/`OR` + Date                        | `Staff`                           |  ⭐  |       |
+| 13  | `WHERE` + `ORDER BY DESC`                | `Client`                          |  ⭐  |       |
+| 14  | Expression + Alias backtick + `ORDER BY` | `PropertyForRent`                 | ⭐⭐  |       |
+| 15  | `LIKE` + `ESCAPE` (`%` เป็นตัวอักษรจริง) | `Interesting`                     | ⭐⭐⭐ |       |
+| 16  | `WHERE` เท่ากับ                          | `Client`                          |  ⭐  |       |
+| 17  | `LIKE` ขึ้นต้น/ลงท้าย                    | `PropertyForRent`                 |  ⭐  |       |
+| 18  | `IS NULL` (FK ว่าง)                      | `PropertyForRent`                 |  ⭐  |       |
 
 ---
 
@@ -160,7 +160,7 @@ join propertyforrent pr on pr.StaffNo = s.StaffNo
 ```sql
 select PropNo , Type , Rent 
 from propertyforrent prf
-where Rent < some(select Rent from propertyforrent where Type = 'condo')
+where Rent < any(select Rent from propertyforrent where Type = 'condo')
 ```
 
 > [!INFO]- เฉลย
@@ -182,7 +182,10 @@ where Rent < some(select Rent from propertyforrent where Type = 'condo')
 
 **คำตอบของฉัน:**
 ```sql
-
+select sFirstName , sLastName , Salary 
+from staff
+where Position = (select Position from staff where StaffNo = 400021)
+and StaffNo != 400021
 ```
 
 > [!INFO]- เฉลย
@@ -205,7 +208,10 @@ where Rent < some(select Rent from propertyforrent where Type = 'condo')
 
 **คำตอบของฉัน:**
 ```sql
-
+select PropNo , count(Comment) as 'AmountofComment'
+from Interesting 
+group by ClientNo
+having count(Comment) > 1
 ```
 
 > [!INFO]- เฉลย
@@ -226,7 +232,9 @@ where Rent < some(select Rent from propertyforrent where Type = 'condo')
 
 **คำตอบของฉัน:**
 ```sql
-
+select OwnerNo , count(StaffNo) as 'AmountofStaff'
+from PropertyForRent
+group by OwnerNo
 ```
 
 > [!INFO]- เฉลย
@@ -245,7 +253,9 @@ where Rent < some(select Rent from propertyforrent where Type = 'condo')
 
 **คำตอบของฉัน:**
 ```sql
-
+select avg(Salary) as 'AverageSalary'
+from Staff
+group by StaffNo
 ```
 
 > [!INFO]- เฉลย
@@ -264,7 +274,10 @@ where Rent < some(select Rent from propertyforrent where Type = 'condo')
 
 **คำตอบของฉัน:**
 ```sql
-
+select o.oFirstName , o.oLastName , o.OwnerTel 
+from PrivateOwner o
+left outer join PropertyForRent pr on pr.OwnerNo = o.OwnerNo
+where pr.PropNo is null
 ```
 
 > [!INFO]- เฉลย
@@ -285,7 +298,9 @@ where Rent < some(select Rent from propertyforrent where Type = 'condo')
 
 **คำตอบของฉัน:**
 ```sql
-
+select o.oFirstName , o.oLastName , o.OwnerTel , pr.PropNo
+from PrivateOwner o
+left outer join PropertyForRent pr on o.OwnerNo = pr.OwnerNo
 ```
 
 > [!INFO]- เฉลย
@@ -305,7 +320,10 @@ where Rent < some(select Rent from propertyforrent where Type = 'condo')
 
 **คำตอบของฉัน:**
 ```sql
-
+select PropCity , PropPostcode , Rent , concat(o.oFirstName , ' ' , o.oLastName) as 'Owner Name' , o.OwnerTel
+from PropertyForRent pr
+join PrivateOwner o using (OwnerNo)
+where pr.PropNo is like '%Ap%'
 ```
 
 > [!INFO]- เฉลย
@@ -328,7 +346,9 @@ where Rent < some(select Rent from propertyforrent where Type = 'condo')
 
 **คำตอบของฉัน:**
 ```sql
-
+select cFirstName , cLastName , ClientTel , PrefType
+from Client
+where MaxRent Between 5000 and 10000
 ```
 
 > [!INFO]- เฉลย
@@ -350,7 +370,9 @@ where Rent < some(select Rent from propertyforrent where Type = 'condo')
 
 **คำตอบของฉัน:**
 ```sql
-
+select c.cFirstName , c.cLastName , in.InterestDate , in.Comment
+from Client c , in.Interesting
+where c.ClientNo = c.ClientNo
 ```
 
 > [!INFO]- เฉลย
@@ -370,7 +392,8 @@ where Rent < some(select Rent from propertyforrent where Type = 'condo')
 
 **คำตอบของฉัน:**
 ```sql
-
+select sFirstName , sLastName from Staff
+where Sex = 'F' and DOB = '2002-11-21'
 ```
 
 > [!INFO]- เฉลย
@@ -391,7 +414,9 @@ where Rent < some(select Rent from propertyforrent where Type = 'condo')
 
 **คำตอบของฉัน:**
 ```sql
-
+select ClientNo , ClientTel from Client 
+where PrefType = 'townhouse'
+order by MaxRent desc
 ```
 
 > [!INFO]- เฉลย
@@ -413,7 +438,10 @@ where Rent < some(select Rent from propertyforrent where Type = 'condo')
 
 **คำตอบของฉัน:**
 ```sql
-
+select PropNo , (Rent/2) as 'discount rent'
+from PropertyForRent
+where Type = 'condo'
+order by `discount rent` asc
 ```
 
 > [!INFO]- เฉลย
@@ -434,7 +462,9 @@ where Rent < some(select Rent from propertyforrent where Type = 'condo')
 
 **คำตอบของฉัน:**
 ```sql
-
+select pr.PropNo , Inte.Comment from PropertyForRent pr
+join Interesting Inte using (PropNo)
+where Inte.Comment is like '%2|%%' escape '|'
 ```
 
 > [!INFO]- เฉลย
@@ -463,7 +493,8 @@ where Rent < some(select Rent from propertyforrent where Type = 'condo')
 
 **คำตอบของฉัน:**
 ```sql
-
+select cFirstName , cLastName from Client 
+where MaxRent = 50000
 ```
 
 > [!INFO]- เฉลย
@@ -483,7 +514,8 @@ where Rent < some(select Rent from propertyforrent where Type = 'condo')
 
 **คำตอบของฉัน:**
 ```sql
-
+select PropCity , Type from PropertyForRent
+where PropPostcode is like '4%4'
 ```
 
 > [!INFO]- เฉลย
@@ -503,7 +535,7 @@ where Rent < some(select Rent from propertyforrent where Type = 'condo')
 
 **คำตอบของฉัน:**
 ```sql
-
+select PropStreet , Propcity from PropertyForRent where OwnerNo is null
 ```
 
 > [!INFO]- เฉลย

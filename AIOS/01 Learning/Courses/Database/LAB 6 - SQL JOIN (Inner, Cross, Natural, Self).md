@@ -131,7 +131,7 @@ INNER JOIN location l   ON d.location_id = l.location_id;
 **แตกวลีสำคัญ:**
 - "return เฉพาะแถวที่ match" → SQL ดูแต่ละ row และเลือกเฉพาะที่ ON condition = TRUE
 - "แถวที่ไม่มีคู่ match จะถูกตัดออก" → ถ้า dept_id = NULL หรือ ไม่มี matching row → หายไป
-- "EQUI JOIN" → INNER JOIN ที่ใช้ `=` เป็น condition (vs. `>`, `<` เป็นต้น)
+- "EQUI JOIN" → INNER JOIN ที่ใช้ = เป็น condition (vs. `>`, `<` เป็นต้น)
 
 **ตัวอย่าง:**
 - ✅ `INNER JOIN department ON e.dept_id = d.dept_id` → ได้พนักงานที่มี dept_id อยู่ใน department
