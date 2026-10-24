@@ -19,4 +19,16 @@ app.get('/panda/:id', (req, res) => {
     res.json(panda);
 });
 
+// GET /foods              -> all foods   (same shape as my-json-server.typicode.com/bemalykuma/mockDB/foods)
+// GET /foods/:id          -> one food, 404 {} if missing
+const foods = require('./foods.json');
+
+app.get('/foods', (req, res) => res.json(foods));
+
+app.get('/foods/:id', (req, res) => {
+    const food = foods.find(f => f.id === Number(req.params.id));
+    if (!food) return res.status(404).json({});
+    res.json(food);
+});
+
 app.listen(4000, () => console.log('Mock API running at http://localhost:4000'));

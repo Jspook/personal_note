@@ -1,0 +1,15 @@
+body { font-family: system-ui, sans-serif; background: #eef1f6; margin: 0; padding: 24px; }
+h1 { text-align: center; color: #1e293b; }
+table { border-collapse: collapse; width: 100%; max-width: 900px; margin: 0 auto; background: #fff; }
+th { background: #b91c1c; color: #fff; padding: 10px 12px; text-align: left; font-size: .85rem; }
+td { padding: 8px 12px; border-bottom: 1px solid #e2e8f0; font-size: .85rem; }
+.num { text-align: right; }
+td a { color: #b91c1c; font-weight: 600; text-decoration: none; }
+.bar { width: 120px; background: transparent; }
+.bar-fill { background: #86efac; font-size: .75rem; padding: 2px 4px; white-space: nowrap; min-width: 2.5em; box-sizing: border-box; }
+.grand { max-width: 900px; margin: 12px auto; text-align: right; }
+.panel { max-width: 360px; margin: 40px auto; background: #fff; padding: 24px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+.panel label { display: block; margin-top: 12px; font-size: .85rem; }
+.panel input { width: 100%; padding: 8px; box-sizing: border-box; }
+.panel button { margin-top: 16px; width: 100%; padding: 10px; background: #b91c1c; color: #fff; border: 0; border-radius: 8px; }
+.error { background: #fee2e2; color: #991b1b; padding: 8px 12px; border-radius: 6px; }

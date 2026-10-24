@@ -1,0 +1,7 @@
+{
+  "name": "mock-exam-4",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": { "init": "node init_db.js", "start": "node index.js" },
+  "dependencies": { "ejs": "^6.0.1", "express": "^5.2.1", "sqlite3": "^5.1.7" }
+}

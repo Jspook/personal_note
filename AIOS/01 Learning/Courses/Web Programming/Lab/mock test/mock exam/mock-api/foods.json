@@ -1,0 +1,8 @@
+[
+  { "id": 1, "name": "Pizza", "description": "Delicious cheesy pizza topped with fresh ingredients and baked to perfection.", "price": 199, "image": "https://placehold.co/400x240/fde68a/78350f?text=Pizza" },
+  { "id": 2, "name": "Burger", "description": "Juicy beef burger with lettuce, tomato, and special sauce in a soft bun.", "price": 129, "image": "https://placehold.co/400x240/fdba74/7c2d12?text=Burger" },
+  { "id": 3, "name": "Fried Chicken", "description": "Crispy fried chicken with a golden crust and tender meat inside.", "price": 149, "image": "https://placehold.co/400x240/fcd34d/713f12?text=Fried+Chicken" },
+  { "id": 4, "name": "Sushi", "description": "Fresh sushi rolls made with premium fish and perfectly seasoned rice.", "price": 249, "image": "https://placehold.co/400x240/bbf7d0/14532d?text=Sushi" },
+  { "id": 5, "name": "Spaghetti", "description": "Classic spaghetti pasta served with rich tomato sauce and herbs.", "price": 139, "image": "https://placehold.co/400x240/fecaca/7f1d1d?text=Spaghetti" },
+  { "id": 6, "name": "Steak", "description": "Grilled steak cooked to your liking, juicy and full of flavor.", "price": 359, "image": "https://placehold.co/400x240/e7e5e4/292524?text=Steak" }
+]
