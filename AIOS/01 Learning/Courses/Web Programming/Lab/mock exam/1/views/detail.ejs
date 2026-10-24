@@ -1,9 +1,21 @@
-<%# TODO 2: include partials/header %>
+<%- include('partials/header')%>
 
 <% if (!panda) { %>
-    <%# TODO 5: show "Panda not found" and a link back to / %>
+    <h2>Panda not found</h2>
+    <a href="/">Back to gallery</a>
 <% } else { %>
-    <%# TODO 5: show image, name, species, age, weight_kg, zoo, diet, description, and a Back link %>
+    <img src = "<%= panda.image_url %>" alt="<%= panda.name %>">
+                <div class = "body">
+                    <h1><%= panda.name %></h1>
+                    <span class = "badge <%= panda.species === 'Red' ? 'red' : '' %>"><%= panda.species %></span>
+                    <span>Age: <%= panda.age %></span>
+                    <p>Species: <%= panda.species %></p>
+                    <p>Weight: <%= panda.weight_kg %> kg</p>
+                    <p>Zoo: <%= panda.zoo %></p>
+                    <p>Diet: <%= panda.diet %></p>
+                    <p>Description: <%= panda.description %></p>
+                    <a href="/">Back to gallery</a>
+                </div>
 <% } %>
 
-<%# TODO 2: include partials/footer %>
+<%- include('partials/footer')%>

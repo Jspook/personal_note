@@ -1,11 +1,9 @@
-<%# TODO 2: include partials/header %>
-
+<%- include('partials/header')%>
 <h1>Panda Gallery</h1>
-
-<%# TODO 7: show "Total: N pandas · Average age: X.X" using stats %>
-
 <div class="filters">
-    <%# TODO 4: three links All (/), Giant (/?species=Giant), Red (/?species=Red) %>
+    <a href="/">All</a>
+    <a href = "/?species=Giant">Giant</a>
+    <a href = "/?species=Red">Red</a>
 </div>
 
 <% if (error) { %>
@@ -14,8 +12,21 @@
     <p>No pandas found</p>
 <% } else { %>
     <div class="grid">
-        <%# TODO 3: loop pandas -> one .card each: img, name, badge (red class when species is Red), age, link to /panda/:id %>
+        <% pandas.forEach(function(p) {%>
+            <div class = "card">
+                <img src = "<%= p.image_url %>" alt="<%= p.name %>">
+                <div class = "body">
+                    <h3><%= p.name %></h3>
+                    <span class = "badge <%= p.species === 'Red' ? 'red' : '' %>"><%= p.species %></span>
+                    <span>Age: <%= p.age %></span>
+                    <a href = '/panda/<%= p.id %>'>View</a>
+                </div>
+            </div>
+        <% }); %>           
     </div>
 <% } %>
+<% if (stats) { %>
+    <p>Total: <%= stats.total %> pandas · Average age: <%= stats.avgAge %></p>
+<% } %>
 
-<%# TODO 2: include partials/footer %>
+<%- include('partials/footer')%>
